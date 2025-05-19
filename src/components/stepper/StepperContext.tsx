@@ -167,7 +167,7 @@ export function StepperProvider<
          */
         setCurrentStepIndex(currentStepIndex - 1);
       },
-      goToStep(stepId: string | number | symbol) {
+      goToStep(stepId: StepId) {
         const stepIndex = props.steps.findIndex((step) => {
           return step.id === stepId;
         });
