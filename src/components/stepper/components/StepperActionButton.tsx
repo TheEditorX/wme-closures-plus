@@ -6,7 +6,7 @@ interface StepperActionButtonProps {
 export function StepperActionButton({ action }: StepperActionButtonProps) {
   return (
     <wz-button
-      onClick={action}
+      onClick={action.onClick}
       variant={action.variant || 'primary'}
       disabled={
         typeof action.disabled === 'boolean' ?
