@@ -4,12 +4,18 @@ import { StepperActions, StepperContent } from './components';
 import { StepperProvider, StepperProviderProps } from './StepperContext';
 import { StepperIndicator } from './StepperIndicator';
 
-type ModalStepperProps = StepperProviderProps & Omit<WzDialogProps, 'ref'>;
+type ModalStepperProps = StepperProviderProps &
+  Omit<WzDialogProps, 'ref' | 'onShown' | 'onHidden'>;
 export function ModalStepper(props: ModalStepperProps) {
   return (
     <StepperProvider {...props}>
       {createSafePortal(
-        <WzDialog {...props} controls={<StepperActions />}>
+        <WzDialog
+          {...props}
+          controls={<StepperActions />}
+          openOnMount
+          onHidden={() => props.onCancelled()}
+        >
           <StepperIndicator />
 
           <StepperContent />
