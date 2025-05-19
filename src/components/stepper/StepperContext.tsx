@@ -34,41 +34,7 @@ export interface StepperContextValue<
   isLastStep: boolean;
 }
 
-const StepperContext = createContext<StepperContextValue>({
-  currentStepIndex: -1,
-  totalSteps: -1,
-  currentStepConfig: null,
-
-  goToNextStep() {
-    throw new Error(
-      'Stepper is not initialized. Use <StepperProvider> to initialize it.',
-    );
-  },
-  goToPreviousStep() {
-    throw new Error(
-      'Stepper is not initialized. Use <StepperProvider> to initialize it.',
-    );
-  },
-  goToStep() {
-    throw new Error(
-      'Stepper is not initialized. Use <StepperProvider> to initialize it.',
-    );
-  },
-
-  updateStepData() {
-    throw new Error(
-      'Stepper is not initialized. Use <StepperProvider> to initialize it.',
-    );
-  },
-  getStepData() {
-    throw new Error(
-      'Stepper is not initialized. Use <StepperProvider> to initialize it.',
-    );
-  },
-
-  isFirstStep: false,
-  isLastStep: false,
-});
+const StepperContext = createContext<StepperContextValue>(undefined);
 
 export interface StepperProviderProps<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
