@@ -14,7 +14,7 @@ export function ModalStepper(props: ModalStepperProps) {
           {...props}
           controls={<StepperActions />}
           openOnMount
-          onHidden={() => props.onCancelled()}
+          onHidden={() => props.onCancelled?.()}
         >
           <StepperIndicator />
 
