@@ -179,7 +179,7 @@ export function StepperProvider<
         setCurrentStepIndex(stepIndex);
       },
 
-      updateStepData<K extends keyof D>(stepId: K, data: D[K]) {
+      updateStepData<K extends keyof D>(stepId: K, data: Partial<D[K]>) {
         dispatchStepData({
           type: 'SET_STEP',
           stepId,
