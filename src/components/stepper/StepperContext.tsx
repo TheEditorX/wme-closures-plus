@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { useStepperDataReducer } from './hooks';
 import { StepConfig } from './interfaces';
 import { StepId } from './types';
@@ -202,6 +202,17 @@ export function StepperProvider<
       stepData,
     ],
   );
+
+  useEffect(() => {
+    if (!value.currentStepConfig) return;
+
+    const stepConfig = value.currentStepConfig;
+    stepConfig.onEnter?.();
+
+    return () => {
+      stepConfig.onLeave?.();
+    };
+  }, [value.currentStepConfig]);
 
   return <StepperContext value={value}>{props.children}</StepperContext>;
 }
