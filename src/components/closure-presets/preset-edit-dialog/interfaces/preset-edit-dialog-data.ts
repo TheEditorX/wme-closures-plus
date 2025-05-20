@@ -2,6 +2,7 @@ import { Weekday } from '../../../../enums';
 import {
   STEP_CLOSURE_DETAILS_SYMBOL,
   STEP_PRESET_INFO_SYMBOL,
+  STEP_SUMMARY_SYMBOL,
 } from '../consts';
 
 export type PresetEditDialogData = {
@@ -28,4 +29,6 @@ export type PresetEditDialogData = {
           duration: number;
         };
   };
+} & {
+  [S in typeof STEP_SUMMARY_SYMBOL]: never;
 };
