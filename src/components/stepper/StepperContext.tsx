@@ -1,4 +1,11 @@
-import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useStepperDataReducer } from './hooks';
 import { StepConfig } from './interfaces';
 import { StepId } from './types';
@@ -21,20 +28,28 @@ export interface StepperContextValue<
   totalSteps: number;
 
   /** The step configuration for the current, active step, or null if unavailable */
-  currentStepConfig: StepConfig | null;
+  currentStepConfig: StepConfig<D, StepId> | null;
 
   goToNextStep(): void;
   goToPreviousStep(): void;
   goToStep(stepId: StepId): void;
 
   updateStepData(stepId: StepId, data: Partial<D[StepId]>): void;
-  getStepData(stepId: StepId): D[StepId];
+  getStepData(
+    stepId: StepId,
+  ): StepId extends keyof ExistingData<D> ? ExistingData<D>[StepId] : never;
 
   isFirstStep: boolean;
   isLastStep: boolean;
 }
 
 const StepperContext = createContext<StepperContextValue>(undefined);
+
+type ExistingData<D> = {
+  [K in {
+    [K in keyof D]: D[K] extends never ? never : K;
+  }[keyof D]]: D[K];
+};
 
 export interface StepperProviderProps<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,20 +58,22 @@ export interface StepperProviderProps<
   children: ReactNode;
 
   /** an array of StepConfig objects, where each object defines a step */
-  steps: StepConfig[];
+  steps: {
+    [K in keyof D]: StepConfig<D, K>;
+  }[keyof D][];
 
   /**
    * Pre-populates the stepper with existing data. The keys in this map/object should correspond to the id of each StepConfig.
    * This is useful if you're loading a saved state or have some default values.
    */
-  initialData: D;
+  initialData: ExistingData<D>;
 
   /**
    * A callback function that is triggered when the user successfully completes the last step.
    *
    * @param data - The data returned or generated upon the successful completion of the operation.
    */
-  onComplete?: (data: D) => void;
+  onComplete?: (data: ExistingData<D>) => void;
 
   /**
    * A callback function that can be triggered to indicate the user wants to cancel or dismiss the entire stepper flow.
@@ -78,7 +95,7 @@ export interface StepperProviderProps<
     previousStepId: StepId,
     newStepIndex: number,
     newStepId: StepId,
-    newStepConfig: StepConfig,
+    newStepConfig: StepConfig<D, StepId>,
     allStepData: D,
   ) => void;
 }
@@ -152,7 +169,7 @@ export function StepperProvider<
           data,
         });
       },
-      getStepData<K extends keyof D>(stepId: K): D[K] {
+      getStepData<K extends keyof ExistingData<D>>(stepId: K): D[K] {
         return stepData[stepId];
       },
 
@@ -183,7 +200,10 @@ export function StepperProvider<
   return <StepperContext value={value}>{props.children}</StepperContext>;
 }
 
-export function useStepper(): StepperContextValue {
+export function useStepper<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  D extends Record<StepId, any> = Record<StepId, any>,
+>(): StepperContextValue<D> {
   const context = useContext(StepperContext);
   if (!context) {
     throw new Error('useStepper must be used within a <StepperProvider>');

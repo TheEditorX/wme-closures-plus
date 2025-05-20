@@ -4,9 +4,13 @@ import { ActionConfig } from './action-config';
 import { IconDetail } from './icon-detail';
 import { StepContentProps } from './step-content-props';
 
-export interface StepConfig {
+export interface StepConfig<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  D extends Record<StepId, any>,
+  I extends StepId,
+> {
   /** Unique ID for the step, used for data storage */
-  id: StepId;
+  id: I;
 
   title: string;
   description?: string;
@@ -23,7 +27,9 @@ export interface StepConfig {
   /** Called before leaving. Return false to prevent. */
   onLeave?: () => void | boolean | Promise<void | boolean>;
 
-  actions?: ActionConfig[] | (() => ReactNode);
+  actions?:
+    | ActionConfig[]
+    | ((stepData: I extends keyof D ? D[I] : never) => ReactNode);
 
   nextButtonLabel?: string;
   prevButtonLabel?: string;
