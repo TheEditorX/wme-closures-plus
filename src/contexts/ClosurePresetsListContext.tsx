@@ -124,7 +124,7 @@ export function ClosurePresetsListProvider({ children }: ClosurePresetsListProvi
       presets,
       isLoading: false,
       error: null,
-      isReadOnly: true,
+      isReadOnly: false,
 
       createPreset: async (preset) => {
         throw new Error('Not implemented');
