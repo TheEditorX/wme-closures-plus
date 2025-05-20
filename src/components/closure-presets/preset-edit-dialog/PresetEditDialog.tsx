@@ -10,6 +10,7 @@ import {
   STEP_SUMMARY_SYMBOL,
 } from './consts';
 import { PresetEditDialogData } from './interfaces';
+import { PresetInformationStep } from './steps/PresetInformationStep';
 
 interface CreatePresetModeProps {
   mode: 'CREATE';
@@ -56,10 +57,12 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
             name: 'project-fill',
             color: '#B80000',
           },
-          content: null,
-          actions: () => (
+          content: <PresetInformationStep />,
+          actions: (data) => (
             <>
-              <StepperNextButton>Next - Closure details</StepperNextButton>
+              <StepperNextButton disabled={!data.name}>
+                Next - Closure details
+              </StepperNextButton>
               <StepperPrevButton color="secondary">Cancel</StepperPrevButton>
             </>
           ),
