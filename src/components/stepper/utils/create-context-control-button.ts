@@ -3,6 +3,7 @@ import {
   ComponentType,
   createElement,
   FunctionComponent,
+  SyntheticEvent,
 } from 'react';
 import { StepperContextValue, useStepper } from '../StepperContext';
 
@@ -26,7 +27,10 @@ export function createContextControlButton(
       Object.assign(
         {
           children: defaultLabel,
-          onClick: stepper[targetName],
+          onClick: (e: SyntheticEvent<HTMLButtonElement>) => {
+            e.currentTarget.blur();
+            stepper[targetName]();
+          },
         },
         props,
       ),
