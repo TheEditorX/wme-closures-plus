@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { CreateNewPresetButton } from './CreateNewPresetButton';
 import { PresetsListMessage } from './PresetsListMessage';
 import { ClosurePresetsList } from './ClosurePresetsList';
 import { useClosurePresetsListContext } from 'contexts';
@@ -20,11 +21,7 @@ export function ClosurePresetsManager() {
     <SectionContainer>
       <SectionHeader>
         <wz-subhead5>Closure Presets</wz-subhead5>
-        {!closurePresets.isReadOnly && (
-          <wz-button size="xs" color="text">
-            + Create preset
-          </wz-button>
-        )}
+        {!closurePresets.isReadOnly && <CreateNewPresetButton />}
       </SectionHeader>
 
       {closurePresets.error ?
