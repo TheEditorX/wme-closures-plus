@@ -1,6 +1,6 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
 export default {
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   transform: {
     "^.+\.tsx?$": ["ts-jest",{}],
   },
@@ -9,3 +9,4 @@ export default {
   ],
   coveragePathIgnorePatterns: ['<rootDir>/tests/__extenders__'],
 };
+
