@@ -76,9 +76,11 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
             color: 'var(--promotion_variant)',
           },
           content: null,
-          actions: () => (
+          actions: (data) => (
             <>
-              <StepperNextButton>Next - Summary</StepperNextButton>
+              <StepperNextButton disabled={!data.startDate || !data.endTime}>
+                Next - Summary
+              </StepperNextButton>
               <StepperPrevButton color="secondary">Back</StepperPrevButton>
             </>
           ),
