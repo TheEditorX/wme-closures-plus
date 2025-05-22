@@ -1,9 +1,52 @@
+import { Toggle, ToggleGroup } from '@base-ui-components/react';
+import { cx } from '@emotion/css';
+import styled from '@emotion/styled';
 import { WeekdayFlags } from '../enums'; // Assuming WeekdayFlags is imported
-import React, { SyntheticEvent, useCallback, useMemo } from 'react';
 import { createBlurrableHandler } from '../utils';
 import { WeekdayPickerLabel } from './WeekdayPickerLabel'; // For React.ReactNode
 
 const ALL_WEEKDAY_KEYS = WeekdayFlags.getBasicFlagKeys();
+
+const ToggleButton = styled('button')({
+  minWidth: 40,
+  minHeight: 40,
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '50%',
+  fontFamily: '"Waze Boing", "Waze Boing HB", "Rubik", sans-serif',
+  fontWeight: 500,
+
+  color: 'var(--cp_toggle_button_color, var(--content_default, #202124))',
+  backgroundColor: 'transparent',
+  border: '1px solid var(--cp_toggle_button_border, var(--hairline, #d5d7db))',
+
+  '&:hover': {
+    backgroundColor:
+      'rgb(from var(--cp_toggle_button_color, var(--content_default, #202124)) r g b / 0.04)',
+  },
+  '&:active': {
+    backgroundColor:
+      'rgb(from var(--cp_toggle_button_color, var(--content_default, #202124)) r g b / 0.1)',
+  },
+
+  '&.selected': {
+    backgroundColor:
+      'rgb(from var(--cp_toggle_button_selected_color, var(--primary_variant, #0075e3)) r g b / 0.1)',
+    borderColor:
+      'var(--cp_toggle_button_selected_border, var(--primary, #0075e3))',
+    color: 'var(--cp_toggle_button_selected_color, var(--primary, #0075e3))',
+
+    '&:hover': {
+      backgroundColor:
+        'rgb(from var(--cp_toggle_button_selected_color, var(--primary_variant, #0075e3)) r g b / 0.14)',
+    },
+    '&:active': {
+      backgroundColor:
+        'rgb(from var(--cp_toggle_button_selected_color, var(--primary_variant, #0075e3)) r g b / 0.2)',
+    },
+  },
+});
 
 interface CommonWeekdayPickerProps {
   /** Optional label for the picker */
@@ -13,17 +56,19 @@ interface CommonWeekdayPickerProps {
    * @default false
    */
   disabled?: boolean;
+  /** Sets the selected days by default */
+  defaultValue?: InstanceType<typeof WeekdayFlags>;
   /**
    * The currently selected weekday(s).
    * Should be a valid bitwise combination of values from `WeekdayFlags`.
    */
-  value: InstanceType<typeof WeekdayFlags>;
+  value?: InstanceType<typeof WeekdayFlags>;
   /**
    * Callback function invoked when the selected weekday changes.
    * @param day - The newly selected weekday(s) (or undefined if deselected and {@link SingleWeekdayPickerProps.allowDeselect allowDeselect} is true),
    *              a value from `WeekdayFlags`.
    */
-  onChange(day: InstanceType<typeof WeekdayFlags>): void;
+  onChange?(day: InstanceType<typeof WeekdayFlags>): void;
   /**
    * Optional flag to make the picker read-only.
    * @default false
@@ -57,67 +102,6 @@ export type WeekdayPickerProps =
   | MultipleWeekdayPickerProps;
 
 export function WeekdayPicker(props: WeekdayPickerProps) {
-  const createHandlerSelect = useCallback(
-    (day: ReturnType<typeof WeekdayFlags.getBasicFlagKeys>[number]) => {
-      const dayValue = WeekdayFlags[day];
-      return (e: SyntheticEvent<HTMLElement & { checked: boolean }>) => {
-        if (props.disabled || props.readOnly) return;
-
-        if (props.allowMultiple) {
-          const newValue =
-            e.currentTarget.checked ?
-              props.value.set(dayValue)
-            : props.value.clear(dayValue);
-          props.onChange(newValue);
-        } else {
-          let newValue = props.value.reset();
-          if (e.currentTarget.checked) newValue = newValue.set(dayValue);
-          props.onChange(newValue);
-        }
-      };
-    },
-    [props],
-  );
-
-  const renderDayInput = useCallback(
-    (day: (typeof ALL_WEEKDAY_KEYS)[number]) => {
-      if (props.allowMultiple) {
-        return (
-          <wz-checkbox
-            key={day}
-            checked={props.value[day]}
-            disabled={props.disabled || props.readOnly}
-            onChange={createHandlerSelect(day)}
-          >
-            {day}
-          </wz-checkbox>
-        );
-      } else {
-        return (
-          <wz-radio-button
-            key={day}
-            checked={props.value[day]}
-            disabled={props.disabled || props.readOnly}
-            onChange={createHandlerSelect(day)}
-          >
-            {day}
-          </wz-radio-button>
-        );
-      }
-    },
-    [
-      createHandlerSelect,
-      props.allowMultiple,
-      props.disabled,
-      props.readOnly,
-      props.value,
-    ],
-  );
-
-  const allDayElements = useMemo(() => {
-    return ALL_WEEKDAY_KEYS.map((day) => renderDayInput(day));
-  }, [renderDayInput]);
-
   return (
     <div>
       {props.label && (
@@ -151,14 +135,41 @@ export function WeekdayPicker(props: WeekdayPickerProps) {
         />
       )}
 
-      {!props.allowMultiple ?
-        <wz-radio-group
-          style={{ '--wz-radio-button-margin': 0 }}
-          layout="vertical"
-        >
-          {allDayElements}
-        </wz-radio-group>
-      : allDayElements}
+      <ToggleGroup
+        toggleMultiple={props.allowMultiple}
+        defaultValue={props.defaultValue?.getActiveBasicFlags()}
+        value={props.value?.getActiveBasicFlags()}
+        onValueChange={
+          props.onChange ?
+            (groupValue) => {
+              props.onChange(
+                new WeekdayFlags(
+                  groupValue.reduce((acc, flag) => acc | flag, 0),
+                ),
+              );
+            }
+          : undefined
+        }
+        style={{
+          display: 'flex',
+          gap: 'var(--space-always-xxxs, 2px)',
+        }}
+      >
+        {ALL_WEEKDAY_KEYS.map((day) => (
+          <Toggle
+            key={day}
+            value={WeekdayFlags[day].getValue().toString()}
+            render={(props, state) => (
+              <ToggleButton
+                {...props}
+                className={cx(state.pressed && 'selected')}
+              >
+                {day[0]}
+              </ToggleButton>
+            )}
+          />
+        ))}
+      </ToggleGroup>
     </div>
   );
 }
