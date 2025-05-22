@@ -1,10 +1,10 @@
 export interface IBitwiseEnumFlags<TNumVal extends number> {
   getValue(): number;
-  set(flag: TNumVal | number): this;
-  clear(flag: TNumVal | number): this;
-  toggle(flag: TNumVal | number): this;
-  has(flag: TNumVal | number): boolean;
-  hasAny(flag: TNumVal | number): boolean;
+  set(flag: TNumVal | number | this): this;
+  clear(flag: TNumVal | number | this): this;
+  toggle(flag: TNumVal | number | this): this;
+  has(flag: TNumVal | number | this): boolean;
+  hasAny(flag: TNumVal | number | this): boolean;
   reset(): this;
   getActiveBasicFlags(): TNumVal[];
   valueOf(): number;
@@ -18,7 +18,7 @@ export function createBitwiseEnumFlagsClass<
   NumVal extends FullEnumObj[StrKey] & number,
 >(enumObject: FullEnumObj, enumName: string = 'Flags') {
   class DynamicBitwiseEnumFlags implements IBitwiseEnumFlags<NumVal> {
-    protected _value: number;
+    protected readonly _value: number;
 
     constructor(initialValue: NumVal | number = 0) {
       this._value = Number(initialValue);
@@ -39,20 +39,34 @@ export function createBitwiseEnumFlagsClass<
       return `Unknown(${flag})`;
     }
 
+    static getBasicFlagKeys(): StrKey[] {
+      const basicFlagKeys: StrKey[] = [];
+      for (const key in enumObject) {
+        if (!this.isValidFlagKey(key)) continue;
+        const enumMemberValue = enumObject[key as StrKey];
+        if (typeof enumMemberValue !== 'number') continue;
+        if (enumMemberValue === 0) continue;
+        if ((enumMemberValue & (enumMemberValue - 1)) !== 0) continue;
+
+        basicFlagKeys.push(key as StrKey);
+      }
+      return basicFlagKeys;
+    }
+
     getValue(): number {
       return this._value;
     }
-    set(flag: NumVal | number): this {
-      this._value |= flag;
-      return this;
+    set(flag: NumVal | number | this): this {
+      if (flag instanceof DynamicBitwiseEnumFlags) flag = flag.getValue();
+      return new DynamicBitwiseEnumFlags(this._value | flag) as typeof this;
     }
-    clear(flag: NumVal | number): this {
-      this._value &= ~flag;
-      return this;
+    clear(flag: NumVal | number | this): this {
+      if (flag instanceof DynamicBitwiseEnumFlags) flag = flag.getValue();
+      return new DynamicBitwiseEnumFlags(this._value & ~flag) as typeof this;
     }
-    toggle(flag: NumVal | number): this {
-      this._value ^= flag;
-      return this;
+    toggle(flag: NumVal | number | this): this {
+      if (flag instanceof DynamicBitwiseEnumFlags) flag = flag.getValue();
+      return new DynamicBitwiseEnumFlags(this._value ^ flag) as typeof this;
     }
     has(flag: NumVal | number): boolean {
       if (flag === 0) return this._value === 0;
@@ -63,8 +77,7 @@ export function createBitwiseEnumFlagsClass<
       return (this._value & flag) !== 0;
     }
     reset(): this {
-      this._value = 0;
-      return this;
+      return new DynamicBitwiseEnumFlags(0) as typeof this;
     }
     getActiveBasicFlags(): NumVal[] {
       const activeFlags: NumVal[] = [];
@@ -144,7 +157,7 @@ export function createBitwiseEnumFlagsClass<
     const value = enumObject[key as StrKey];
     if (typeof value !== 'number') continue;
     Object.defineProperty(DynamicBitwiseEnumFlags, key, {
-      value: value,
+      value: new DynamicBitwiseEnumFlags(value),
       writable: false,
       enumerable: true,
       configurable: false,
@@ -194,14 +207,14 @@ export function createBitwiseEnumFlagsClass<
   // Define the type for the static part of the class (ClassName.EnumMember)
   type StaticEnumProps = {
     readonly [K in StrKey as FullEnumObj[K] extends number ? K
-    : never]: FullEnumObj[K] & number;
+    : never]: InstanceType<BitwiseEnumClassWithAccessorsType> & number;
   };
 
   // Define the type for the dynamic boolean accessors on the instance (instance.EnumMember)
   type InstanceBooleanAccessors = {
     // For each string key K that maps to a numeric value in the enum,
     // add a boolean property K to the instance type.
-    [K in StrKey as FullEnumObj[K] extends 0 ? never
+    readonly [K in StrKey as FullEnumObj[K] extends 0 ? never
     : FullEnumObj[K] extends number ? K
     : never]: boolean;
   } & {
@@ -214,12 +227,9 @@ export function createBitwiseEnumFlagsClass<
   type BitwiseEnumClassWithAccessorsType = {
     new (
       initialValue?: NumVal | number,
-    ): IBitwiseEnumFlags<NumVal> & InstanceBooleanAccessors;
-  } & StaticEnumProps;
+    ): InstanceType<typeof DynamicBitwiseEnumFlags> & InstanceBooleanAccessors;
+  } & Omit<typeof DynamicBitwiseEnumFlags, 'new'> &
+    StaticEnumProps;
 
-  return DynamicBitwiseEnumFlags as Omit<
-    typeof DynamicBitwiseEnumFlags,
-    'new'
-  > &
-    BitwiseEnumClassWithAccessorsType;
+  return DynamicBitwiseEnumFlags as BitwiseEnumClassWithAccessorsType;
 }

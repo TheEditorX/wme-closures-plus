@@ -84,6 +84,64 @@ describe('createBitwiseEnumFlagsClass', () => {
         ).toBe('Unknown(5)'); // 5 is not directly mapped
       });
     });
+
+    describe('getBasicFlagKeys', () => {
+      it('should return keys of basic (power-of-two, non-zero) numeric flags from Permissions enum', () => {
+        const basicKeys = PermsClass.getBasicFlagKeys();
+        // Expected order depends on enum declaration order for string keys
+        expect(basicKeys).toEqual(['Read', 'Write', 'Execute']);
+      });
+
+      it('should return keys of basic flags from a complex enum, filtering non-numeric, zero, and compound values', () => {
+        enum ComplexEnum {
+          ZeroVal = 0,
+          One = 1, // Basic
+          Two = 2, // Basic
+          TextVal = 'Not a number', // Non-numeric
+          Four = 4, // Basic
+          Six = 6, // Compound (2 | 4), not a power of two
+          Eight = 8, // Basic
+        }
+        const ComplexEnumClass = createBitwiseEnumFlagsClass(ComplexEnum);
+        const basicKeys = ComplexEnumClass.getBasicFlagKeys();
+        // String enum keys are generally iterated in declaration order
+        expect(basicKeys).toEqual(['One', 'Two', 'Four', 'Eight']);
+      });
+
+      it('should return an empty array if no basic flags are defined', () => {
+        enum NoBasicEnum {
+          None = 0,
+          Compound1 = 3, // Not power of two
+          Compound2 = 5, // Not power of two
+          Message = 'Hello', // Not numeric
+        }
+        const NoBasicClass = createBitwiseEnumFlagsClass(NoBasicEnum);
+        const basicKeys = NoBasicClass.getBasicFlagKeys();
+        expect(basicKeys).toEqual([]);
+      });
+
+      it('should return an empty array for an enum with only a zero value', () => {
+        enum OnlyZeroEnum {
+          Nada = 0,
+        }
+        const OnlyZeroClass = createBitwiseEnumFlagsClass(OnlyZeroEnum);
+        const basicKeys = OnlyZeroClass.getBasicFlagKeys();
+        expect(basicKeys).toEqual([]);
+      });
+
+      it('should correctly handle an enum with only non-power-of-two numeric values (and zero)', () => {
+        enum NonPowerOfTwoEnum {
+          None = 0,
+          Val3 = 3,
+          Val5 = 5,
+          Val6 = 6,
+        }
+        const NonPowerOfTwoClass =
+          createBitwiseEnumFlagsClass(NonPowerOfTwoEnum);
+        const basicKeys = NonPowerOfTwoClass.getBasicFlagKeys();
+        expect(basicKeys).toEqual([]);
+      });
+    });
   });
 
   describe('Instance Creation and Basic Methods', () => {
@@ -243,33 +301,6 @@ describe('createBitwiseEnumFlagsClass', () => {
       p.set(PermsClass.Read);
       expect(p.Read).toBe(true);
       expect(p.Write).toBe(false);
-    });
-
-    it('setter should set flag if true, clear if false', () => {
-      p.Write = true;
-      expect(p.has(PermsClass.Write)).toBe(true);
-      expect(p.getValue()).toBe(Permissions.Write);
-
-      p.Execute = true;
-      expect(p.has(PermsClass.Execute)).toBe(true);
-      expect(p.getValue()).toBe(Permissions.Write | Permissions.Execute);
-
-      p.Write = false;
-      expect(p.has(PermsClass.Write)).toBe(false);
-      expect(p.getValue()).toBe(Permissions.Execute);
-    });
-
-    it('accessors should work for compound-named flags if they are numeric members', () => {
-      // Permissions.ReadWrite is 3
-      p.ReadWrite = true; // Sets value to 3
-      expect(p.getValue()).toBe(3);
-      expect(p.ReadWrite).toBe(true); // has(3) is true
-      expect(p.Read).toBe(true);
-      expect(p.Write).toBe(true);
-
-      p.ReadWrite = false; // Clears value 3 (i.e., clears Read and Write if set)
-      expect(p.getValue()).toBe(0);
-      expect(p.ReadWrite).toBe(false);
     });
 
     describe('Accessor for None (Zero Value Flag)', () => {
