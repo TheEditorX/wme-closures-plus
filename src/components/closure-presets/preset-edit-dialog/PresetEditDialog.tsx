@@ -10,6 +10,7 @@ import {
   STEP_SUMMARY_SYMBOL,
 } from './consts';
 import { PresetEditDialogData } from './interfaces';
+import { ClosureDetailsStep } from './steps/ClosureDetailsStep';
 import { PresetInformationStep } from './steps/PresetInformationStep';
 
 interface CreatePresetModeProps {
@@ -75,7 +76,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
             name: 'inbox',
             color: 'var(--promotion_variant)',
           },
-          content: null,
+          content: <ClosureDetailsStep />,
           actions: (data) => (
             <>
               <StepperNextButton disabled={!data.startDate || !data.endTime}>
