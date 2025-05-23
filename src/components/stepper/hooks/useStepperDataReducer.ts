@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { ActionDispatch, useReducer } from 'react';
+import { deepMerge } from '../../../utils';
 import { StepId } from '../types';
 
 interface SetStepDataAction<K extends StepId, D> {
@@ -44,7 +45,10 @@ function stepperDataReducer<
 >(state: D, action: AnyAction) {
   switch (action.type) {
     case 'SET_STEP':
-      return { ...state, [action.stepId]: action.data };
+      return {
+        ...state,
+        [action.stepId]: deepMerge(state[action.stepId], action.data),
+      };
     case 'CLEAR_STEP':
       return { ...state, [action.stepId]: {} };
     case 'CLEAR_ALL':
