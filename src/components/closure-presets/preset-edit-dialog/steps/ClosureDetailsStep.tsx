@@ -45,6 +45,7 @@ export function ClosureDetailsStep() {
           }}
           style={{
             display: 'flex',
+            marginBottom: 'var(--space-always-xs, 8px)',
           }}
         >
           <Toggle
