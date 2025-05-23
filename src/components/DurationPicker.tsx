@@ -3,7 +3,7 @@ import { ComponentProps } from 'react';
 
 interface DurationPickerProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
-  label: string;
+  label?: string;
   value?: number;
   onChange?: (value: number) => void;
 }
