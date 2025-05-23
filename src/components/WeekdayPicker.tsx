@@ -1,50 +1,26 @@
 import { Toggle, ToggleGroup } from '@base-ui-components/react';
-import { cx } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import styled from '@emotion/styled';
-import { WeekdayFlags } from '../enums'; // Assuming WeekdayFlags is imported
+import { WeekdayFlags } from '../enums';
 import { createBlurrableHandler } from '../utils';
-import { WeekdayPickerLabel } from './WeekdayPickerLabel'; // For React.ReactNode
+import { ToggleButton } from './ToggleButton';
+import { WeekdayPickerLabel } from './WeekdayPickerLabel';
 
 const ALL_WEEKDAY_KEYS = WeekdayFlags.getBasicFlagKeys();
 
-const ToggleButton = styled('button')({
-  minWidth: 40,
-  minHeight: 40,
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  borderRadius: '50%',
-  fontFamily: '"Waze Boing", "Waze Boing HB", "Rubik", sans-serif',
-  fontWeight: 500,
+const RoundedToggleButton = styled(ToggleButton)({
+  borderRadius: '100px',
+});
 
-  color: 'var(--cp_toggle_button_color, var(--content_default, #202124))',
-  backgroundColor: 'transparent',
-  border: '1px solid var(--cp_toggle_button_border, var(--hairline, #d5d7db))',
+const rootClass = css({
+  display: 'flex',
+  gap: 'var(--space-always-xxs, 4px)',
+});
+const rootFullWidthClass = css({
+  width: '100%',
 
-  '&:hover': {
-    backgroundColor:
-      'rgb(from var(--cp_toggle_button_color, var(--content_default, #202124)) r g b / 0.04)',
-  },
-  '&:active': {
-    backgroundColor:
-      'rgb(from var(--cp_toggle_button_color, var(--content_default, #202124)) r g b / 0.1)',
-  },
-
-  '&.selected': {
-    backgroundColor:
-      'rgb(from var(--cp_toggle_button_selected_color, var(--primary_variant, #0075e3)) r g b / 0.1)',
-    borderColor:
-      'var(--cp_toggle_button_selected_border, var(--primary, #0075e3))',
-    color: 'var(--cp_toggle_button_selected_color, var(--primary, #0075e3))',
-
-    '&:hover': {
-      backgroundColor:
-        'rgb(from var(--cp_toggle_button_selected_color, var(--primary_variant, #0075e3)) r g b / 0.14)',
-    },
-    '&:active': {
-      backgroundColor:
-        'rgb(from var(--cp_toggle_button_selected_color, var(--primary_variant, #0075e3)) r g b / 0.2)',
-    },
+  '& > *': {
+    flex: 1,
   },
 });
 
@@ -74,6 +50,9 @@ interface CommonWeekdayPickerProps {
    * @default false
    */
   readOnly?: boolean;
+
+  /** Optional flag to make the picker span the full width of its container. */
+  fullWidth?: boolean;
 }
 interface SingleWeekdayPickerProps extends CommonWeekdayPickerProps {
   /**
@@ -157,22 +136,19 @@ export function WeekdayPicker(props: WeekdayPickerProps) {
             }
           : undefined
         }
-        style={{
-          display: 'flex',
-          gap: 'var(--space-always-xxxs, 2px)',
-        }}
+        className={cx(rootClass, props.fullWidth && rootFullWidthClass)}
       >
         {ALL_WEEKDAY_KEYS.map((day) => (
           <Toggle
             key={day}
             value={WeekdayFlags[day].getValue().toString()}
-            render={(props, state) => (
-              <ToggleButton
-                {...props}
+            render={(toggleProps, state) => (
+              <RoundedToggleButton
+                {...toggleProps}
                 className={cx(state.pressed && 'selected')}
               >
-                {day[0]}
-              </ToggleButton>
+                {props.fullWidth ? day.substring(0, 3) : day[0]}
+              </RoundedToggleButton>
             )}
           />
         ))}
