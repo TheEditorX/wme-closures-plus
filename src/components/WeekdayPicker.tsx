@@ -142,6 +142,13 @@ export function WeekdayPicker(props: WeekdayPickerProps) {
         onValueChange={
           props.onChange ?
             (groupValue) => {
+              if (
+                !groupValue &&
+                isSingleSelectMode(props) &&
+                !props.allowDeselect
+              )
+                return;
+
               props.onChange(
                 new WeekdayFlags(
                   groupValue.reduce((acc, flag) => acc | flag, 0),
@@ -172,4 +179,10 @@ export function WeekdayPicker(props: WeekdayPickerProps) {
       </ToggleGroup>
     </div>
   );
+}
+
+function isSingleSelectMode(
+  props: WeekdayPickerProps,
+): props is SingleWeekdayPickerProps {
+  return !props.allowMultiple;
 }
