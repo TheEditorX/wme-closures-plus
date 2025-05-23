@@ -1,3 +1,4 @@
+import { TimeOnly } from '../../../../classes';
 import { WeekdayFlags } from '../../../../enums';
 import {
   STEP_CLOSURE_DETAILS_SYMBOL,
@@ -17,12 +18,12 @@ export type PresetEditDialogData = {
       | null
       | { type: 'CURRENT_DAY' }
       | { type: 'DAY_OF_WEEK'; value: InstanceType<typeof WeekdayFlags> };
-    startTime: string;
+    startTime: TimeOnly;
     endTime:
       | null
       | {
           type: 'FIXED';
-          value: string;
+          value: TimeOnly;
         }
       | {
           type: 'DURATIONAL';

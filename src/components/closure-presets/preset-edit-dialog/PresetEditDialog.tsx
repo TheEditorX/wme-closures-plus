@@ -44,7 +44,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
               ''
             : props.preset.closureDetails.description,
           startDate: null,
-          startTime: '',
+          startTime: null,
           endTime: null,
         },
       }}
