@@ -94,7 +94,7 @@ export function WeekdayPicker(props: WeekdayPickerProps) {
                   color="text"
                   size="xs"
                   onClick={createBlurrableHandler(() =>
-                    props.onChange(WeekdayFlags.All),
+                    props.onChange?.(WeekdayFlags.All),
                   )}
                 >
                   Select all
@@ -103,7 +103,7 @@ export function WeekdayPicker(props: WeekdayPickerProps) {
                   color="text"
                   size="xs"
                   onClick={createBlurrableHandler(() =>
-                    props.onChange(WeekdayFlags.None),
+                    props.onChange?.(WeekdayFlags.None),
                   )}
                 >
                   Select none
