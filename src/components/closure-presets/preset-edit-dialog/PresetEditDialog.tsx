@@ -12,6 +12,7 @@ import {
 import { PresetEditDialogData } from './interfaces';
 import { ClosureDetailsStep } from './steps/ClosureDetailsStep';
 import { PresetInformationStep } from './steps/PresetInformationStep';
+import { SummaryStep } from './steps/SummaryStep';
 
 interface CreatePresetModeProps {
   mode: 'CREATE';
@@ -94,7 +95,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
             name: 'info',
             color: 'var(--primary_variant)',
           },
-          content: null,
+          content: <SummaryStep />,
           actions: () => (
             <>
               <StepperNextButton>Save</StepperNextButton>
