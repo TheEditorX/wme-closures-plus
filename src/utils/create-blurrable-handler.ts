@@ -8,7 +8,7 @@ export function createBlurrableHandler<
   return (e) => {
     // Blur the element to prevent focus retaining
     const target = e.currentTarget;
-    target.blur();
+    target.blur?.();
 
     // Call (and return) the original handler
     return handler?.(e);
