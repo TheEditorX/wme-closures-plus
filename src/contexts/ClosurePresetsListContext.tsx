@@ -1,4 +1,7 @@
-import { ClosurePreset, ClosurePresetMetadata } from 'interfaces/closure-preset';
+import {
+  ClosurePreset,
+  ClosurePresetMetadata,
+} from 'interfaces/closure-preset';
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 
 const PRESETS_DEMO: ClosurePreset[] = [
@@ -79,7 +82,9 @@ export interface ClosurePresetsListContext {
    * @returns A promise that resolves to the created preset.
    * @throws An error if the preset could not be created.
    */
-  createPreset(preset: Exclude<ClosurePreset, ClosurePresetMetadata>): Promise<ClosurePreset>;
+  createPreset(
+    preset: Omit<ClosurePreset, keyof ClosurePresetMetadata>,
+  ): Promise<ClosurePreset>;
 
   /**
    * Updates an existing closure preset in the list.
@@ -87,7 +92,9 @@ export interface ClosurePresetsListContext {
    * @returns A promise that resolves to the updated preset.
    * @throws An error if the preset could not be updated.
    */
-  updatePreset(preset: ClosurePreset): Promise<ClosurePreset>;
+  updatePreset(
+    preset: Omit<ClosurePreset, Exclude<keyof ClosurePresetMetadata, 'id'>>,
+  ): Promise<ClosurePreset>;
 
   /**
    * Deletes a closure preset from the list.

@@ -1,7 +1,9 @@
 import { SyntheticEvent, useState } from 'react';
+import { useClosurePresetsListContext } from '../../contexts';
 import { PresetEditingDialog } from './preset-edit-dialog';
 
 export function CreateNewPresetButton() {
+  const { createPreset } = useClosurePresetsListContext();
   const [isModalShown, setIsModalShown] = useState(false);
 
   const handleClick = (event: SyntheticEvent) => {
@@ -18,6 +20,7 @@ export function CreateNewPresetButton() {
       {isModalShown && (
         <PresetEditingDialog
           mode="CREATE"
+          onComplete={createPreset}
           onCancel={() => setIsModalShown(false)}
         />
       )}
