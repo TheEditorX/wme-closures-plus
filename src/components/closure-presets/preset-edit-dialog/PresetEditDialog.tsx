@@ -1,4 +1,8 @@
-import { ClosurePreset } from 'interfaces/closure-preset';
+import {
+  ClosurePreset,
+  ClosurePresetMetadata,
+} from 'interfaces/closure-preset';
+import { SerializedDateResolver } from 'consts/date-resolvers'; // Assuming this path is correct
 import {
   ModalStepper,
   StepperNextButton,
@@ -24,6 +28,7 @@ interface EditPresetModeProps {
 type AnyModeProps = CreatePresetModeProps | EditPresetModeProps;
 
 type PresetEditingDialogProps = AnyModeProps & {
+  onComplete?(preset: Omit<ClosurePreset, keyof ClosurePresetMetadata>): void;
   onCancel?(): void;
 };
 export function PresetEditingDialog(props: PresetEditingDialogProps) {
@@ -31,7 +36,90 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
     <ModalStepper<PresetEditDialogData>
       size="lg"
       openOnMount
-      onComplete={(data) => console.log(data)}
+      onComplete={(data) => {
+        if (!props.onComplete) {
+          return;
+        }
+
+        const presetInfo = data[STEP_PRESET_INFO_SYMBOL];
+        const closureDetailsData = data[STEP_CLOSURE_DETAILS_SYMBOL];
+
+        let serializedStartDate: SerializedDateResolver;
+        // startDate is guaranteed to be non-null by form validation before this step
+        switch (closureDetailsData.startDate!.type) {
+          case 'CURRENT_DAY':
+            serializedStartDate = { type: 'CURRENT_DATE', args: null };
+            break;
+          case 'DAY_OF_WEEK':
+            // Assuming closureDetailsData.startDate!.value (WeekdayFlags) is compatible
+            // or can be cast to Weekday. A specific conversion function might be needed
+            // if WeekdayFlags and Weekday are not directly assignable.
+            serializedStartDate = {
+              type: 'SPECIFIC_DAY_OF_WEEK',
+              args: {
+                dayOfWeek: closureDetailsData.startDate!.value.getValue(),
+              },
+            };
+            break;
+          default:
+            // Should not happen if form validation is correct and types are exhaustive
+            throw new Error(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              `Invalid startDate type: ${(closureDetailsData.startDate! as any).type}`,
+            );
+        }
+
+        let closureEnd: ClosurePreset['closureDetails']['end'];
+        // endTime is guaranteed to be non-null by form validation
+        switch (closureDetailsData.endTime!.type) {
+          case 'FIXED':
+            closureEnd = {
+              type: 'FIXED',
+              time: {
+                hours: closureDetailsData.endTime!.value.getHours(),
+                minutes: closureDetailsData.endTime!.value.getMinutes(),
+              },
+            };
+            break;
+          case 'DURATIONAL': {
+            const durationInMinutes = closureDetailsData.endTime!.duration;
+            closureEnd = {
+              type: 'DURATIONAL',
+              duration: {
+                hours: Math.floor(durationInMinutes / 60),
+                minutes: durationInMinutes % 60,
+              },
+            };
+            break;
+          }
+          default:
+            // Should not happen if form validation is correct and types are exhaustive
+            throw new Error(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              `Invalid endTime type: ${(closureDetailsData.endTime! as any).type}`,
+            );
+        }
+
+        const closureStartTime =
+          closureDetailsData.startTime ?
+            {
+              hours: closureDetailsData.startTime.getHours(),
+              minutes: closureDetailsData.startTime.getMinutes(),
+            }
+          : undefined;
+
+        props.onComplete({
+          ...('preset' in props ? props.preset : {}),
+          name: presetInfo.name,
+          description: presetInfo.description,
+          closureDetails: {
+            description: closureDetailsData.description, // Can be "" or undefined
+            startDate: serializedStartDate,
+            startTime: closureStartTime,
+            end: closureEnd,
+          },
+        } satisfies Omit<ClosurePreset, keyof ClosurePresetMetadata>);
+      }}
       onCancelled={props.onCancel}
       title={props.mode === 'CREATE' ? 'Create new preset' : 'Edit preset'}
       initialData={{
