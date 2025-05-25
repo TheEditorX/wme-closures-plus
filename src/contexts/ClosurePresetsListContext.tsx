@@ -29,7 +29,8 @@ const PRESETS_DEMO: ClosurePreset[] = [
   {
     id: '2',
     name: 'Construction',
-    description: 'This template defines a closure due to an overnight construction',
+    description:
+      'This template defines a closure due to an overnight construction',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     closureDetails: {
@@ -47,7 +48,7 @@ const PRESETS_DEMO: ClosurePreset[] = [
         time: {
           hours: 5,
           minutes: 0,
-        }
+        },
       },
     },
   },
@@ -123,7 +124,9 @@ const ClosurePresetsListContext = createContext<ClosurePresetsListContext>({
 interface ClosurePresetsListProviderProps {
   children: ReactNode;
 }
-export function ClosurePresetsListProvider({ children }: ClosurePresetsListProviderProps) {
+export function ClosurePresetsListProvider({
+  children,
+}: ClosurePresetsListProviderProps) {
   const [presets, setPresets] = useState<ClosurePreset[]>(PRESETS_DEMO);
 
   const contextData: ClosurePresetsListContext = useMemo(() => {
@@ -142,20 +145,22 @@ export function ClosurePresetsListProvider({ children }: ClosurePresetsListProvi
       deletePreset: async (presetId) => {
         throw new Error('Not implemented');
       },
-    }
+    };
   }, [presets]);
 
   return (
     <ClosurePresetsListContext value={contextData}>
       {children}
     </ClosurePresetsListContext>
-  )
+  );
 }
 
 export function useClosurePresetsListContext(): ClosurePresetsListContext {
   const context = useContext(ClosurePresetsListContext);
   if (!context) {
-    throw new Error('useClosurePresetsListContext must be used within a ClosurePresetsListProvider');
+    throw new Error(
+      'useClosurePresetsListContext must be used within a ClosurePresetsListProvider',
+    );
   }
   return context;
 }
