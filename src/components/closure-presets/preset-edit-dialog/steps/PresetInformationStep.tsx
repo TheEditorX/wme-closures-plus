@@ -27,7 +27,7 @@ export function PresetInformationStep() {
         label="Preset description"
         placeholder="Daily closures on weekdays for roadworks starting at 23:00 and ending 05:00 next morning"
         value={description}
-        onChange={(e: SyntheticEvent<HTMLInputElement, InputEvent>) =>
+        onChange={(e: SyntheticEvent<HTMLTextAreaElement, InputEvent>) =>
           setDescription(e.currentTarget.value)
         }
       />
