@@ -224,7 +224,15 @@ export function ClosureDetailsStep() {
                 })
               }
             />
-          : endTime?.type === 'DURATIONAL' && <DurationPicker />}
+          : endTime?.type === 'DURATIONAL' && (
+              <DurationPicker
+                value={endTime.duration}
+                onChange={(value) =>
+                  setEndTime({ type: 'DURATIONAL', duration: value })
+                }
+              />
+            )
+          }
         </div>
       </TwoColumnsGrid>
     </PresetEditForm>
