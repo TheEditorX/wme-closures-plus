@@ -62,6 +62,9 @@ export function ClosureDetailsStep() {
             marginBottom: 'var(--space-always-xs, 8px)',
           }}
         >
+          {/* add a fictive toggle to prevent from BaseUI selecting the first option by default */}
+          <Toggle style={{ display: 'none' }} value=""></Toggle>
+
           <Toggle
             value="CURRENT_DAY"
             render={
@@ -106,6 +109,9 @@ export function ClosureDetailsStep() {
               marginBottom: 'var(--space-always-xs, 8px)',
             }}
           >
+            {/* add a fictive toggle to prevent from BaseUI selecting the first option by default */}
+            <Toggle style={{ display: 'none' }} value=""></Toggle>
+
             <Toggle
               value="IMMEDIATE"
               render={
