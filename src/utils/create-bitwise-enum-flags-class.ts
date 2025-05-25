@@ -185,6 +185,8 @@ export function createBitwiseEnumFlagsClass<
         enumerable: true,
         configurable: true,
       });
+
+      continue;
     }
 
     Object.defineProperty(DynamicBitwiseEnumFlags.prototype, key, {
