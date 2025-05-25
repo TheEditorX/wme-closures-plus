@@ -20,7 +20,10 @@ export function CreateNewPresetButton() {
       {isModalShown && (
         <PresetEditingDialog
           mode="CREATE"
-          onComplete={createPreset}
+          onComplete={(preset) => {
+            createPreset(preset);
+            setIsModalShown(false);
+          }}
           onCancel={() => setIsModalShown(false)}
         />
       )}
