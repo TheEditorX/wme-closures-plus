@@ -18,7 +18,7 @@ export function PresetListCardMenu({ preset }: PresetListCardMenuProps) {
   return (
     <>
       <wz-menu fixed ref={menuRef}>
-        <wz-menu-item>
+        <wz-menu-item style={{ display: 'hidden' }}>
           <i className="w-icon w-icon-pencil" /> Edit
         </wz-menu-item>
         <wz-menu-item onClick={() => deletePreset(preset.id)}>
