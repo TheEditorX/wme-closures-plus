@@ -6,7 +6,9 @@ export function deepMerge<T>(target: T, ...sources: Partial<T>[]): T {
       if (source[key] instanceof Object && !Array.isArray(source[key])) {
         if (!target[key] || isInstance(target[key]) || isInstance(source[key]))
           target[key] = source[key];
-        else deepMerge(target[key], source[key]);
+        else if (target[key] instanceof Object && !Array.isArray(target[key]))
+          deepMerge(target[key], source[key]);
+        else target[key] = source[key];
       } else {
         target[key] = source[key];
       }
