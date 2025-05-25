@@ -18,10 +18,23 @@ export function PresetListCardMenu({ preset }: PresetListCardMenuProps) {
   return (
     <>
       <wz-menu fixed ref={menuRef}>
-        <wz-menu-item style={{ display: 'hidden' }}>
+        <wz-menu-item style={{ display: 'none' }}>
           <i className="w-icon w-icon-pencil" /> Edit
         </wz-menu-item>
-        <wz-menu-item onClick={() => deletePreset(preset.id)}>
+        <wz-menu-item
+          ref={(el: HTMLElement) => {
+            if (!el) return;
+
+            const handler = async () => {
+              await deletePreset(preset.id);
+            };
+
+            el.addEventListener('click', handler);
+            return () => {
+              el.removeEventListener('click', handler);
+            };
+          }}
+        >
           <i className="w-icon w-icon-trash" /> Delete
         </wz-menu-item>
       </wz-menu>
