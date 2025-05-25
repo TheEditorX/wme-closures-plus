@@ -55,6 +55,9 @@ export function ClosureDetailsStep() {
                   type: 'DAY_OF_WEEK',
                   value: new WeekdayFlags(0),
                 });
+              default:
+                console.warn(`Unexpected start date type: ${value}`);
+                return;
             }
           }}
           style={{
@@ -169,10 +172,9 @@ export function ClosureDetailsStep() {
                 }
                 case 'DURATIONAL':
                   return setEndTime({ type: 'DURATIONAL', duration: NaN });
-              }
-              setStartTimeMode(value);
-              if (value === 'FIXED' && !startTime) {
-                setStartTime(new TimeOnly());
+                default:
+                  console.warn(`Unexpected end time type: ${value}`);
+                  break;
               }
             }}
             style={{
