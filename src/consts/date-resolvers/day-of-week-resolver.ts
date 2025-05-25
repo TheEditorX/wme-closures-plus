@@ -3,7 +3,8 @@ import { createDateResolver } from './date-resolver';
 import { DateOnly } from 'classes';
 
 interface DayOfWeekResolverArgs {
-  dayOfWeek: Weekday;
+  /** The numeric representation of the day(s) of the week, to be used with the {@link WeekdayFlags} bitwise enum. */
+  dayOfWeek: number;
 }
 
 function validateDayOfWeek(dayOfWeek: Weekday): boolean {
