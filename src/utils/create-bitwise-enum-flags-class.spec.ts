@@ -311,6 +311,16 @@ describe('createBitwiseEnumFlagsClass', () => {
         const pR = new PermsClass(PermsClass.Read); // value is 1
         expect(pR.None).toBe(false);
       });
+
+      it('getter for "None" should not have a setter', () => {
+        const descriptor = Object.getOwnPropertyDescriptor(
+          PermsClass.prototype,
+          'None',
+        );
+        expect(descriptor).toBeDefined();
+        expect(descriptor!.set).toBeUndefined(); // None should NOT have a setter
+        expect(descriptor!.get).toBeDefined(); // But should have a getter
+      });
     });
   });
 
