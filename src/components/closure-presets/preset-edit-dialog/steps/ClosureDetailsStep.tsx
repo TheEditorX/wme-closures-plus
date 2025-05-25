@@ -102,6 +102,8 @@ export function ClosureDetailsStep() {
               setStartTimeMode(value);
               if (value === 'FIXED' && !startTime) {
                 setStartTime(new TimeOnly());
+              } else if (value === 'IMMEDIATE') {
+                setStartTime(null);
               }
             }}
             style={{
