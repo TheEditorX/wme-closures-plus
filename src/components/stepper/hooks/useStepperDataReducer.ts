@@ -45,9 +45,11 @@ function stepperDataReducer<
 >(state: D, action: AnyAction) {
   switch (action.type) {
     case 'SET_STEP':
+      // clone first to keep the previous state immutable
+      const mergedData = deepMerge({}, state[action.stepId], action.data);
       return {
         ...state,
-        [action.stepId]: deepMerge(state[action.stepId], action.data),
+        [action.stepId]: mergedData,
       };
     case 'CLEAR_STEP':
       return { ...state, [action.stepId]: {} };
