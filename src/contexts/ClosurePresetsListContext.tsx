@@ -137,13 +137,54 @@ export function ClosurePresetsListProvider({
       isReadOnly: false,
 
       createPreset: async (preset) => {
-        throw new Error('Not implemented');
+        // set the id, createdAt and updatedAt fields
+        const newPreset: ClosurePreset = {
+          ...preset,
+          id: Math.random().toString(36).substring(2, 15),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+
+        // add the new preset to the list
+        setPresets((prevPresets) => [...prevPresets, newPreset]);
+        return newPreset;
       },
       updatePreset: async (preset) => {
-        throw new Error('Not implemented');
+        // find the preset to update
+        const index = presets.findIndex((p) => p.id === preset.id);
+        if (index === -1) {
+          throw new Error(`Preset with id ${preset.id} not found`);
+        }
+
+        // create a new preset object with updated fields
+        const updatedPreset: ClosurePreset = {
+          ...presets[index],
+          ...preset,
+          updatedAt: new Date().toISOString(),
+        };
+
+        // update the preset in the list
+        setPresets((prevPresets) => {
+          const newPresets = [...prevPresets];
+          newPresets[index] = updatedPreset;
+          return newPresets;
+        });
+
+        return updatedPreset;
       },
       deletePreset: async (presetId) => {
-        throw new Error('Not implemented');
+        // find the preset to delete
+        const index = presets.findIndex((p) => p.id === presetId);
+        if (index === -1) {
+          throw new Error(`Preset with id ${presetId} not found`);
+        }
+
+        // remove the preset from the list
+        setPresets((prevPresets) => {
+          const newPresets = [...prevPresets];
+          newPresets.splice(index, 1);
+          return newPresets;
+        });
       },
     };
   }, [presets]);
