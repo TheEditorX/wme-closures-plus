@@ -44,13 +44,14 @@ function stepperDataReducer<
   D extends Record<StepId, any> = Record<StepId, any>,
 >(state: D, action: AnyAction) {
   switch (action.type) {
-    case 'SET_STEP':
+    case 'SET_STEP': {
       // clone first to keep the previous state immutable
       const mergedData = deepMerge({}, state[action.stepId], action.data);
       return {
         ...state,
         [action.stepId]: mergedData,
       };
+    }
     case 'CLEAR_STEP':
       return { ...state, [action.stepId]: {} };
     case 'CLEAR_ALL':
