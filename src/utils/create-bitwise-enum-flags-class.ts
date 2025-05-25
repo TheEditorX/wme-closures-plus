@@ -194,13 +194,6 @@ export function createBitwiseEnumFlagsClass<
         // `this` will be the instance
         return this.has(flagNumericValue as NumVal);
       },
-      set: function (this: DynamicBitwiseEnumFlags, value: boolean) {
-        if (value) {
-          this.set(flagNumericValue as NumVal);
-        } else {
-          this.clear(flagNumericValue as NumVal);
-        }
-      },
       enumerable: true, // So these properties show up in Object.keys(), for...in
       configurable: true, // Allows them to be deleted or reconfigured if needed
     });
