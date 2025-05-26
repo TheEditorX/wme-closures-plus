@@ -68,13 +68,17 @@ export function createBitwiseEnumFlagsClass<
       if (flag instanceof DynamicBitwiseEnumFlags) flag = flag.getValue();
       return new DynamicBitwiseEnumFlags(this._value ^ flag) as typeof this;
     }
-    has(flag: NumVal | number): boolean {
-      if (flag === 0) return this._value === 0;
-      return (this._value & flag) === flag;
+    has(flag: NumVal | number | this): boolean {
+      const flagVal =
+        flag instanceof DynamicBitwiseEnumFlags ? flag.getValue() : flag;
+      if (flagVal === 0) return this._value === 0;
+      return (this._value & flagVal) === flag;
     }
-    hasAny(flag: NumVal | number): boolean {
-      if (flag === 0) return this._value === 0;
-      return (this._value & flag) !== 0;
+    hasAny(flag: NumVal | number | this): boolean {
+      const flagVal =
+        flag instanceof DynamicBitwiseEnumFlags ? flag.getValue() : flag;
+      if (flagVal === 0) return this._value === 0;
+      return (this._value & flagVal) !== 0;
     }
     reset(): this {
       return new DynamicBitwiseEnumFlags(0) as typeof this;
