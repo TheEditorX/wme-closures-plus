@@ -57,7 +57,7 @@ export interface ClosurePresetsListContext {
    * @returns A promise that resolves when the preset has been deleted.
    * @throws An error if the preset could not be deleted.
    */
-  deletePreset(presetId: string): Promise<void>;
+  deletePreset(presetId: ClosurePresetMetadata['id']): Promise<void>;
 }
 const ClosurePresetsListContext = createContext<ClosurePresetsListContext>({
   presets: [],
@@ -112,7 +112,7 @@ export function ClosurePresetsListProvider({
           ...preset,
           updatedAt: new Date().toISOString(),
         });
-        return db.closurePresets.get(presetId);
+        return await db.closurePresets.get(presetId);
       },
       deletePreset: async (presetId) => {
         await db.closurePresets.delete(presetId);

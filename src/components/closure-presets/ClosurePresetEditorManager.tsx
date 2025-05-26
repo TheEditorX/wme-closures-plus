@@ -1,10 +1,10 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 import { useClosurePresetsListContext } from '../../contexts';
-import { ClosurePreset } from '../../interfaces/closure-preset';
+import { ClosurePreset, ClosurePresetMetadata } from '../../interfaces';
 import { PresetEditingDialog } from './preset-edit-dialog';
 
 interface ClosurePresetEditorManager {
-  openEditor(presetId?: string): void;
+  openEditor(presetId?: ClosurePresetMetadata['id']): void;
 }
 const ClosurePresetEditorManagerContext =
   createContext<ClosurePresetEditorManager>(null!);
@@ -23,14 +23,14 @@ export function ClosurePresetEditorManagerProvider({
   );
 
   const context = useMemo<ClosurePresetEditorManager>(() => {
-    const getPresetById = (presetId: string) => {
+    const getPresetById = (presetId: ClosurePresetMetadata['id']) => {
       const preset = presets.find((p) => p.id === presetId);
       if (!preset) throw new Error(`Preset with ID ${presetId} not found`);
       return preset;
     };
 
     return {
-      openEditor(presetId?: string) {
+      openEditor(presetId) {
         setEditingPreset(presetId ? getPresetById(presetId) : null);
         setIsEditing(true);
       },
