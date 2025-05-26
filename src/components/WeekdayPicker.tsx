@@ -115,6 +115,7 @@ export function WeekdayPicker(props: WeekdayPickerProps) {
       )}
 
       <ToggleGroup
+        disabled={props.disabled || props.readOnly}
         toggleMultiple={props.allowMultiple}
         defaultValue={props.defaultValue?.getActiveBasicFlags().map(String)}
         value={props.value?.getActiveBasicFlags().map(String)}
