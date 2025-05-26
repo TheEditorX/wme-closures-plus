@@ -18,10 +18,10 @@ export function ClosurePresetDropdown(props: ClosurePresetDropdownProps) {
   const optionsMap = useOptionsMap(options);
 
   const handleChange = (event: Event) => {
-    if (!optionsMap.has((event.target as HTMLSelectElement).value)) return;
-    props.onSelect?.(
-      optionsMap.get((event.target as HTMLSelectElement).value)!,
-    );
+    const targetValue = (event.target as HTMLSelectElement).value;
+    const castedValue = parseInt(targetValue);
+    if (isNaN(castedValue) || !optionsMap.has(castedValue)) return;
+    props.onSelect?.(optionsMap.get(castedValue)!);
   };
 
   return (

@@ -16,7 +16,7 @@ interface ClosureDurationalEnd {
 }
 
 export interface ClosurePresetMetadata {
-  id: string;
+  id: number;
   createdAt: string;
   updatedAt: string;
 }
