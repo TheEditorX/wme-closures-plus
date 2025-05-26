@@ -72,7 +72,7 @@ export function createBitwiseEnumFlagsClass<
       const flagVal =
         flag instanceof DynamicBitwiseEnumFlags ? flag.getValue() : flag;
       if (flagVal === 0) return this._value === 0;
-      return (this._value & flagVal) === flag;
+      return (this._value & flagVal) === flagVal;
     }
     hasAny(flag: NumVal | number | this): boolean {
       const flagVal =
