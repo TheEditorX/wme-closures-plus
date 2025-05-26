@@ -211,7 +211,14 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
           content: <ClosureDetailsStep />,
           actions: (data) => (
             <>
-              <StepperNextButton disabled={!data.startDate || !data.endTime}>
+              <StepperNextButton
+                disabled={
+                  !data.startDate ||
+                  !data.endTime ||
+                  (data.startDate.type === 'DAY_OF_WEEK' &&
+                    !data.startDate.value)
+                }
+              >
                 Next - Summary
               </StepperNextButton>
               <StepperPrevButton color="secondary">Back</StepperPrevButton>
