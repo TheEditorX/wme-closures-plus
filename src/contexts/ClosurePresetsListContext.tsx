@@ -87,7 +87,7 @@ export function ClosurePresetsListProvider({
 
   const contextData: ClosurePresetsListContext = useMemo(() => {
     return {
-      presets: closurePresets,
+      presets: closurePresets ?? [],
       isLoading: !closurePresets,
       error: null,
       isReadOnly: false,
