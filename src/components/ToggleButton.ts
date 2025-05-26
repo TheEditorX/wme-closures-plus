@@ -23,7 +23,7 @@ export const ToggleButton = styled('button')({
       'rgb(from var(--cp_toggle_button_color, var(--content_default, #202124)) r g b / 0.1)',
   },
 
-  '&.selected, &[data-highlighted]': {
+  '&.selected, &[data-pressed]': {
     backgroundColor:
       'rgb(from var(--cp_toggle_button_selected_color, var(--primary_variant, #0075e3)) r g b / 0.1)',
     borderColor:
@@ -51,7 +51,7 @@ export const PositionAwareToggleButton = styled(ToggleButton)({
     borderBottomLeftRadius: 0,
   },
 
-  '&.selected, &[data-highlighted]': {
+  '&.selected, &[data-pressed]': {
     // when selected, show the border of the selected button and hide the border of the following button
     borderRightWidth: 1,
     '& + *': {
