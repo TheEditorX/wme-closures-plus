@@ -16,7 +16,7 @@ export type PresetEditDialogData = {
     description?: string;
     startDate:
       | null
-      | { type: 'CURRENT_DAY' }
+      | { type: 'CURRENT_DATE' }
       | { type: 'DAY_OF_WEEK'; value: InstanceType<typeof WeekdayFlags> };
     startTime?: TimeOnly;
     endTime:

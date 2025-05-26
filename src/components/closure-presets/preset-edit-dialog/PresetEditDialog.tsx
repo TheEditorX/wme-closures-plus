@@ -49,7 +49,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
         let serializedStartDate: SerializedDateResolver;
         // startDate is guaranteed to be non-null by form validation before this step
         switch (closureDetailsData.startDate!.type) {
-          case 'CURRENT_DAY':
+          case 'CURRENT_DATE':
             serializedStartDate = { type: 'CURRENT_DATE', args: null };
             break;
           case 'DAY_OF_WEEK':
@@ -137,7 +137,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
           startDate:
             props.mode === 'CREATE' ? null
             : props.preset.closureDetails.startDate.type === 'CURRENT_DATE' ?
-              { type: 'CURRENT_DAY' }
+              { type: 'CURRENT_DATE' }
             : (
               props.preset.closureDetails.startDate.type ===
               'SPECIFIC_DAY_OF_WEEK'

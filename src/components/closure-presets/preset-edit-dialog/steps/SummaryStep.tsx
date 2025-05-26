@@ -22,7 +22,7 @@ const formatStartDate = (
   startDate: PresetEditDialogData[typeof STEP_CLOSURE_DETAILS_SYMBOL]['startDate'],
 ): string => {
   if (!startDate) return 'Not set';
-  if (startDate.type === 'CURRENT_DAY') return 'Activation Date';
+  if (startDate.type === 'CURRENT_DATE') return 'Activation Date';
   if (startDate.type === 'DAY_OF_WEEK') {
     if (startDate.value instanceof WeekdayFlags) {
       const days: string[] = [];
