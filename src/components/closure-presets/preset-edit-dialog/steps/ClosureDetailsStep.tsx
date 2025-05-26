@@ -48,8 +48,8 @@ export function ClosureDetailsStep() {
           value={[startDate?.type]}
           onValueChange={([value]) => {
             switch (value) {
-              case 'CURRENT_DAY':
-                return setStartDate({ type: 'CURRENT_DAY' });
+              case 'CURRENT_DATE':
+                return setStartDate({ type: 'CURRENT_DATE' });
               case 'DAY_OF_WEEK':
                 return setStartDate({
                   type: 'DAY_OF_WEEK',
@@ -69,7 +69,7 @@ export function ClosureDetailsStep() {
           <Toggle style={{ display: 'none' }} value=""></Toggle>
 
           <Toggle
-            value="CURRENT_DAY"
+            value="CURRENT_DATE"
             render={
               <PositionAwareToggleButton style={{ flex: 1 }}>
                 Activation Date
