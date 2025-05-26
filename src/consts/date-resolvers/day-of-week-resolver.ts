@@ -1,4 +1,4 @@
-import { Weekday } from 'enums';
+import { WeekdayFlags } from 'enums';
 import { createDateResolver } from './date-resolver';
 import { DateOnly } from 'classes';
 
@@ -7,12 +7,22 @@ interface DayOfWeekResolverArgs {
   dayOfWeek: number;
 }
 
-function validateDayOfWeek(dayOfWeek: Weekday): boolean {
-  return Object.values(Weekday).includes(dayOfWeek);
+function dayFlagToDayIndex(dayFlag: number): number {
+  // days are sorted from Sunday to Saturday by bit-position
+  // Sunday being the first bit (00000001), Saturday being the last (01000000)
+
+  // we need to calculate the index of the first set bit
+  for (let i = 0; i < 7; i++) {
+    if (dayFlag & (1 << i)) {
+      return i; // Return the index of the first set bit
+    }
+  }
+
+  return -1; // No bits are set, return -1
 }
 
 function validateArguments(args: DayOfWeekResolverArgs): boolean {
-  return args.dayOfWeek != null && validateDayOfWeek(args.dayOfWeek);
+  return args.dayOfWeek != null;
 }
 
 /**
@@ -33,11 +43,27 @@ export const DAY_OF_WEEK_RESOLVER = createDateResolver(
     }
 
     const { dayOfWeek } = args;
-    const today = new Date();
-    const todayDayOfWeek = today.getUTCDay();
-    const daysUntilNextOccurrence = (dayOfWeek + 7 - todayDayOfWeek) % 7 || 7; // If it's today, go to next week
-    const nextOccurrence = new DateOnly(today);
-    nextOccurrence.setUTCDate(today.getUTCDate() + daysUntilNextOccurrence);
-    return nextOccurrence;
+    const flags = new WeekdayFlags(dayOfWeek);
+
+    const nextOccurrences = flags.getActiveBasicFlags().map((dayFlagValue) => {
+      const dayIndex = dayFlagToDayIndex(dayFlagValue);
+      const today = new Date();
+      const todayDayOfWeek = today.getUTCDay();
+      const daysUntilNextOccurrence = (dayIndex + 7 - todayDayOfWeek) % 7 || 7; // If it's today, go to next week
+      const nextOccurrence = new DateOnly(today);
+      nextOccurrence.setUTCDate(today.getUTCDate() + daysUntilNextOccurrence);
+      return nextOccurrence;
+    });
+
+    if (nextOccurrences.length === 0) {
+      throw new Error(
+        `No valid days of the week found in the provided dayOfWeek: ${dayOfWeek}`,
+      );
+    }
+
+    // Return the earliest next occurrence
+    return nextOccurrences.reduce((earliest, current) => {
+      return earliest < current ? earliest : current;
+    }, nextOccurrences[0]);
   },
 );
