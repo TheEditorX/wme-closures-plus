@@ -1,58 +1,10 @@
+import { useLiveQuery } from 'dexie-react-hooks';
 import {
   ClosurePreset,
   ClosurePresetMetadata,
 } from 'interfaces/closure-preset';
-import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
-
-const PRESETS_DEMO: ClosurePreset[] = [
-  {
-    id: '1',
-    name: 'Accident',
-    description: 'This template defines a closure due to an accident',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    closureDetails: {
-      description: 'Accident on the road',
-      startDate: {
-        type: 'CURRENT_DATE',
-        args: null,
-      },
-      end: {
-        type: 'DURATIONAL',
-        duration: {
-          hours: 2,
-          minutes: 0,
-        },
-      },
-    },
-  },
-  {
-    id: '2',
-    name: 'Construction',
-    description:
-      'This template defines a closure due to an overnight construction',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    closureDetails: {
-      description: 'Road is closed for construction; will reopen tomorrow',
-      startDate: {
-        type: 'CURRENT_DATE',
-        args: null,
-      },
-      startTime: {
-        hours: 22,
-        minutes: 0,
-      },
-      end: {
-        type: 'FIXED',
-        time: {
-          hours: 5,
-          minutes: 0,
-        },
-      },
-    },
-  },
-];
+import { createContext, ReactNode, useContext, useMemo } from 'react';
+import { db } from '../db';
 
 export interface ClosurePresetsListContext {
   /**
@@ -129,67 +81,44 @@ interface ClosurePresetsListProviderProps {
 export function ClosurePresetsListProvider({
   children,
 }: ClosurePresetsListProviderProps) {
-  const [presets, setPresets] = useState<ClosurePreset[]>(PRESETS_DEMO);
+  const closurePresets = useLiveQuery(() =>
+    db.closurePresets.orderBy('name').toArray(),
+  );
 
   const contextData: ClosurePresetsListContext = useMemo(() => {
     return {
-      presets,
-      isLoading: false,
+      presets: closurePresets,
+      isLoading: !closurePresets,
       error: null,
       isReadOnly: false,
 
-      createPreset: async (preset) => {
+      createPreset: async (preset): Promise<ClosurePreset> => {
         // set the id, createdAt and updatedAt fields
-        const newPreset: ClosurePreset = {
+        const newPreset: Omit<ClosurePreset, 'id'> = {
           ...preset,
-          id: Math.random().toString(36).substring(2, 15),
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
 
         // add the new preset to the list
-        setPresets((prevPresets) => [...prevPresets, newPreset]);
-        return newPreset;
+        const id = await db.closurePresets.add(newPreset);
+        return {
+          id,
+          ...newPreset,
+        };
       },
       updatePreset: async (presetId, preset) => {
-        // find the preset to update
-        const index = presets.findIndex((p) => p.id === presetId);
-        if (index === -1) {
-          throw new Error(`Preset with id ${presetId} not found`);
-        }
-
-        // create a new preset object with updated fields
-        const updatedPreset: ClosurePreset = {
-          ...presets[index],
+        await db.closurePresets.update(presetId, {
           ...preset,
           updatedAt: new Date().toISOString(),
-        };
-
-        // update the preset in the list
-        setPresets((prevPresets) => {
-          const newPresets = [...prevPresets];
-          newPresets[index] = updatedPreset;
-          return newPresets;
         });
-
-        return updatedPreset;
+        return db.closurePresets.get(presetId);
       },
       deletePreset: async (presetId) => {
-        // find the preset to delete
-        const index = presets.findIndex((p) => p.id === presetId);
-        if (index === -1) {
-          throw new Error(`Preset with id ${presetId} not found`);
-        }
-
-        // remove the preset from the list
-        setPresets((prevPresets) => {
-          const newPresets = [...prevPresets];
-          newPresets.splice(index, 1);
-          return newPresets;
-        });
+        await db.closurePresets.delete(presetId);
       },
     };
-  }, [presets]);
+  }, [closurePresets]);
 
   return (
     <ClosurePresetsListContext value={contextData}>
