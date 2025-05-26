@@ -6,7 +6,7 @@ interface ClosurePresetsListProps {
   presets: ReadonlyArray<Readonly<ClosurePreset>>;
 }
 export function ClosurePresetsList({ presets }: ClosurePresetsListProps) {
-  if (!presets.length) {
+  if (!presets?.length) {
     return (
       <PresetsListMessage
         title="No presets here yet"
