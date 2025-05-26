@@ -89,6 +89,7 @@ export function ClosureDetailsStep() {
           <WeekdayPicker
             fullWidth
             value={startDate.value}
+            allowMultiple
             onChange={(day) =>
               setStartDate({ type: 'DAY_OF_WEEK', value: day })
             }
