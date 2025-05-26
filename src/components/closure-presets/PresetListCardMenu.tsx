@@ -2,11 +2,13 @@ import { ClosurePreset } from 'interfaces/closure-preset';
 import { SyntheticEvent, useRef } from 'react';
 import { WzMenuElement } from 'types/waze/elements';
 import { useClosurePresetsListContext } from '../../contexts';
+import { useClosurePresetEditorManager } from './ClosurePresetEditorManager';
 
 interface PresetListCardMenuProps {
   preset: ClosurePreset;
 }
 export function PresetListCardMenu({ preset }: PresetListCardMenuProps) {
+  const { openEditor } = useClosurePresetEditorManager();
   const { deletePreset } = useClosurePresetsListContext();
   const menuRef = useRef<WzMenuElement>(null);
 
@@ -18,7 +20,20 @@ export function PresetListCardMenu({ preset }: PresetListCardMenuProps) {
   return (
     <>
       <wz-menu fixed ref={menuRef}>
-        <wz-menu-item style={{ display: 'none' }}>
+        <wz-menu-item
+          ref={(el: HTMLElement) => {
+            if (!el) return;
+
+            const handler = () => {
+              openEditor(preset.id);
+            };
+
+            el.addEventListener('click', handler);
+            return () => {
+              el.removeEventListener('click', handler);
+            };
+          }}
+        >
           <i className="w-icon w-icon-pencil" /> Edit
         </wz-menu-item>
         <wz-menu-item

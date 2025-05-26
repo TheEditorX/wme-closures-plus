@@ -89,12 +89,14 @@ export interface ClosurePresetsListContext {
 
   /**
    * Updates an existing closure preset in the list.
-   * @param preset The preset to be updated.
+   * @param presetId The preset ID to be updated.
+   * @param preset The new preset data to update..
    * @returns A promise that resolves to the updated preset.
    * @throws An error if the preset could not be updated.
    */
   updatePreset(
-    preset: Omit<ClosurePreset, Exclude<keyof ClosurePresetMetadata, 'id'>>,
+    presetId: ClosurePresetMetadata['id'],
+    preset: Omit<ClosurePreset, keyof ClosurePresetMetadata>,
   ): Promise<ClosurePreset>;
 
   /**
@@ -149,11 +151,11 @@ export function ClosurePresetsListProvider({
         setPresets((prevPresets) => [...prevPresets, newPreset]);
         return newPreset;
       },
-      updatePreset: async (preset) => {
+      updatePreset: async (presetId, preset) => {
         // find the preset to update
-        const index = presets.findIndex((p) => p.id === preset.id);
+        const index = presets.findIndex((p) => p.id === presetId);
         if (index === -1) {
-          throw new Error(`Preset with id ${preset.id} not found`);
+          throw new Error(`Preset with id ${presetId} not found`);
         }
 
         // create a new preset object with updated fields

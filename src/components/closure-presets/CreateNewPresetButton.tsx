@@ -1,32 +1,17 @@
-import { SyntheticEvent, useState } from 'react';
-import { useClosurePresetsListContext } from '../../contexts';
-import { PresetEditingDialog } from './preset-edit-dialog';
+import { SyntheticEvent } from 'react';
+import { useClosurePresetEditorManager } from './ClosurePresetEditorManager';
 
 export function CreateNewPresetButton() {
-  const { createPreset } = useClosurePresetsListContext();
-  const [isModalShown, setIsModalShown] = useState(false);
+  const { openEditor } = useClosurePresetEditorManager();
 
   const handleClick = (event: SyntheticEvent) => {
     if (event.currentTarget instanceof HTMLElement) event.currentTarget.blur();
-    setIsModalShown(true);
+    openEditor();
   };
 
   return (
-    <>
-      <wz-button size="xs" color="text" onClick={handleClick}>
-        + Create preset
-      </wz-button>
-
-      {isModalShown && (
-        <PresetEditingDialog
-          mode="CREATE"
-          onComplete={(preset) => {
-            createPreset(preset);
-            setIsModalShown(false);
-          }}
-          onCancel={() => setIsModalShown(false)}
-        />
-      )}
-    </>
+    <wz-button size="xs" color="text" onClick={handleClick}>
+      + Create preset
+    </wz-button>
   );
 }

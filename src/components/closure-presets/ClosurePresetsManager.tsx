@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { ClosurePresetEditorManagerProvider } from './ClosurePresetEditorManager';
 import { CreateNewPresetButton } from './CreateNewPresetButton';
 import { PresetsListMessage } from './PresetsListMessage';
 import { ClosurePresetsList } from './ClosurePresetsList';
@@ -18,19 +19,21 @@ export function ClosurePresetsManager() {
   const closurePresets = useClosurePresetsListContext();
 
   return (
-    <SectionContainer>
-      <SectionHeader>
-        <wz-subhead5>Closure Presets</wz-subhead5>
-        {!closurePresets.isReadOnly && <CreateNewPresetButton />}
-      </SectionHeader>
+    <ClosurePresetEditorManagerProvider>
+      <SectionContainer>
+        <SectionHeader>
+          <wz-subhead5>Closure Presets</wz-subhead5>
+          {!closurePresets.isReadOnly && <CreateNewPresetButton />}
+        </SectionHeader>
 
-      {closurePresets.error ?
-        <PresetsListMessage
-          isSlashed
-          title="Closure Presets Not Supported"
-          message="This browser lacks the necessary features to save and load closure presets"
-        />
-      : <ClosurePresetsList presets={closurePresets.presets} />}
-    </SectionContainer>
+        {closurePresets.error ?
+          <PresetsListMessage
+            isSlashed
+            title="Closure Presets Not Supported"
+            message="This browser lacks the necessary features to save and load closure presets"
+          />
+        : <ClosurePresetsList presets={closurePresets.presets} />}
+      </SectionContainer>
+    </ClosurePresetEditorManagerProvider>
   );
 }

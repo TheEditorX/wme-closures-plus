@@ -2,7 +2,9 @@ import {
   ClosurePreset,
   ClosurePresetMetadata,
 } from 'interfaces/closure-preset';
-import { SerializedDateResolver } from 'consts/date-resolvers'; // Assuming this path is correct
+import { SerializedDateResolver } from 'consts/date-resolvers';
+import { TimeOnly } from '../../../classes';
+import { WeekdayFlags } from '../../../enums'; // Assuming this path is correct
 import {
   ModalStepper,
   StepperNextButton,
@@ -132,9 +134,50 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
             props.mode === 'CREATE' ?
               ''
             : props.preset.closureDetails.description,
-          startDate: null,
-          startTime: null,
-          endTime: null,
+          startDate:
+            props.mode === 'CREATE' ? null
+            : props.preset.closureDetails.startDate.type === 'CURRENT_DATE' ?
+              { type: 'CURRENT_DAY' }
+            : (
+              props.preset.closureDetails.startDate.type ===
+              'SPECIFIC_DAY_OF_WEEK'
+            ) ?
+              {
+                type: 'DAY_OF_WEEK',
+                value: new WeekdayFlags(
+                  props.preset.closureDetails.startDate.args.dayOfWeek,
+                ),
+              }
+            : null,
+          startTime:
+            props.mode === 'CREATE' || !props.preset.closureDetails.startTime ?
+              null
+            : new TimeOnly(
+                props.preset.closureDetails.startTime.hours,
+                props.preset.closureDetails.startTime.minutes,
+                0,
+                0,
+              ),
+          endTime:
+            props.mode === 'CREATE' ? null
+            : props.preset.closureDetails.end.type === 'FIXED' ?
+              {
+                type: 'FIXED',
+                value: new TimeOnly(
+                  props.preset.closureDetails.end.time.hours,
+                  props.preset.closureDetails.end.time.minutes,
+                  0,
+                  0,
+                ),
+              }
+            : props.preset.closureDetails.end.type === 'DURATIONAL' ?
+              {
+                type: 'DURATIONAL',
+                duration:
+                  props.preset.closureDetails.end.duration.hours * 60 +
+                  props.preset.closureDetails.end.duration.minutes,
+              }
+            : null,
         },
       }}
       steps={[
