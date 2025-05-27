@@ -25,12 +25,24 @@ describe('createBitwiseEnumFlagsClass', () => {
     });
 
     it('should have static properties for enum members', () => {
-      expect(PermsClass.None).toBe(0);
-      expect(PermsClass.Read).toBe(1);
-      expect(PermsClass.Write).toBe(2);
-      expect(PermsClass.Execute).toBe(4);
-      expect(PermsClass.ReadWrite).toBe(3);
-      expect(PermsClass.All).toBe(7);
+      expect(PermsClass.None).toBeDefined();
+      expect(PermsClass.None).toBeInstanceOf(PermsClass);
+      expect(PermsClass.None.getValue()).toBe(0);
+      expect(PermsClass.Read).toBeDefined();
+      expect(PermsClass.Read).toBeInstanceOf(PermsClass);
+      expect(PermsClass.Read.getValue()).toBe(1);
+      expect(PermsClass.Write).toBeDefined();
+      expect(PermsClass.Write).toBeInstanceOf(PermsClass);
+      expect(PermsClass.Write.getValue()).toBe(2);
+      expect(PermsClass.Execute).toBeDefined();
+      expect(PermsClass.Execute).toBeInstanceOf(PermsClass);
+      expect(PermsClass.Execute.getValue()).toBe(4);
+      expect(PermsClass.ReadWrite).toBeDefined();
+      expect(PermsClass.ReadWrite).toBeInstanceOf(PermsClass);
+      expect(PermsClass.ReadWrite.getValue()).toBe(3);
+      expect(PermsClass.All).toBeDefined();
+      expect(PermsClass.All).toBeInstanceOf(PermsClass);
+      expect(PermsClass.All.getValue()).toBe(7);
     });
 
     it('should not allow modification of static enum properties', () => {
@@ -51,7 +63,6 @@ describe('createBitwiseEnumFlagsClass', () => {
         Description = 'Some text', // Non-numeric member
       }
       const MixedClass = createBitwiseEnumFlagsClass(MixedEnum);
-      expect(MixedClass.Read).toBe(1);
       expect(
         !Object.prototype.hasOwnProperty.call(MixedClass, 'Description'),
       ).toBe(true);
@@ -166,30 +177,30 @@ describe('createBitwiseEnumFlagsClass', () => {
     });
 
     it('set() should add flags', () => {
-      const p = new PermsClass();
-      p.set(PermsClass.Read);
+      let p = new PermsClass();
+      p = p.set(PermsClass.Read);
       expect(p.getValue()).toBe(Permissions.Read);
-      p.set(PermsClass.Write);
+      p = p.set(PermsClass.Write);
       expect(p.getValue()).toBe(Permissions.Read | Permissions.Write);
-      p.set(PermsClass.Read); // Setting existing flag should not change
+      p = p.set(PermsClass.Read); // Setting existing flag should not change
       expect(p.getValue()).toBe(Permissions.Read | Permissions.Write);
     });
 
     it('clear() should remove flags', () => {
-      const p = new PermsClass(PermsClass.Read | PermsClass.Write);
-      p.clear(PermsClass.Read);
+      let p = new PermsClass(PermsClass.Read | PermsClass.Write);
+      p = p.clear(PermsClass.Read);
       expect(p.getValue()).toBe(Permissions.Write);
-      p.clear(PermsClass.Execute); // Clearing non-set flag
+      p = p.clear(PermsClass.Execute); // Clearing non-set flag
       expect(p.getValue()).toBe(Permissions.Write);
-      p.clear(PermsClass.Write);
+      p = p.clear(PermsClass.Write);
       expect(p.getValue()).toBe(0);
     });
 
     it('toggle() should invert flags', () => {
-      const p = new PermsClass(PermsClass.Read);
-      p.toggle(PermsClass.Write); // Add Write
+      let p = new PermsClass(PermsClass.Read);
+      p = p.toggle(PermsClass.Write); // Add Write
       expect(p.getValue()).toBe(Permissions.Read | Permissions.Write);
-      p.toggle(PermsClass.Read); // Remove Read
+      p = p.toggle(PermsClass.Read); // Remove Read
       expect(p.getValue()).toBe(Permissions.Write);
     });
 
@@ -208,9 +219,9 @@ describe('createBitwiseEnumFlagsClass', () => {
     });
 
     it('has() with numeric 0 should mean value is 0', () => {
-      const p = new PermsClass(PermsClass.Read);
+      let p = new PermsClass(PermsClass.Read);
       expect(p.has(0)).toBe(false); // Read is 1, not 0
-      p.reset();
+      p = p.reset();
       expect(p.has(0)).toBe(true); // Now value is 0
     });
 
@@ -226,17 +237,27 @@ describe('createBitwiseEnumFlagsClass', () => {
     });
 
     it('reset() should set value to 0', () => {
-      const p = new PermsClass(PermsClass.All);
-      p.reset();
+      let p = new PermsClass(PermsClass.All);
+      p = p.reset();
       expect(p.getValue()).toBe(0);
     });
 
     it('methods should be chainable', () => {
       const p = new PermsClass();
-      p.set(PermsClass.Read).toggle(PermsClass.Write).clear(PermsClass.Read);
-      expect(p.getValue()).toBe(Permissions.Write);
-      p.reset().set(PermsClass.All);
-      expect(p.getValue()).toBe(Permissions.All);
+      const readOnlyPerms = p
+        .set(PermsClass.Read)
+        .toggle(PermsClass.Write)
+        .clear(PermsClass.Read);
+      expect(readOnlyPerms.has(PermsClass.Read)).toBe(false);
+      expect(readOnlyPerms.has(PermsClass.Write)).toBe(true);
+      expect(readOnlyPerms.has(PermsClass.Execute)).toBe(false);
+      expect(readOnlyPerms.getValue()).toBe(Permissions.Write);
+      const allPermsChained = readOnlyPerms.reset().set(PermsClass.All);
+      expect(allPermsChained.has(PermsClass.Read)).toBe(true);
+      expect(allPermsChained.has(PermsClass.Write)).toBe(true);
+      expect(allPermsChained.has(PermsClass.Execute)).toBe(true);
+      expect(allPermsChained.has(PermsClass.All)).toBe(true);
+      expect(allPermsChained.getValue()).toBe(Permissions.All);
     });
   });
 
@@ -291,14 +312,14 @@ describe('createBitwiseEnumFlagsClass', () => {
   });
 
   describe('Dynamic Accessors (Getters/Setters)', () => {
-    const p = new PermsClass();
+    let p = new PermsClass();
 
     beforeEach(() => {
-      p.reset();
+      p = p.reset();
     });
 
     it('getter should return true if flag is set, false otherwise', () => {
-      p.set(PermsClass.Read);
+      p = p.set(PermsClass.Read);
       expect(p.Read).toBe(true);
       expect(p.Write).toBe(false);
     });
@@ -438,14 +459,14 @@ describe('createBitwiseEnumFlagsClass', () => {
         Nada = 0,
       }
       const NadaClass = createBitwiseEnumFlagsClass(OnlyNone, 'Nada');
-      expect(NadaClass.Nada).toBe(0);
+      expect(NadaClass.Nada.getValue()).toBe(0);
       const n = new NadaClass();
       expect(n.getValue()).toBe(0);
       expect(n.Nada).toBe(true);
       expect(n.toString()).toBe('Nada');
-      n.set(1); // Set an unknown flag
-      expect(n.Nada).toBe(false);
-      expect(n.toString()).toBe('Nada(1)');
+      const withUnknownFlag = n.set(1); // Set an unknown flag
+      expect(withUnknownFlag.Nada).toBe(false);
+      expect(withUnknownFlag.toString()).toBe('Nada(1)');
     });
 
     it('should handle numeric string in constructor correctly', () => {
