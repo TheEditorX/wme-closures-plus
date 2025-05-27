@@ -58,7 +58,7 @@ export const IntervalRecurringMode: RecurringMode<IntervalModeFields> = {
           case IntervalAnchorPoint.EndOfPreviousClosure:
             return nextClosureEndTime;
           default:
-            return nextClosureEndTime;
+            throw new Error(`Unexpected anchor point: ${targetAnchorPoint}`);
         }
       })();
 
