@@ -90,7 +90,7 @@ export function IntervalConfigForm(props: RecurringModeFormProps) {
 
         <wz-option
           value={IntervalAnchorPoint.StartOfPreviousClosure}
-          disabled={closureDuration > intervalBetweenClosures}
+          disabled={closureDuration >= intervalBetweenClosures}
         >
           Start of previous closure
         </wz-option>
