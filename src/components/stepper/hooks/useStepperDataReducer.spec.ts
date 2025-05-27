@@ -22,16 +22,24 @@ describe('useStepperDataReducer', () => {
   });
 
   it("should update specific step's data", () => {
-    const initialData = { step1: 'data1', step2: 'initial data2' };
+    const initialData = {
+      step1: { value: 'data1' },
+      step2: { value: 'initial data2' },
+    };
 
     const { result } = renderHook(() =>
       useStepperDataReducer(['step1', 'step2'], initialData),
     );
     const [, dispatch] = result.current;
 
-    act(() => dispatch({ type: 'SET_STEP', stepId: 'step2', data: 'data2' }));
+    act(() =>
+      dispatch({ type: 'SET_STEP', stepId: 'step2', data: { value: 'data2' } }),
+    );
 
-    expect(result.current[0]).toEqual({ step1: 'data1', step2: 'data2' });
+    expect(result.current[0]).toEqual({
+      step1: { value: 'data1' },
+      step2: { value: 'data2' },
+    });
   });
 
   it("should clear specific step's data", () => {
