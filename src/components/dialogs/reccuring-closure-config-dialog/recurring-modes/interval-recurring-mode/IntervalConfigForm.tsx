@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
 import { RecurringModeFormProps } from '../recurring-mode';
-import { useState, useRef, useImperativeHandle } from 'react';
+import { useState, useRef, useImperativeHandle, SyntheticEvent } from 'react';
 import { DurationPicker } from 'components/DurationPicker';
 import { formatMinutes, createFocusHandler } from 'utils';
+import { IntervalAnchorPoint } from './enums';
+import { IntervalModeFields } from './interval-recurring-mode';
+import { getDefaultAnchorPoint } from './utils';
 
 const DurationsConfigContainer = styled('div')({
   display: 'flex',
@@ -35,14 +38,19 @@ export function IntervalConfigForm(props: RecurringModeFormProps) {
       : NaN,
     );
   const intervalBetweenClosuresInputRef = useRef<HTMLInputElement | null>(null);
+  const [intervalAnchorPoint, setIntervalAnchorPoint] = useState(
+    props.initialFieldValues?.anchorPoint ?? IntervalAnchorPoint.Default,
+  );
 
   useImperativeHandle(
     props.fieldsValuesRef,
-    () => ({
-      closureDuration,
-      intervalBetweenClosures,
-    }),
-    [closureDuration, intervalBetweenClosures],
+    () =>
+      ({
+        closureDuration,
+        intervalBetweenClosures,
+        anchorPoint: intervalAnchorPoint,
+      }) as IntervalModeFields,
+    [closureDuration, intervalAnchorPoint, intervalBetweenClosures],
   );
 
   props.setButtonState(
@@ -69,6 +77,29 @@ export function IntervalConfigForm(props: RecurringModeFormProps) {
         />
       </DurationsConfigContainer>
 
+      <wz-select
+        value={intervalAnchorPoint}
+        onChange={(e: SyntheticEvent<HTMLSelectElement>) =>
+          setIntervalAnchorPoint(e.currentTarget.value as IntervalAnchorPoint)
+        }
+        label="Base next repeat on…"
+      >
+        <wz-option value={IntervalAnchorPoint.Default}>
+          Let Closures+ decide it
+        </wz-option>
+
+        <wz-option
+          value={IntervalAnchorPoint.StartOfPreviousClosure}
+          disabled={closureDuration > intervalBetweenClosures}
+        >
+          Start of previous closure
+        </wz-option>
+
+        <wz-option value={IntervalAnchorPoint.EndOfPreviousClosure}>
+          End of previous closure
+        </wz-option>
+      </wz-select>
+
       <wz-caption>
         Creates multiple closures, each lasting{' '}
         <b>
@@ -88,8 +119,35 @@ export function IntervalConfigForm(props: RecurringModeFormProps) {
             </wz-a>
           }
         </b>{' '}
-        within the overall start and end times.
+        {formatAnchorPointLabel(
+          intervalAnchorPoint,
+          closureDuration,
+          intervalBetweenClosures,
+        )}
+        , within the overall start and end times.
       </wz-caption>
     </div>
   );
+}
+
+function formatAnchorPointLabel(
+  anchorPoint: IntervalAnchorPoint,
+  closureDuration: number,
+  intervalBetweenClosures: number,
+): string {
+  if (anchorPoint === IntervalAnchorPoint.Default) {
+    anchorPoint = getDefaultAnchorPoint(
+      closureDuration,
+      intervalBetweenClosures,
+    );
+  }
+
+  switch (anchorPoint) {
+    case IntervalAnchorPoint.StartOfPreviousClosure:
+      return 'from the start of the previous closure';
+    case IntervalAnchorPoint.EndOfPreviousClosure:
+      return 'from the end of the previous closure';
+    default:
+      return 'whenever Closures+ decides';
+  }
 }
