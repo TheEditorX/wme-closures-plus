@@ -50,6 +50,7 @@ export function RecurringClosure({ closureEditPanel }: RecurringClosureProps) {
         },
         {
           dialogProps: {
+            // @i18n edit.closure.recurrence.set_rules_btn
             title: 'Set Closure Repetition',
           },
           disabledButtons: ['APPLY'],
@@ -115,6 +116,7 @@ export function RecurringClosure({ closureEditPanel }: RecurringClosureProps) {
         checked={isEnabled && config}
         onChange={handleCheckboxChanged}
       >
+        {/* @i18n edit.closure.recurrence.enable_checkbox */}
         Reccuring Closure
       </wz-checkbox>
 
@@ -124,6 +126,7 @@ export function RecurringClosure({ closureEditPanel }: RecurringClosureProps) {
         disabled={!isEnabled || !config}
         onClick={handleButtonClick}
       >
+        {/* @i18n common.change */}
         Change
       </wz-button>
 

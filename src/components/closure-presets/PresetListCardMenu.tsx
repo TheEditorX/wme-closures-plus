@@ -34,6 +34,8 @@ export function PresetListCardMenu({ preset }: PresetListCardMenuProps) {
             };
           }}
         >
+          {/* @i18n sidebar_tab.closure_presets.list.edit_btn */}
+          {/* @i18n-remark Prepend the icon in front of the string */}
           <i className="w-icon w-icon-pencil" /> Edit
         </wz-menu-item>
         <wz-menu-item
@@ -50,6 +52,8 @@ export function PresetListCardMenu({ preset }: PresetListCardMenuProps) {
             };
           }}
         >
+          {/* @i18n sidebar_tab.closure_presets.list.delete_btn */}
+          {/* @i18n-remark Prepend the icon in front of the string */}
           <i className="w-icon w-icon-trash" /> Delete
         </wz-menu-item>
       </wz-menu>

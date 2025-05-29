@@ -5,12 +5,19 @@ import { Day } from './enums';
 import styled from '@emotion/styled';
 
 const AVAILABLE_DAYS = [
+  // @i18n common.day.SU
   { day: Day.Sunday, label: 'Sunday' },
+  // @i18n common.day.MO
   { day: Day.Monday, label: 'Monday' },
+  // @i18n common.day.TU
   { day: Day.Tuesday, label: 'Tuesday' },
+  // @i18n common.day.WE
   { day: Day.Wednesday, label: 'Wednesday' },
+  // @i18n common.day.TH
   { day: Day.Thursday, label: 'Thursday' },
+  // @i18n common.day.FR
   { day: Day.Friday, label: 'Friday' },
+  // @i18n common.day.SA
   { day: Day.Saturday, label: 'Saturday' },
 ];
 

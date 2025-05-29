@@ -22,6 +22,7 @@ export function ClosurePresetsManager() {
     <ClosurePresetEditorManagerProvider>
       <SectionContainer>
         <SectionHeader>
+          {/* @i18n sidebar_tab.closure_presets.list.title */}
           <wz-subhead5>Closure Presets</wz-subhead5>
           {!closurePresets.isReadOnly && <CreateNewPresetButton />}
         </SectionHeader>
@@ -29,7 +30,9 @@ export function ClosurePresetsManager() {
         {closurePresets.error ?
           <PresetsListMessage
             isSlashed
+            {/* @i18n sidebar_tab.closure_presets.list.messages.NOT_SUPPORTED.title */}
             title="Closure Presets Not Supported"
+            {/* @i18n sidebar_tab.closure_presets.list.messages.NOT_SUPPORTED.message */}
             message="This browser lacks the necessary features to save and load closure presets"
           />
         : <ClosurePresetsList presets={closurePresets.presets} />}

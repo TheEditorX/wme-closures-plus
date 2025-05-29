@@ -123,6 +123,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
         } satisfies Omit<ClosurePreset, keyof ClosurePresetMetadata>);
       }}
       onCancelled={props.onCancel}
+      {/* @i18n edit.closure_preset.edit_dialog.title[MODE] */}
       title={props.mode === 'CREATE' ? 'Create new preset' : 'Edit preset'}
       initialData={{
         [STEP_PRESET_INFO_SYMBOL]: {
@@ -183,7 +184,9 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
       steps={[
         {
           id: STEP_PRESET_INFO_SYMBOL,
+          // @i18n edit.closure_preset.edit_dialog.steps.PRESET_INFO.title
           title: 'Preset info',
+          // @i18n edit.closure_preset.edit_dialog.steps.PRESET_INFO.description
           description:
             "Provide details for the closure preset you're about to create",
           icon: {
@@ -194,15 +197,21 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
           actions: (data) => (
             <>
               <StepperNextButton disabled={!data.name}>
+                {/* @i18n edit.closure_preset.edit_dialog.steps.PRESET_INFO.next_btn */}
                 Next - Closure details
               </StepperNextButton>
-              <StepperPrevButton color="secondary">Cancel</StepperPrevButton>
+              <StepperPrevButton color="secondary">
+                {/* @i18n-waze edit.cancel */}
+                Cancel
+              </StepperPrevButton>
             </>
           ),
         },
         {
           id: STEP_CLOSURE_DETAILS_SYMBOL,
+          // @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.title
           title: 'Closure details',
+          // @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.description
           description: 'Add details about the closure that this preset sets',
           icon: {
             name: 'inbox',
@@ -219,15 +228,21 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
                     !data.startDate.value)
                 }
               >
+                {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.next_btn */}
                 Next - Summary
               </StepperNextButton>
-              <StepperPrevButton color="secondary">Back</StepperPrevButton>
+              <StepperPrevButton color="secondary">
+                {/* @i18n common.previous */}
+                Back
+              </StepperPrevButton>
             </>
           ),
         },
         {
           id: STEP_SUMMARY_SYMBOL,
+          // @i18n edit.closure_preset.edit_dialog.steps.SUMMARY.title
           title: 'Summary',
+          // @i18n edit.closure_preset.edit_dialog.steps.SUMMARY.details
           description: 'Review the preset before saving it',
           icon: {
             name: 'info',
@@ -236,8 +251,14 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
           content: <SummaryStep />,
           actions: () => (
             <>
-              <StepperNextButton>Save</StepperNextButton>
-              <StepperPrevButton color="secondary">Back</StepperPrevButton>
+              <StepperNextButton>
+                {/* @i18n-waze toolbar.save.title */}
+                Save
+              </StepperNextButton>
+              <StepperPrevButton color="secondary">
+                {/* @i18n common.previous */}
+                Back
+              </StepperPrevButton>
             </>
           ),
         },

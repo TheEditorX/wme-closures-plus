@@ -29,6 +29,7 @@ export function DurationPicker(props: DurationPickerProps) {
       errorMessage={
         error ?
           {
+            // @i18n duration_picker.errors.INVALID_PATTERN
             INVALID_PATTERN: '* Invalid format',
           }[error]
         : null

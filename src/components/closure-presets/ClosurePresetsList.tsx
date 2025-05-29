@@ -9,7 +9,9 @@ export function ClosurePresetsList({ presets }: ClosurePresetsListProps) {
   if (!presets?.length) {
     return (
       <PresetsListMessage
+        {/* @i18n sidebar_tab.closure_presets.list.messages.NO_PRESETS.title */}
         title="No presets here yet"
+        {/* @i18n sidebar_tab.closure_presets.list.messages.NO_PRESETS.message */}
         message="Presets allows you to define common configuration to reuse then on closures."
       />
     );

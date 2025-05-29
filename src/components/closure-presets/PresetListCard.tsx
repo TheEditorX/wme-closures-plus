@@ -56,6 +56,7 @@ export function PresetListCard(props: PresetListCardProps) {
 
         <wz-truncate limit={50}>
           <wz-body2>{props.preset.description}</wz-body2>
+          {/* @i18n-waze common.show_less */}
           <span slot="ellipsis">Show more</span>
         </wz-truncate>
       </ContentContainer>

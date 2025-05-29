@@ -32,6 +32,7 @@ function ClosureEditorPanel(props: ClosureEditorPanelProps) {
         <ClosureEditorFormContextConsumer>
           {(closureEditorForm) => (
             <ClosurePresetDropdown
+              {/* @i18n edit.closure_preset_apply_dropdown */}
               label="Select Closure Preset"
               onSelect={(preset) => {
                 applyClosurePreset(preset, closureEditorForm);

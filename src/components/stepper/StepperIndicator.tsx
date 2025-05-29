@@ -52,6 +52,7 @@ export function StepperIndicator() {
 
         <div>
           <wz-subhead5 className={stepIndicatorDetailClass}>
+            {/* @i18n stepper.current_step */}
             Step {currentStepIndex + 1} of {totalSteps}
           </wz-subhead5>
           <wz-h6 className={stepIndicatorDetailClass}>

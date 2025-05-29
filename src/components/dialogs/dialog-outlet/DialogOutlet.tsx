@@ -91,11 +91,13 @@ export function DialogOutlet({ ref }: DialogOutletProps) {
             buttons: [
               {
                 id: 'APPLY',
+                // @i18n-waze edit.apply
                 label: options?.confirmButtonLabel ?? 'Apply',
                 action: destructingButton((result) => resolve(result)),
               },
               {
                 id: 'CANCEL',
+                // @i18n-waze edit.cancel
                 label: options?.cancelButtonLabel ?? 'Cancel',
                 action: destructingButton(() =>
                   reject(new DialogDismissedError(DialogDismissReason.Button)),

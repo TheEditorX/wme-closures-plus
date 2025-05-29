@@ -11,6 +11,8 @@ export function CreateNewPresetButton() {
 
   return (
     <wz-button size="xs" color="text" onClick={handleClick}>
+      {/* @i18n sidebar_tab.closure_presets.list.create_btn */}
+      {/* @i18n-remark Add a static plus symbol in front of the string */}
       + Create preset
     </wz-button>
   );

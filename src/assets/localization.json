@@ -1,0 +1,140 @@
+{
+  "common": {
+    "change": "Change",
+    "day": {
+      "SU": "Sunday",
+      "MO": "Monday",
+      "TU": "Tuesday",
+      "WE": "Wednesday",
+      "TH": "Thursday",
+      "FR": "Friday",
+      "SA": "Saturday"
+    },
+    "next": "Next",
+    "previous": "Previous",
+    "not_set": "Not set",
+    "invalid_time": "Invalid time"
+  },
+  "edit": {
+    "closure": {
+      "preset_apply_dropdown": "Select Closure Preset",
+      "recurrence": {
+        "enable_checkbox": "Recurring Closure",
+        "set_rules_btn": "Set Closure Repetition",
+        "daily": {
+          "label": "Daily",
+          "recurrence_explanation": "A closure will be created for each day you select. Each of these closures will run during the hours and between the overall dates you already set up for this closure."
+        },
+        "interval": {
+          "label": "Interval-based",
+          "recurrence_explanation": "Creates multiple closures, each lasting %{duration}, starting every %{interval} %{anchor_point}",
+          "closure_duration_label": "Closure duration",
+          "interval_between_closures_label": "Interval between closures",
+          "anchor_point_label": "Base next repeat on…",
+          "anchor_point_options": {
+            "DEFAULT": "Let Closures+ decide it",
+            "CLOSURE_START": "Start of previous closure",
+            "CLOSURE_END": "End of previous closure"
+          },
+          "anchor_point_explanations": {
+            "DEFAULT": "whenever Closures+ decides it",
+            "CLOSURE_START": "from the start of the previous closure",
+            "CLOSURE_END": "from the end of the previous closure"
+          }
+        }
+      }
+    },
+    "closure_preset": {
+      "edit_dialog": {
+        "title": {
+          "CREATE": "Create closure preset",
+          "EDIT": "Edit preset"
+        },
+        "steps": {
+          "PRESET_INFO": {
+            "title": "Preset info",
+            "description": "Provide details for the closure preset you are creating",
+            "next_btn": "Next - Closure details",
+            "preset_name": {
+              "label": "Preset name",
+              "placeholder": "Overnight Maintenance",
+              "helper": "Give it a descriptive name so it's easy for you to find"
+            },
+            "preset_description": {
+              "label": "Preset description",
+              "placeholder": "Used for overnight road maintenance. Closes the road from 10 PM to 6 AM"
+            }
+          },
+          "CLOSURE_DETAILS": {
+            "title": "Closure details",
+            "description": "Add details about the closure that this preset sets",
+            "next_btn": "Next - Summary",
+            "closure_description": {
+              "label": "Closure description",
+              "placeholder": "Road closed for maintenance",
+              "helper": "This description will be shown in the Waze app"
+            },
+            "closure_start_date": {
+              "label": "Closure's start date",
+              "modes": {
+                "UNKNOWN": "Not set",
+                "CURRENT_DATE": "Activation Date",
+                "DAY_OF_WEEK": "Specific Day"
+              }
+            },
+            "closure_start_time": {
+              "label": "Closure's start time",
+              "modes": {
+                "IMMEDIATE": "Immediately",
+                "FIXED": "Specific time"
+              }
+            },
+            "closure_end_time": {
+              "label": "Closure's end time",
+              "modes": {
+                "FIXED": "Specific time",
+                "DURATIONAL": "Durational"
+              }
+            }
+          },
+          "SUMMARY": {
+            "title": "Summary",
+            "description": "Review the preset before saving it"
+          }
+        }
+      }
+    }
+  },
+  "duration_picker": {
+    "errors": {
+      "INVALID_PATTERN": "* Invalid format"
+    }
+  },
+  "sidebar_tab": {
+    "closure_presets": {
+      "list": {
+        "title": "Closure Presets",
+        "messages": {
+          "NO_PRESETS": {
+            "title": "No presets here yet",
+            "message": "Presets allows you to define common configuration to reuse then on closures"
+          },
+          "NOT_SUPPORTED": {
+            "title": "Closure Presets Not Supported",
+            "message": "This browser lacks the necessary features to support closure presets"
+          }
+        },
+        "create_btn": "Create preset",
+        "edit_btn": "Edit",
+        "delete_btn": "Delete"
+      }
+    }
+  },
+  "day_picker": {
+    "select_all": "Select All",
+    "select_none": "Select None"
+  },
+  "stepper": {
+    "current_step": "Step %{step} of %{total}"
+  }
+}

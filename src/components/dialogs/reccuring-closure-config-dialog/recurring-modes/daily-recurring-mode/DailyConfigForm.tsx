@@ -48,6 +48,7 @@ export function DailyConfigForm(
           marginTop: 'var(--space-always-xs, 8px)',
         }}
       >
+        {/* @i18n edit.closure.recurrence.daily.recurrence_explanation */}
         A closure will be created for each day you select. Each of these
         closures will run during the hours and between the overall dates you
         already set up for this closure.
