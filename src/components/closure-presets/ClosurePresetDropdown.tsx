@@ -1,6 +1,11 @@
 import { useClosurePresetsListContext } from 'contexts';
 import { ClosurePreset } from 'interfaces/closure-preset';
 import { SelectHTMLAttributes, useMemo } from 'react';
+import {
+  ClosurePresetEditorManagerConsumer,
+  ClosurePresetEditorManagerProvider,
+} from './ClosurePresetEditorManager';
+import { useTranslation } from 'hooks';
 
 interface ClosurePresetDropdownProps {
   label: string;
@@ -14,6 +19,7 @@ interface ClosurePresetDropdownProps {
   >;
 }
 export function ClosurePresetDropdown(props: ClosurePresetDropdownProps) {
+  const { t } = useTranslation();
   const options = useOptionsWithInheritance(props.options);
   const optionsMap = useOptionsMap(options);
 
@@ -25,26 +31,50 @@ export function ClosurePresetDropdown(props: ClosurePresetDropdownProps) {
   };
 
   return (
-    <wz-select
-      {...props.selectProps}
-      label={props.label}
-      placeholder={props.placeholder}
-      ref={(select: HTMLSelectElement) => {
-        if (!select) return;
+    <ClosurePresetEditorManagerProvider>
+      <ClosurePresetEditorManagerConsumer>
+        {(presetEditor) => (
+          <wz-select
+            {...props.selectProps}
+            label={props.label}
+            placeholder={props.placeholder}
+            ref={(select: HTMLSelectElement) => {
+              if (!select) return;
 
-        select.addEventListener('change', handleChange);
+              select.addEventListener('change', handleChange);
 
-        return () => {
-          select.removeEventListener('change', handleChange);
-        };
-      }}
-    >
-      {Array.from(optionsMap.values()).map((option) => (
-        <wz-option key={option.id} value={option.id}>
-          {option.name}
-        </wz-option>
-      ))}
-    </wz-select>
+              return () => {
+                select.removeEventListener('change', handleChange);
+              };
+            }}
+          >
+            {Array.from(optionsMap.values()).map((option) => (
+              <wz-option key={option.id} value={option.id}>
+                {option.name}
+              </wz-option>
+            ))}
+
+            <wz-menu-divider />
+            <wz-menu-item
+              ref={(item: HTMLLIElement) => {
+                if (!item) return;
+
+                const handleClick = () => {
+                  presetEditor.openEditor();
+                };
+
+                item.addEventListener('click', handleClick);
+                return () => {
+                  item.removeEventListener('click', handleClick);
+                };
+              }}
+            >
+              {t('edit.closure.create_preset_dropdown_option')}
+            </wz-menu-item>
+          </wz-select>
+        )}
+      </ClosurePresetEditorManagerConsumer>
+    </ClosurePresetEditorManagerProvider>
   );
 }
 

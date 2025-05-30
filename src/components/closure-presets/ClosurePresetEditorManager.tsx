@@ -63,6 +63,9 @@ export function ClosurePresetEditorManagerProvider({
   );
 }
 
+export const ClosurePresetEditorManagerConsumer =
+  ClosurePresetEditorManagerContext.Consumer;
+
 export function useClosurePresetEditorManager() {
   const context = useContext(ClosurePresetEditorManagerContext);
   if (!context) {

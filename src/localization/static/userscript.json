@@ -18,6 +18,7 @@
   "edit": {
     "closure": {
       "preset_apply_dropdown": "Select Closure Preset",
+      "create_preset_dropdown_option": "Create new",
       "recurrence": {
         "enable_checkbox": "Recurring Closure",
         "set_rules_btn": "Set Closure Repetition",
