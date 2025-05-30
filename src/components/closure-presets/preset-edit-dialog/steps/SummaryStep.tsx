@@ -27,7 +27,7 @@ const formatStartDate = (
   if (!startDate) return t('common.not_set');
   if (startDate.type === 'CURRENT_DATE')
     return t(
-      'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.start_date_modes.CURRENT_DATE',
+      'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.modes.CURRENT_DATE',
     );
   if (startDate.type === 'DAY_OF_WEEK') {
     if (startDate.value instanceof WeekdayFlags) {

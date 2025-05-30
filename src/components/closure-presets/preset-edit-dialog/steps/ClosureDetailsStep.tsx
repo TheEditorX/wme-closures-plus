@@ -148,7 +148,6 @@ export function ClosureDetailsStep() {
               value="FIXED"
               render={
                 <PositionAwareToggleButton style={{ flex: 1 }}>
-                  Specific time
                   {t(
                     'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.modes.FIXED',
                   )}
