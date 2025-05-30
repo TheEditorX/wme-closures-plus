@@ -81,6 +81,13 @@ export default {
         convertStringConvention(packagePureName, 'PascalCase'),
       ),
       __BUILD_TIME__: JSON.stringify(new Date()),
+      'process.env.CROWDIN_DISTRIBUTION_HASH': JSON.stringify(
+        process.env.CROWDIN_DISTRIBUTION_HASH || '15dd9243e7c0c5a4cad8d58031c',
+      ),
+      'process.env.LOCALIZATION_PREFIX': JSON.stringify(
+        process.env.LOCALIZATION_PREFIX ||
+          `${packageAuthor}/${packagePureName}`,
+      ),
     }),
     addBanner({ file: 'tampermonkey.meta.js' }),
   ],
