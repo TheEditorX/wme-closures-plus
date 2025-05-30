@@ -62,10 +62,18 @@ export function ClosurePresetDropdown(props: ClosurePresetDropdownProps) {
                 const handleClick = () => {
                   presetEditor.openEditor();
                 };
+                const handleKeyDown = (event: KeyboardEvent) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    handleClick();
+                  }
+                };
 
                 item.addEventListener('click', handleClick);
+                item.addEventListener('keydown', handleKeyDown);
                 return () => {
                   item.removeEventListener('click', handleClick);
+                  item.removeEventListener('keydown', handleKeyDown);
                 };
               }}
             >
