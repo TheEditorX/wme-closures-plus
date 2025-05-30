@@ -41,11 +41,9 @@ If not, feel free to [open a new issue](https://github.com/davidsl4/wme-closures
 
 ## Localization and Translation
 
-We aim to make Closures+ usable for editors in any language. We plan to manage translations using a platform like [Crowdin](https://crowdin.com/).
+We aim to make Closures+ usable for editors in any language. To make it happen we're using a localization management platform which streamlines the translation and localization process and enables us to surface these translations in no-time! The platform we're using is named Crowdin and it provides simple user interface for users to translate everything.
 
-* **Link to Translation Project:** TBD.
-
-If you're fluent in another language, your help translating the interface text would be greatly appreciated!
+If you're fluent in another language, your help translating the interface would be greatly appreciated! You can start by following [this link](https://translate.editorx.dev) to the localization platform (https://translate.editorx.dev).
 
 ## Code Contributions
 
