@@ -1,0 +1,1 @@
+export { axiosGmXhrAdapter } from './adapter';

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { createRoot } from 'react-dom/client';
 import { getWmeSdk, SDK_INITIALIZED } from './utils/sdk-utils';
 import { App } from './App';
@@ -7,13 +8,7 @@ import PlusBranded from './assets/plus-branded.svg';
 
 import './utils/wme-date-format';
 
-await SDK_INITIALIZED;
-const wmeSdk = await initWmeSdkPlus(
-  getWmeSdk({
-    scriptId: __SCRIPT_ID__,
-    scriptName: __SCRIPT_NAME__,
-  }),
-);
+axios.defaults.adapter = axiosGmXhrAdapter;
 
 const root = createRoot(document.createDocumentFragment());
 const AppWrapper = asScriptTab(
