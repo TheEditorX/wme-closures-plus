@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
+import { useTranslation } from '../../../../../hooks';
 import { RecurringModeFormProps } from '../recurring-mode';
 import { useState, useRef, useImperativeHandle, SyntheticEvent } from 'react';
 import { DurationPicker } from 'components/DurationPicker';
-import { formatMinutes, createFocusHandler } from 'utils';
+import { formatMinutes } from 'utils';
 import { IntervalAnchorPoint } from './enums';
 import { IntervalModeFields } from './interval-recurring-mode';
 import { getDefaultAnchorPoint } from './utils';
@@ -25,6 +26,7 @@ const DurationsConfigContainer = styled('div')({
 });
 
 export function IntervalConfigForm(props: RecurringModeFormProps) {
+  const { t } = useTranslation();
   const [closureDuration, setClosureDuration] = useState<number>(
     typeof props.initialFieldValues?.closureDuration === 'number' ?
       props.initialFieldValues.closureDuration
@@ -64,16 +66,16 @@ export function IntervalConfigForm(props: RecurringModeFormProps) {
         <DurationPicker
           ref={closureDurationInputRef}
           className="duration"
-          // @i18n edit.closure_recurrence.interval.closure_duration_label 
-          label="Closure duration"
+          label={t('edit.closure.recurrence.interval.closure_duration_label')}
           value={closureDuration}
           onChange={setClosureDuration}
         />
         <DurationPicker
           ref={intervalBetweenClosuresInputRef}
           className="interval"
-          // @i18n edit.closure_recurrence.interval.interval_between_closures_label 
-          label="Interval between closures"
+          label={t(
+            'edit.closure.recurrence.interval.interval_between_closures_label',
+          )}
           value={intervalBetweenClosures}
           onChange={setIntervalBetweenClosures}
         />
@@ -84,78 +86,64 @@ export function IntervalConfigForm(props: RecurringModeFormProps) {
         onChange={(e: SyntheticEvent<HTMLSelectElement>) =>
           setIntervalAnchorPoint(e.currentTarget.value as IntervalAnchorPoint)
         }
-        // @i18n edit.closure_recurrence.interval.anchor_point_label 
-        label="Base next repeat on…"
+        label={t('edit.closure.recurrence.interval.anchor_point_label')}
       >
         <wz-option value={IntervalAnchorPoint.Default}>
-          {/* @i18n edit.closure_recurrence.interval.anchor_point_options.DEFAULT */}
-          Let Closures+ decide it
+          {t('edit.closure.recurrence.interval.anchor_point_options.DEFAULT')}
         </wz-option>
 
         <wz-option
           value={IntervalAnchorPoint.StartOfPreviousClosure}
           disabled={closureDuration >= intervalBetweenClosures}
         >
-          {/* @i18n edit.closure_recurrence.interval.anchor_point_options.CLOSURE_START */}
-          Start of previous closure
+          {t(
+            'edit.closure.recurrence.interval.anchor_point_options.CLOSURE_START',
+          )}
         </wz-option>
 
         <wz-option value={IntervalAnchorPoint.EndOfPreviousClosure}>
-          {/* @i18n edit.closure_recurrence.interval.anchor_point_options.CLOSURE_END */}
-          End of previous closure
+          {t(
+            'edit.closure.recurrence.interval.anchor_point_options.CLOSURE_END',
+          )}
         </wz-option>
       </wz-select>
 
       <wz-caption>
-        {/* @i18n edit.closure_recurrence.interval.recurrence_explanation */}
-        {/* @i18n-sub edit.closure_recurrence.interval.anchor_point_explanations */}
-        Creates multiple closures, each lasting{' '}
-        <b>
-          {isFinite(closureDuration) ?
-            formatMinutes(closureDuration)
-          : <wz-a onClick={createFocusHandler(closureDurationInputRef)}>
-              {'<Closure duration>'}
-            </wz-a>
-          }
-        </b>
-        , starting every{' '}
-        <b>
-          {isFinite(intervalBetweenClosures) ?
-            formatMinutes(intervalBetweenClosures)
-          : <wz-a onClick={createFocusHandler(intervalBetweenClosuresInputRef)}>
-              {'<Interval between closures>'}
-            </wz-a>
-          }
-        </b>{' '}
-        {formatAnchorPointLabel(
-          intervalAnchorPoint,
-          closureDuration,
-          intervalBetweenClosures,
-        )}
-        , within the overall start and end times.
+        {/* @i18n edit.closure.recurrence.interval.recurrence_explanation */}
+        {/* @i18n-sub edit.closure.recurrence.interval.anchor_point_explanations */}
+        {t('edit.closure.recurrence.interval.recurrence_explanation', {
+          closureDuration:
+            isFinite(closureDuration) ?
+              formatMinutes(closureDuration)
+            : `<${t('edit.closure.recurrence.interval.closure_duration_label')}>`,
+          intervalBetweenClosures:
+            isFinite(intervalBetweenClosures) ?
+              formatMinutes(intervalBetweenClosures)
+            : `<${t(
+                'edit.closure.recurrence.interval.interval_between_closures_label',
+              )}>`,
+          anchorPoint: t(
+            'edit.closure.recurrence.interval.anchor_point_explanations',
+          )[
+            normalizeAnchorPoint(
+              intervalAnchorPoint,
+              closureDuration,
+              intervalBetweenClosures,
+            )
+          ],
+        })}
       </wz-caption>
     </div>
   );
 }
 
-function formatAnchorPointLabel(
+function normalizeAnchorPoint(
   anchorPoint: IntervalAnchorPoint,
   closureDuration: number,
   intervalBetweenClosures: number,
-): string {
+): IntervalAnchorPoint {
   if (anchorPoint === IntervalAnchorPoint.Default) {
-    anchorPoint = getDefaultAnchorPoint(
-      closureDuration,
-      intervalBetweenClosures,
-    );
+    return getDefaultAnchorPoint(closureDuration, intervalBetweenClosures);
   }
-
-  switch (anchorPoint) {
-    case IntervalAnchorPoint.StartOfPreviousClosure:
-      return 'from the start of the previous closure';
-    case IntervalAnchorPoint.EndOfPreviousClosure:
-      return 'from the end of the previous closure';
-    default:
-      return 'whenever Closures+ decides';
-  }
+  return anchorPoint;
 }

@@ -2,6 +2,7 @@ import { useImperativeHandle, useState } from 'react';
 import { RecurringModeFormProps } from '../recurring-mode';
 import { Day } from './enums';
 import { DaySelector } from './DaySelector';
+import { useTranslation } from '../../../../../hooks';
 
 export interface DailyConfigFormFields {
   days: readonly Day[];
@@ -9,6 +10,7 @@ export interface DailyConfigFormFields {
 export function DailyConfigForm(
   props: RecurringModeFormProps<DailyConfigFormFields>,
 ) {
+  const { t } = useTranslation();
   const [selectedDays, setSelectedDays] = useState<readonly Day[]>(
     props.initialFieldValues?.days ?? [],
   );
@@ -48,10 +50,7 @@ export function DailyConfigForm(
           marginTop: 'var(--space-always-xs, 8px)',
         }}
       >
-        {/* @i18n edit.closure.recurrence.daily.recurrence_explanation */}
-        A closure will be created for each day you select. Each of these
-        closures will run during the hours and between the overall dates you
-        already set up for this closure.
+        {t('edit.closure.recurrence.daily.recurrence_explanation')}
       </wz-caption>
     </>
   );

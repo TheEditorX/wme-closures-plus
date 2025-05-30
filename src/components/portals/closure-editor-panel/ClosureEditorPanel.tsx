@@ -4,7 +4,7 @@ import {
   ClosureEditorFormContextConsumer,
   ClosureEditorFormContextProvider,
 } from 'contexts';
-import { useChangeTabPadding } from 'hooks';
+import { useChangeTabPadding, useTranslation } from 'hooks';
 import { ClosureEditorGroup } from './ClosureEditorGroup';
 import { ClosurePresetDropdown } from 'components/closure-presets/ClosurePresetDropdown';
 import { applyClosurePreset } from 'utils';
@@ -13,6 +13,7 @@ interface ClosureEditorPanelProps {
   target: HTMLElement;
 }
 function ClosureEditorPanel(props: ClosureEditorPanelProps) {
+  const { t } = useTranslation();
   const closestTab = props.target.closest<HTMLElement>('wz-tab');
   const originalPadding = useChangeTabPadding(closestTab, 0);
   if (originalPadding) {
@@ -32,8 +33,7 @@ function ClosureEditorPanel(props: ClosureEditorPanelProps) {
         <ClosureEditorFormContextConsumer>
           {(closureEditorForm) => (
             <ClosurePresetDropdown
-              // @i18n edit.closure_preset_apply_dropdown
-              label="Select Closure Preset"
+              label={t('edit.closure.preset_apply_dropdown')}
               onSelect={(preset) => {
                 applyClosurePreset(preset, closureEditorForm);
               }}

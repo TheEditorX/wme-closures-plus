@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { SyntheticEvent, useState } from 'react';
 import { TimeOnly } from '../../../../classes';
 import { WeekdayFlags } from '../../../../enums';
+import { useTranslation } from '../../../../hooks';
 import { DurationPicker } from '../../../DurationPicker';
 import { createUseStepState } from '../../../stepper';
 import { PositionAwareToggleButton } from '../../../ToggleButton';
@@ -22,6 +23,7 @@ type ClosureDetailsDialogData =
 const useClosureDetailsState = createUseStepState<ClosureDetailsDialogData>();
 
 export function ClosureDetailsStep() {
+  const { t } = useTranslation();
   const [description, setDescription] = useClosureDetailsState('description');
   const [startDate, setStartDate] = useClosureDetailsState('startDate');
   const [startTimeMode, setStartTimeMode] = useState<'IMMEDIATE' | 'FIXED'>(
@@ -33,11 +35,8 @@ export function ClosureDetailsStep() {
   return (
     <PresetEditForm>
       <wz-text-input
-        // @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_description.label 
         label="Closure description"
-        // @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_description.placeholder 
         placeholder="Road is closed for construction"
-        // @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_description.helper 
         helper-message="This description will be shown in the Waze app"
         value={description}
         onChange={(e: SyntheticEvent<HTMLInputElement, InputEvent>) =>
@@ -47,8 +46,10 @@ export function ClosureDetailsStep() {
 
       <div>
         <wz-label>
-          {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.label */}
-          * Closure&#39;s start date
+          *{' '}
+          {t(
+            'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.label',
+          )}
         </wz-label>
         <ToggleGroup
           value={[startDate?.type]}
@@ -78,8 +79,9 @@ export function ClosureDetailsStep() {
             value="CURRENT_DATE"
             render={
               <PositionAwareToggleButton style={{ flex: 1 }}>
-                {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.modes.CURRENT_DATE */}
-                Activation Date
+                {t(
+                  'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.modes.CURRENT_DATE',
+                )}
               </PositionAwareToggleButton>
             }
           />
@@ -87,8 +89,9 @@ export function ClosureDetailsStep() {
             value="DAY_OF_WEEK"
             render={
               <PositionAwareToggleButton style={{ flex: 1 }}>
-                {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.modes.DAY_OF_WEEK */}
-                Specific Day
+                {t(
+                  'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.modes.DAY_OF_WEEK',
+                )}
               </PositionAwareToggleButton>
             }
           />
@@ -108,8 +111,10 @@ export function ClosureDetailsStep() {
       <TwoColumnsGrid>
         <div>
           <wz-label>
-            {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.label */}
-            * Closure&#39;s start time
+            *{' '}
+            {t(
+              'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.label',
+            )}
           </wz-label>
           <ToggleGroup
             value={[startTimeMode]}
@@ -133,8 +138,9 @@ export function ClosureDetailsStep() {
               value="IMMEDIATE"
               render={
                 <PositionAwareToggleButton style={{ flex: 1 }}>
-                  {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.modes.IMMEDIATE */}
-                  Immediately
+                  {t(
+                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.modes.IMMEDIATE',
+                  )}
                 </PositionAwareToggleButton>
               }
             />
@@ -142,8 +148,10 @@ export function ClosureDetailsStep() {
               value="FIXED"
               render={
                 <PositionAwareToggleButton style={{ flex: 1 }}>
-                  {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.modes.FIXED */}
                   Specific time
+                  {t(
+                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.modes.FIXED',
+                  )}
                 </PositionAwareToggleButton>
               }
             />
@@ -175,8 +183,10 @@ export function ClosureDetailsStep() {
 
         <div>
           <wz-label>
-            {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.label */}
-            * Closure&#39;s end time
+            *{' '}
+            {t(
+              'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.label',
+            )}
           </wz-label>
           <ToggleGroup
             value={[endTime?.type].filter(Boolean)}
@@ -206,8 +216,9 @@ export function ClosureDetailsStep() {
               value="FIXED"
               render={
                 <PositionAwareToggleButton style={{ flex: 1 }}>
-                  {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.modes.FIXED */}
-                  Specific time
+                  {t(
+                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.modes.FIXED',
+                  )}
                 </PositionAwareToggleButton>
               }
             />
@@ -215,8 +226,9 @@ export function ClosureDetailsStep() {
               value="DURATIONAL"
               render={
                 <PositionAwareToggleButton style={{ flex: 1 }}>
-                  {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.modes.DURATIONAL */}
-                  Durational
+                  {t(
+                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.modes.DURATIONAL',
+                  )}
                 </PositionAwareToggleButton>
               }
             />

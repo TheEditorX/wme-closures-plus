@@ -1,7 +1,9 @@
 import { SyntheticEvent } from 'react';
+import { useTranslation } from '../../hooks';
 import { useClosurePresetEditorManager } from './ClosurePresetEditorManager';
 
 export function CreateNewPresetButton() {
+  const { t } = useTranslation();
   const { openEditor } = useClosurePresetEditorManager();
 
   const handleClick = (event: SyntheticEvent) => {
@@ -11,9 +13,7 @@ export function CreateNewPresetButton() {
 
   return (
     <wz-button size="xs" color="text" onClick={handleClick}>
-      {/* @i18n sidebar_tab.closure_presets.list.create_btn*/}
-      {/* @i18n-remark Add a static plus symbol in front of the string */}
-      + Create preset
+      + {t('sidebar_tab.closure_presets.list.create_btn')}
     </wz-button>
   );
 }

@@ -3,22 +3,16 @@ import { ALL_DAYS, NO_DAYS } from './consts/days-presets';
 import { DayCheckbox } from './DayCheckbox';
 import { Day } from './enums';
 import styled from '@emotion/styled';
+import { useTranslation } from '../../../../../hooks';
 
 const AVAILABLE_DAYS = [
-  // @i18n common.day.SU
-  { day: Day.Sunday, label: 'Sunday' },
-  // @i18n common.day.MO
-  { day: Day.Monday, label: 'Monday' },
-  // @i18n common.day.TU
-  { day: Day.Tuesday, label: 'Tuesday' },
-  // @i18n common.day.WE
-  { day: Day.Wednesday, label: 'Wednesday' },
-  // @i18n common.day.TH
-  { day: Day.Thursday, label: 'Thursday' },
-  // @i18n common.day.FR
-  { day: Day.Friday, label: 'Friday' },
-  // @i18n common.day.SA
-  { day: Day.Saturday, label: 'Saturday' },
+  { day: Day.Sunday, key: 'common.day.SU' },
+  { day: Day.Monday, key: 'common.day.MO' },
+  { day: Day.Tuesday, key: 'common.day.TU' },
+  { day: Day.Wednesday, key: 'common.day.WE' },
+  { day: Day.Thursday, key: 'common.day.TH' },
+  { day: Day.Friday, key: 'common.day.FR' },
+  { day: Day.Saturday, key: 'common.day.SA' },
 ];
 
 const HeadlineContainer = styled('div')({
@@ -42,6 +36,7 @@ export function DaySelector({
   label = 'Select days',
   showShortcuts = true,
 }: DaySelectorProps) {
+  const { t } = useTranslation();
   const createShortcutButtonHandler = (days: readonly Day[]) => {
     return (event: SyntheticEvent<HTMLButtonElement>) => {
       event.currentTarget.blur();
@@ -60,27 +55,27 @@ export function DaySelector({
               size="xs"
               onClick={createShortcutButtonHandler(ALL_DAYS)}
             >
-              Select all
+              {t('day_picker.select_all')}
             </wz-button>
             <wz-button
               color="text"
               size="xs"
               onClick={createShortcutButtonHandler(NO_DAYS)}
             >
-              Select none
+              {t('day_picker.select_none')}
             </wz-button>
           </>
         )}
       </HeadlineContainer>
 
-      {AVAILABLE_DAYS.map(({ day, label }) => (
+      {AVAILABLE_DAYS.map(({ day, key }) => (
         <DayCheckbox
           key={day}
           day={day}
           checked={value.includes(day)}
           onChange={onDayChange.bind(null, day)}
         >
-          {label}
+          {t(key)}
         </DayCheckbox>
       ))}
     </div>
