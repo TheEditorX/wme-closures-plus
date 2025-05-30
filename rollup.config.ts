@@ -1,3 +1,4 @@
+import json from '@rollup/plugin-json';
 import convertStringConvention from './convert-string-convention';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
@@ -62,11 +63,12 @@ export default {
   ],
   plugins: [
     svgr(),
+    json(),
     typescript({
       exclude: ['**/*.spec.ts', '**/*.spec.tsx'],
     }),
     commonjs(),
-    resolve(),
+    resolve({ browser: true }),
     replace({
       preventAssignment: true,
       delimiters: ['\\b', '\\b'],
