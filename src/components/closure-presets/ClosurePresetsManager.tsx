@@ -30,9 +30,9 @@ export function ClosurePresetsManager() {
         {closurePresets.error ?
           <PresetsListMessage
             isSlashed
-            {/* @i18n sidebar_tab.closure_presets.list.messages.NOT_SUPPORTED.title */}
+            // @i18n sidebar_tab.closure_presets.list.messages.NOT_SUPPORTED.title
             title="Closure Presets Not Supported"
-            {/* @i18n sidebar_tab.closure_presets.list.messages.NOT_SUPPORTED.message */}
+            // @i18n sidebar_tab.closure_presets.list.messages.NOT_SUPPORTED.message
             message="This browser lacks the necessary features to save and load closure presets"
           />
         : <ClosurePresetsList presets={closurePresets.presets} />}

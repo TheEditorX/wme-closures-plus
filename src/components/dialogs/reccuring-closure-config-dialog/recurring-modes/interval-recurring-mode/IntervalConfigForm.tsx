@@ -64,7 +64,7 @@ export function IntervalConfigForm(props: RecurringModeFormProps) {
         <DurationPicker
           ref={closureDurationInputRef}
           className="duration"
-          {/* @i18n edit.closure_recurrence.interval.closure_duration_label */}
+          // @i18n edit.closure_recurrence.interval.closure_duration_label 
           label="Closure duration"
           value={closureDuration}
           onChange={setClosureDuration}
@@ -72,7 +72,7 @@ export function IntervalConfigForm(props: RecurringModeFormProps) {
         <DurationPicker
           ref={intervalBetweenClosuresInputRef}
           className="interval"
-          {/* @i18n edit.closure_recurrence.interval.interval_between_closures_label */}
+          // @i18n edit.closure_recurrence.interval.interval_between_closures_label 
           label="Interval between closures"
           value={intervalBetweenClosures}
           onChange={setIntervalBetweenClosures}
@@ -84,7 +84,7 @@ export function IntervalConfigForm(props: RecurringModeFormProps) {
         onChange={(e: SyntheticEvent<HTMLSelectElement>) =>
           setIntervalAnchorPoint(e.currentTarget.value as IntervalAnchorPoint)
         }
-        {/* @i18n edit.closure_recurrence.interval.anchor_point_label */}
+        // @i18n edit.closure_recurrence.interval.anchor_point_label 
         label="Base next repeat on…"
       >
         <wz-option value={IntervalAnchorPoint.Default}>

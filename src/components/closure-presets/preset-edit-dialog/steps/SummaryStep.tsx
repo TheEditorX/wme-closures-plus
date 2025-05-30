@@ -92,32 +92,32 @@ export function SummaryStep() {
     >
       <wz-list>
         <wz-list-item
-          {/* @i18n edit.closure_preset.edit_dialog.steps.PRESET_INFO.preset_name.label */}
+          // @i18n edit.closure_preset.edit_dialog.steps.PRESET_INFO.preset_name.label 
           item-key="Preset Name"
           value={presetName || 'Not set'}
         ></wz-list-item>
         <wz-list-item
-          {/* @i18n edit.closure_preset.edit_dialog.steps.PRESET_INFO.preset_description.label */}
+          // @i18n edit.closure_preset.edit_dialog.steps.PRESET_INFO.preset_description.label 
           item-key="Preset Description"
           value={presetDescription || 'Not set'}
         ></wz-list-item>
         <wz-list-item
-          {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_description.label */}
+          // @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_description.label 
           item-key="Closure Description"
           value={closureDescription || 'Not set'}
         ></wz-list-item>
         <wz-list-item
-          {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.label */}
+          // @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.label 
           item-key="Start Date"
           value={formatStartDate(startDate)}
         ></wz-list-item>
         <wz-list-item
-          {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.label */}
+          // @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.label 
           item-key="Start Time"
           value={startTime ? formatTime(startTime) : 'Immediately'}
         ></wz-list-item>
         <wz-list-item
-          {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.label */}
+          // @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.label 
           item-key="End Time"
           value={formatEndTime(endTime)}
         ></wz-list-item>

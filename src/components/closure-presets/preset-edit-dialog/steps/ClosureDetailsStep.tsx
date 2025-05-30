@@ -33,11 +33,11 @@ export function ClosureDetailsStep() {
   return (
     <PresetEditForm>
       <wz-text-input
-        {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_description.label */}
+        // @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_description.label 
         label="Closure description"
-        {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_description.placeholder */}
+        // @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_description.placeholder 
         placeholder="Road is closed for construction"
-        {/* @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_description.helper */}
+        // @i18n edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_description.helper 
         helper-message="This description will be shown in the Waze app"
         value={description}
         onChange={(e: SyntheticEvent<HTMLInputElement, InputEvent>) =>

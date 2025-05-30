@@ -123,7 +123,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
         } satisfies Omit<ClosurePreset, keyof ClosurePresetMetadata>);
       }}
       onCancelled={props.onCancel}
-      {/* @i18n edit.closure_preset.edit_dialog.title[MODE] */}
+      // @i18n edit.closure_preset.edit_dialog.title[MODE]
       title={props.mode === 'CREATE' ? 'Create new preset' : 'Edit preset'}
       initialData={{
         [STEP_PRESET_INFO_SYMBOL]: {
