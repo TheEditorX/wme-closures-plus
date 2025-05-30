@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name WME Closures+ [DEV]
 // @description WME Closures+ extends the Waze Map Editor with advanced closure management features
-// @version 0.3.0
+// @version 1.0.0-beta.1
 // @author r0den
 // @match https://*.waze.com/*editor*
 // @match https://waze.com/*editor*
