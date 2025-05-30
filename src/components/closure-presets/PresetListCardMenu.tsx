@@ -2,12 +2,15 @@ import { ClosurePreset } from 'interfaces/closure-preset';
 import { SyntheticEvent, useRef } from 'react';
 import { WzMenuElement } from 'types/waze/elements';
 import { useClosurePresetsListContext } from '../../contexts';
+import { useTranslation } from '../../hooks';
 import { useClosurePresetEditorManager } from './ClosurePresetEditorManager';
 
 interface PresetListCardMenuProps {
   preset: ClosurePreset;
 }
 export function PresetListCardMenu({ preset }: PresetListCardMenuProps) {
+  const { t } = useTranslation();
+
   const { openEditor } = useClosurePresetEditorManager();
   const { deletePreset } = useClosurePresetsListContext();
   const menuRef = useRef<WzMenuElement>(null);
@@ -34,9 +37,8 @@ export function PresetListCardMenu({ preset }: PresetListCardMenuProps) {
             };
           }}
         >
-          {/* @i18n sidebar_tab.closure_presets.list.edit_btn */}
-          {/* @i18n-remark Prepend the icon in front of the string */}
-          <i className="w-icon w-icon-pencil" /> Edit
+          <i className="w-icon w-icon-pencil" />{' '}
+          {t('sidebar_tab.closure_presets.list.edit_btn')}
         </wz-menu-item>
         <wz-menu-item
           ref={(el: HTMLElement) => {
@@ -52,9 +54,8 @@ export function PresetListCardMenu({ preset }: PresetListCardMenuProps) {
             };
           }}
         >
-          {/* @i18n sidebar_tab.closure_presets.list.delete_btn */}
-          {/* @i18n-remark Prepend the icon in front of the string */}
-          <i className="w-icon w-icon-trash" /> Delete
+          <i className="w-icon w-icon-trash" />{' '}
+          {t('sidebar_tab.closure_presets.list.delete_btn')}
         </wz-menu-item>
       </wz-menu>
 

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useTranslation } from '../../hooks';
 import { ClosurePresetEditorManagerProvider } from './ClosurePresetEditorManager';
 import { CreateNewPresetButton } from './CreateNewPresetButton';
 import { PresetsListMessage } from './PresetsListMessage';
@@ -16,24 +17,28 @@ const SectionHeader = styled('div')({
 });
 
 export function ClosurePresetsManager() {
+  const { t } = useTranslation();
   const closurePresets = useClosurePresetsListContext();
 
   return (
     <ClosurePresetEditorManagerProvider>
       <SectionContainer>
         <SectionHeader>
-          {/* @i18n sidebar_tab.closure_presets.list.title */}
-          <wz-subhead5>Closure Presets</wz-subhead5>
+          <wz-subhead5>
+            {t('sidebar_tab.closure_presets.list.title')}
+          </wz-subhead5>
           {!closurePresets.isReadOnly && <CreateNewPresetButton />}
         </SectionHeader>
 
         {closurePresets.error ?
           <PresetsListMessage
             isSlashed
-            // @i18n sidebar_tab.closure_presets.list.messages.NOT_SUPPORTED.title
-            title="Closure Presets Not Supported"
-            // @i18n sidebar_tab.closure_presets.list.messages.NOT_SUPPORTED.message
-            message="This browser lacks the necessary features to save and load closure presets"
+            title={t(
+              'sidebar_tab.closure_presets.list.messages.NOT_SUPPORTED.title',
+            )}
+            message={t(
+              'sidebar_tab.closure_presets.list.messages.NOT_SUPPORTED.message',
+            )}
           />
         : <ClosurePresetsList presets={closurePresets.presets} />}
       </SectionContainer>

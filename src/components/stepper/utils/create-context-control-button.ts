@@ -5,6 +5,7 @@ import {
   FunctionComponent,
   SyntheticEvent,
 } from 'react';
+import { useTranslation } from '../../../hooks';
 import { StepperContextValue, useStepper } from '../StepperContext';
 
 type ControlMethod = () => void;
@@ -15,18 +16,19 @@ type KeyOf<O extends object, T = any> = {
 
 export function createContextControlButton(
   targetName: KeyOf<StepperContextValue, ControlMethod>,
-  defaultLabel: string,
+  defaultLabelKey: string,
 ): ComponentType<Omit<ComponentProps<'wz-button'>, 'onClick'>> {
   const Component: FunctionComponent<
     Omit<ComponentProps<'wz-button'>, 'onClick'>
   > = (props) => {
+    const { t } = useTranslation();
     const stepper = useStepper();
 
     return createElement(
       'wz-button',
       Object.assign(
         {
-          children: defaultLabel,
+          children: t(defaultLabelKey),
           onClick: (e: SyntheticEvent<HTMLButtonElement>) => {
             e.currentTarget.blur();
             stepper[targetName]();

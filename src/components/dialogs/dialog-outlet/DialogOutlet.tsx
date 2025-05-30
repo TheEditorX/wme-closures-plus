@@ -17,7 +17,7 @@ import {
   DialogLayoutProps,
   ModalDialogLayoutProps,
 } from './interfaces';
-import { useSet } from 'hooks';
+import { useSet, useTranslation } from 'hooks';
 import { ModalDialogButtons } from './types';
 // import { DialogLayoutRef } from './interfaces/dialog-layout-ref';
 
@@ -45,6 +45,7 @@ export interface DialogOutletProps {
   ref?: Ref<DialogOutlet>;
 }
 export function DialogOutlet({ ref }: DialogOutletProps) {
+  const { unsafeT } = useTranslation();
   const [activeDialog, setActiveDialog] = useState<{
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     Layout: ComponentType<DialogLayoutProps<{}>>;
@@ -91,14 +92,12 @@ export function DialogOutlet({ ref }: DialogOutletProps) {
             buttons: [
               {
                 id: 'APPLY',
-                // @i18n-waze edit.apply
-                label: options?.confirmButtonLabel ?? 'Apply',
+                label: options?.confirmButtonLabel ?? unsafeT('edit.apply'),
                 action: destructingButton((result) => resolve(result)),
               },
               {
                 id: 'CANCEL',
-                // @i18n-waze edit.cancel
-                label: options?.cancelButtonLabel ?? 'Cancel',
+                label: options?.cancelButtonLabel ?? unsafeT('edit.cancel'),
                 action: destructingButton(() =>
                   reject(new DialogDismissedError(DialogDismissReason.Button)),
                 ),
@@ -112,7 +111,7 @@ export function DialogOutlet({ ref }: DialogOutletProps) {
         });
       },
     }),
-    [destructingButton, disabledButtons],
+    [destructingButton, disabledButtons, unsafeT],
   );
 
   if (!activeDialog) return null;

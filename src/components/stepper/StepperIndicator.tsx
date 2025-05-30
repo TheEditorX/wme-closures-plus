@@ -2,6 +2,7 @@ import { css } from '@emotion/css';
 import styled from '@emotion/styled';
 import clsx from 'clsx';
 import { isValidElement } from 'react';
+import { useTranslation } from '../../hooks';
 import { useStepper } from './StepperContext';
 
 const StepIndicatorContainer = styled.div({
@@ -24,6 +25,7 @@ const stepIndicatorIconClass = css({
 });
 
 export function StepperIndicator() {
+  const { t } = useTranslation();
   const { currentStepIndex, totalSteps, currentStepConfig } = useStepper();
 
   return (
@@ -52,8 +54,10 @@ export function StepperIndicator() {
 
         <div>
           <wz-subhead5 className={stepIndicatorDetailClass}>
-            {/* @i18n stepper.current_step */}
-            Step {currentStepIndex + 1} of {totalSteps}
+            {t('stepper.current_step', {
+              step: currentStepIndex + 1,
+              total: totalSteps,
+            })}
           </wz-subhead5>
           <wz-h6 className={stepIndicatorDetailClass}>
             {currentStepConfig.title}

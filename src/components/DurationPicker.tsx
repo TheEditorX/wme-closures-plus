@@ -1,5 +1,6 @@
 import { useDurationInput } from 'hooks/useDurationInput';
 import { ComponentProps } from 'react';
+import { useTranslation } from '../hooks';
 
 interface DurationPickerProps
   extends Omit<ComponentProps<'input'>, 'value' | 'onChange'> {
@@ -8,6 +9,8 @@ interface DurationPickerProps
   onChange?: (value: number) => void;
 }
 export function DurationPicker(props: DurationPickerProps) {
+  const { t } = useTranslation();
+
   const { inputValue, onChange, onBlur, onKeyDown, error } = useDurationInput({
     modifiers: [
       { modifier: 'd', multiplier: 60 * 24 },
@@ -26,14 +29,7 @@ export function DurationPicker(props: DurationPickerProps) {
       onChange={onChange}
       onBlur={onBlur}
       onKeyDown={onKeyDown}
-      errorMessage={
-        error ?
-          {
-            // @i18n duration_picker.errors.INVALID_PATTERN
-            INVALID_PATTERN: '* Invalid format',
-          }[error]
-        : null
-      }
+      errorMessage={error ? t('duration_picker.errors')[error] : null}
       autocomplete="off"
     />
   );

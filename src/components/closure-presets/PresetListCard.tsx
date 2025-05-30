@@ -1,6 +1,7 @@
 import { css } from '@emotion/css';
 import newStyled from '@emotion/styled';
 import { ClosurePreset } from 'interfaces/closure-preset';
+import { useTranslation } from '../../hooks';
 import { PresetListCardMenu } from './PresetListCardMenu';
 
 const noMarginWzCard = css({
@@ -34,6 +35,8 @@ export interface PresetListCardProps {
   preset: ClosurePreset;
 }
 export function PresetListCard(props: PresetListCardProps) {
+  const { unsafeT } = useTranslation();
+
   return (
     <wz-card className={noMarginWzCard} elevation-on-hover={1}>
       <ContentContainer>
@@ -56,8 +59,7 @@ export function PresetListCard(props: PresetListCardProps) {
 
         <wz-truncate limit={50}>
           <wz-body2>{props.preset.description}</wz-body2>
-          {/* @i18n-waze common.show_less */}
-          <span slot="ellipsis">Show more</span>
+          <span slot="ellipsis">{unsafeT('common.show_more')}</span>
         </wz-truncate>
       </ContentContainer>
     </wz-card>

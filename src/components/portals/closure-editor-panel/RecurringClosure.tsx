@@ -7,6 +7,7 @@ import { css, cx } from '@emotion/css';
 import { SelectedRecurringMode } from 'components/dialogs/reccuring-closure-config-dialog/interfaces';
 import { useEventListener } from 'usehooks-ts';
 import { useWmeSdk } from 'contexts/WmeSdkContext';
+import { useTranslation } from '../../../hooks';
 
 const formGroupClass = css({
   display: 'flex',
@@ -20,6 +21,7 @@ export interface RecurringClosureProps {
   closureEditPanel: Element;
 }
 export function RecurringClosure({ closureEditPanel }: RecurringClosureProps) {
+  const { t } = useTranslation();
   const dialogOutletRef = useRef<DialogOutlet>(null);
   const recurringClosureFormGroup = useMemo(() => {
     const newFormGroup = document.createElement('div');
@@ -50,8 +52,7 @@ export function RecurringClosure({ closureEditPanel }: RecurringClosureProps) {
         },
         {
           dialogProps: {
-            // @i18n edit.closure.recurrence.set_rules_btn
-            title: 'Set Closure Repetition',
+            title: t('edit.closure.recurrence.set_rules_btn'),
           },
           disabledButtons: ['APPLY'],
         },
@@ -116,8 +117,7 @@ export function RecurringClosure({ closureEditPanel }: RecurringClosureProps) {
         checked={isEnabled && config}
         onChange={handleCheckboxChanged}
       >
-        {/* @i18n edit.closure.recurrence.enable_checkbox */}
-        Reccuring Closure
+        {t('edit.closure.recurrence.enable_checkbox')}
       </wz-checkbox>
 
       <wz-button
@@ -126,8 +126,7 @@ export function RecurringClosure({ closureEditPanel }: RecurringClosureProps) {
         disabled={!isEnabled || !config}
         onClick={handleButtonClick}
       >
-        {/* @i18n common.change */}
-        Change
+        {t('common.change')}
       </wz-button>
 
       <DialogOutlet ref={dialogOutletRef} />

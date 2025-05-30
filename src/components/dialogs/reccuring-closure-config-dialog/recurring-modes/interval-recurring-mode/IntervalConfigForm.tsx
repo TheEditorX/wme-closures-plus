@@ -109,8 +109,6 @@ export function IntervalConfigForm(props: RecurringModeFormProps) {
       </wz-select>
 
       <wz-caption>
-        {/* @i18n edit.closure.recurrence.interval.recurrence_explanation */}
-        {/* @i18n-sub edit.closure.recurrence.interval.anchor_point_explanations */}
         {t('edit.closure.recurrence.interval.recurrence_explanation', {
           closureDuration:
             isFinite(closureDuration) ?
