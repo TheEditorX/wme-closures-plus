@@ -15,6 +15,7 @@ export function isInstance(
     typeof value === 'object' &&
     !!value &&
     'constructor' in value &&
-    !!value.constructor
+    !!value.constructor &&
+    value.constructor !== Object
   );
 }
