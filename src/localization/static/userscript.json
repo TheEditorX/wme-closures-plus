@@ -81,7 +81,8 @@
                 "UNKNOWN": "Not set",
                 "CURRENT_DATE": "Activation Date",
                 "DAY_OF_WEEK": "Specific Day"
-              }
+              },
+              "day_of_week_disclaimer": "This preset creates a single closure. If multiple weekdays are selected, it will use the soonest upcoming day. This preset is not for recurring closures."
             },
             "closure_start_time": {
               "label": "Closure's start time",

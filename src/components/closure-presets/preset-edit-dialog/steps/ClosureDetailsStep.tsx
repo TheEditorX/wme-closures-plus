@@ -97,14 +97,22 @@ export function ClosureDetailsStep() {
           />
         </ToggleGroup>
         {startDate?.type === 'DAY_OF_WEEK' && (
-          <WeekdayPicker
-            fullWidth
-            value={startDate.value}
-            allowMultiple
-            onChange={(day) =>
-              setStartDate({ type: 'DAY_OF_WEEK', value: day })
-            }
-          />
+          <>
+            <WeekdayPicker
+              fullWidth
+              value={startDate.value}
+              allowMultiple
+              onChange={(day) =>
+                setStartDate({ type: 'DAY_OF_WEEK', value: day })
+              }
+            />
+
+            <wz-caption>
+              {t(
+                'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.day_of_week_disclaimer',
+              )}
+            </wz-caption>
+          </>
         )}
       </div>
 
