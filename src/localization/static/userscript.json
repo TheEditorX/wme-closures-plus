@@ -110,7 +110,8 @@
   "duration_picker": {
     "errors": {
       "INVALID_PATTERN": "* Invalid format"
-    }
+    },
+    "helper": "Use number+unit (m for minutes, h for hours, d for days, w for weeks). Combine, e.g., `1h 30m`."
   },
   "sidebar_tab": {
     "closure_presets": {

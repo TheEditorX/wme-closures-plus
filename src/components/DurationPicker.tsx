@@ -30,6 +30,7 @@ export function DurationPicker(props: DurationPickerProps) {
       onBlur={onBlur}
       onKeyDown={onKeyDown}
       errorMessage={error ? t('duration_picker.errors')[error] : null}
+      helperMessage={t('duration_picker.helper')}
       autocomplete="off"
     />
   );
