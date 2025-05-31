@@ -7,7 +7,6 @@ export async function loadCrowdinStrings(
   fallbackStrings?: object,
   prefix?: string,
 ): Promise<void> {
-  debugger;
   let strings = await fetchRemoteStrings(
     distributionHash,
     locale,
