@@ -29,12 +29,13 @@ jobs:
         id: branch-info
         run: |
           BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          SAFE_BRANCH_NAME=${BRANCH_NAME//\//--}
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
 
           # Check if this is a PR (GITHUB_HEAD_REF is only set for PRs)
           if [[ -n "$GITHUB_HEAD_REF" ]]; then
             echo "is_pr=true" >> $GITHUB_OUTPUT
-            echo "crowdin_branch=cp-$BRANCH_NAME" >> $GITHUB_OUTPUT
+            echo "crowdin_branch=cp--$BRANCH_NAME" >> $GITHUB_OUTPUT
           else
             echo "is_pr=false" >> $GITHUB_OUTPUT
             echo "crowdin_branch=" >> $GITHUB_OUTPUT
