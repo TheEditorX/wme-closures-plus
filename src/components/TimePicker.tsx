@@ -62,6 +62,7 @@ export const TimePicker = ({
     jQueryInput.on('blur.timepicker', () => {
       timePicker.setTime(input.value, true);
       timePicker.update();
+      onBlur?.(timePicker.getTime());
     });
 
     // Clean up event listeners when component unmounts
