@@ -26,11 +26,11 @@ export function ClosureDetailsStep() {
   const { t } = useTranslation();
   const [description, setDescription] = useClosureDetailsState('description');
   const [startDate, setStartDate] = useClosureDetailsState('startDate');
-  const [startTimeMode, setStartTimeMode] = useState<'IMMEDIATE' | 'FIXED'>(
-    'IMMEDIATE',
-  );
   const [startTime, setStartTime] = useClosureDetailsState('startTime');
   const [endTime, setEndTime] = useClosureDetailsState('endTime');
+  const [startTimeMode, setStartTimeMode] = useState<'IMMEDIATE' | 'FIXED'>(
+    startTime ? 'FIXED' : 'IMMEDIATE',
+  );
 
   return (
     <PresetEditForm>
