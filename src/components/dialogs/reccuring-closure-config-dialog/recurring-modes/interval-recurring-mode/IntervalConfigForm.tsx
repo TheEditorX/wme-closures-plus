@@ -110,17 +110,17 @@ export function IntervalConfigForm(props: RecurringModeFormProps) {
 
       <wz-caption>
         {t('edit.closure.recurrence.interval.recurrence_explanation', {
-          closureDuration:
+          duration:
             isFinite(closureDuration) ?
               formatMinutes(closureDuration)
             : `<${t('edit.closure.recurrence.interval.closure_duration_label')}>`,
-          intervalBetweenClosures:
+          interval:
             isFinite(intervalBetweenClosures) ?
               formatMinutes(intervalBetweenClosures)
             : `<${t(
                 'edit.closure.recurrence.interval.interval_between_closures_label',
               )}>`,
-          anchorPoint: t(
+          anchor_point: t(
             'edit.closure.recurrence.interval.anchor_point_explanations',
           )[
             normalizeAnchorPoint(
