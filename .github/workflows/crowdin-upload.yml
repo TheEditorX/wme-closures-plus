@@ -27,18 +27,18 @@ jobs:
         run: |
           BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
-          
-          # Check if branch ends with 'base' or 'root'
-          if [[ "$BRANCH_NAME" != "main" && ("$BRANCH_NAME" == *base || "$BRANCH_NAME" == *root) ]]; then
-            echo "is_special_branch=true" >> $GITHUB_OUTPUT
+
+          # Check if this is a PR (GITHUB_HEAD_REF is only set for PRs)
+          if [[ -n "$GITHUB_HEAD_REF" ]]; then
+            echo "is_pr=true" >> $GITHUB_OUTPUT
             echo "crowdin_branch=cp-$BRANCH_NAME" >> $GITHUB_OUTPUT
           else
-            echo "is_special_branch=false" >> $GITHUB_OUTPUT
+            echo "is_pr=false" >> $GITHUB_OUTPUT
             echo "crowdin_branch=" >> $GITHUB_OUTPUT
           fi
 
       - name: Upload to Crowdin (main branch)
-        if: ${{ steps.branch-info.outputs.is_special_branch == 'false' }}
+        if: ${{ steps.branch-info.outputs.is_pr == 'false' }}
         uses: crowdin/github-action@v1
         with:
           upload_sources: true
@@ -50,8 +50,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload to Crowdin (special branch)
-        if: ${{ steps.branch-info.outputs.is_special_branch == 'true' }}
+      - name: Upload to Crowdin (with branch)
+        if: ${{ steps.branch-info.outputs.is_pr == 'true' }}
         uses: crowdin/github-action@v1
         with:
           upload_sources: true

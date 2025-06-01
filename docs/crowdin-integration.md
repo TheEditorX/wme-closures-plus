@@ -8,7 +8,6 @@ The project uses GitHub Actions to automatically upload localization files to Cr
 
 1. Detect changes to the `src/localization/static/userscript.json` file
 2. Upload the file to Crowdin under the path `closures-plus/localization.json`
-3. Support special branches (ending with `base` or `root`) by creating a corresponding branch in Crowdin named `cp-{branch-name}`
 
 ## Required Secrets
 
@@ -49,7 +48,11 @@ The workflow will run automatically when:
 - A pull request that changes this file is created against the main branch
 - The workflow is manually triggered from the GitHub Actions tab
 
-For branches ending with `base` or `root`, the workflow will create a branch in Crowdin named `cp-{branch-name}` and upload the file there. For all other branches, including main, the file will be uploaded to the default branch in Crowdin.
+The workflow behaves differently depending on the trigger:
+- **Pull Requests against main**: Always creates a Crowdin branch named `cp-{branch-name}` and uploads the file there
+- **Direct pushes to main**: Uploads the file to the default branch in Crowdin (no branch is created)
+
+Note: The workflow will not be triggered for pull requests opened against branches other than main.
 
 ## Manual Triggering
 
