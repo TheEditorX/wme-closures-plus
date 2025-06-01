@@ -1,0 +1,65 @@
+name: Upload to Crowdin
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/localization/static/userscript.json'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'src/localization/static/userscript.json'
+  workflow_dispatch:
+
+jobs:
+  upload-to-crowdin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for branch detection
+
+      - name: Get branch information
+        id: branch-info
+        run: |
+          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          
+          # Check if branch ends with 'base' or 'root'
+          if [[ "$BRANCH_NAME" != "main" && ("$BRANCH_NAME" == *base || "$BRANCH_NAME" == *root) ]]; then
+            echo "is_special_branch=true" >> $GITHUB_OUTPUT
+            echo "crowdin_branch=cp-$BRANCH_NAME" >> $GITHUB_OUTPUT
+          else
+            echo "is_special_branch=false" >> $GITHUB_OUTPUT
+            echo "crowdin_branch=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload to Crowdin (main branch)
+        if: ${{ steps.branch-info.outputs.is_special_branch == 'false' }}
+        uses: crowdin/github-action@v1
+        with:
+          upload_sources: true
+          upload_translations: false
+          source: 'src/localization/static/userscript.json'
+          translation: 'closures-plus/localization.json'
+          project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload to Crowdin (special branch)
+        if: ${{ steps.branch-info.outputs.is_special_branch == 'true' }}
+        uses: crowdin/github-action@v1
+        with:
+          upload_sources: true
+          upload_translations: false
+          source: 'src/localization/static/userscript.json'
+          translation: 'closures-plus/localization.json'
+          project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+          crowdin_branch_name: ${{ steps.branch-info.outputs.crowdin_branch }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

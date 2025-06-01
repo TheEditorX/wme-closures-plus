@@ -45,6 +45,12 @@ We aim to make Closures+ usable for editors in any language. To make it happen w
 
 If you're fluent in another language, your help translating the interface would be greatly appreciated! You can start by following [this link](https://translate.editorx.dev) to the localization platform (https://translate.editorx.dev).
 
+### Localization Process
+
+The project uses GitHub Actions to automatically upload localization files to Crowdin when changes are detected. The source files are located in `src/localization/static/userscript.json` and are automatically uploaded to Crowdin when changes are pushed to the repository.
+
+For more information about the Crowdin integration and how it works, see the [Crowdin Integration](/docs/crowdin-integration.md) documentation.
+
 ## Code Contributions
 
 We love code contributions! If you'd like to contribute code, please follow these guidelines:

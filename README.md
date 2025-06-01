@@ -49,9 +49,14 @@ To use Closures+, you **must** have a userscript manager browser extension insta
 
 ## Contribution
 
-Closures+ is an open-source, community-driven add-on. We aim to create a stable, native-feeling, performant, easy-to-use, and impactful tool for managing closures, and we welcome contributions!
+Closures+ is an open-source, community-driven add-on. We aim to create a stable, native-feeling, performant, easy-to-use, and impactful tool for managing closures, and we welcome contributions! There are several ways you can help:
 
-See the [**CONTRIBUTING.md**](/CONTRIBUTING.md) guidelines if you're interested in helping improve Closures+.
+* **Reporting Bugs**: Found an issue? [Open a bug report](https://github.com/TheEditorX/wme-closures-plus/issues/new?template=bug_report.yml)
+* **Suggesting Features**: Have an idea? [Start a discussion](https://github.com/TheEditorX/wme-closures-plus/discussions/new?category=ideas)
+* **Writing Code**: Want to contribute code? Check our [contributing guidelines](/CONTRIBUTING.md)
+* **Translations**: Help translate the UI to your language at [translate.editorx.dev](https://translate.editorx.dev)
+
+See the [**CONTRIBUTING.md**](/CONTRIBUTING.md) for detailed guidelines on how to contribute effectively.
 
 ## License
 
