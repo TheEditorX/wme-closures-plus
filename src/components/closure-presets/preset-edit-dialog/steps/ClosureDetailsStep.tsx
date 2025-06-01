@@ -5,6 +5,7 @@ import { TimeOnly } from '../../../../classes';
 import { WeekdayFlags } from '../../../../enums';
 import { useTranslation } from '../../../../hooks';
 import { DurationPicker } from '../../../DurationPicker';
+import { TimePicker } from '../../../TimePicker';
 import { createUseStepState } from '../../../stepper';
 import { PositionAwareToggleButton } from '../../../ToggleButton';
 import { WeekdayPicker } from '../../../WeekdayPicker';
@@ -164,17 +165,7 @@ export function ClosureDetailsStep() {
             />
           </ToggleGroup>
 
-          <wz-text-input
-            ref={(input: HTMLInputElement) => {
-              const jQueryInput = $(input) as JQuery<HTMLInputElement> & {
-                timepicker(options: object): void;
-              };
-              jQueryInput.timepicker({
-                defaultTime: false,
-                showMeridian: false,
-                template: false,
-              });
-            }}
+          <TimePicker
             disabled={startTimeMode !== 'FIXED'}
             placeholder="--:--"
             value={
@@ -182,9 +173,19 @@ export function ClosureDetailsStep() {
                 `${startTime.getHours().toString().padStart(2, '0')}:${startTime.getMinutes().toString().padStart(2, '0')}`
               : ''
             }
-            onChange={(e: SyntheticEvent<HTMLInputElement, InputEvent>) =>
-              setStartTime(new TimeOnly(e.currentTarget.value))
-            }
+            onChange={(timeValue) => {
+              if (!timeValue) return;
+              setStartTime(new TimeOnly(timeValue));
+            }}
+            onBlur={(timeValue) => {
+              if (!timeValue) return;
+              setStartTime(new TimeOnly(timeValue));
+            }}
+            timePickerOptions={{
+              defaultTime: false,
+              showMeridian: false,
+              template: false,
+            }}
           />
         </div>
 
@@ -242,29 +243,32 @@ export function ClosureDetailsStep() {
           </ToggleGroup>
 
           {endTime?.type === 'FIXED' ?
-            <wz-text-input
-              ref={(input: HTMLInputElement) => {
-                const jQueryInput = $(input) as JQuery<HTMLInputElement> & {
-                  timepicker(options: object): void;
-                };
-                jQueryInput.timepicker({
-                  defaultTime: false,
-                  showMeridian: false,
-                  template: false,
-                });
-              }}
+            <TimePicker
               placeholder="--:--"
               value={
                 endTime.value ?
                   `${endTime.value.getHours().toString().padStart(2, '0')}:${endTime.value.getMinutes().toString().padStart(2, '0')}`
                 : ''
               }
-              onChange={(e: SyntheticEvent<HTMLInputElement, InputEvent>) =>
+              onChange={(timeValue) => {
+                if (!timeValue) return;
                 setEndTime({
                   type: 'FIXED',
-                  value: new TimeOnly(e.currentTarget.value),
-                })
-              }
+                  value: new TimeOnly(timeValue),
+                });
+              }}
+              onBlur={(timeValue) => {
+                if (!timeValue) return;
+                setEndTime({
+                  type: 'FIXED',
+                  value: new TimeOnly(timeValue),
+                });
+              }}
+              timePickerOptions={{
+                defaultTime: false,
+                showMeridian: false,
+                template: false,
+              }}
             />
           : endTime?.type === 'DURATIONAL' && (
               <DurationPicker
