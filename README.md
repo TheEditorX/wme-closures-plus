@@ -9,32 +9,20 @@
 
 ## Description
 
-Closures+ is an add-on script for the Waze Map Editor (WME), part of the **Editor+ series**. This series focuses on delivering a **premium experience** for core WME tasks through carefully crafted and enhanced features, high-quality implementation, and dedicated community support.
+Closures+ is an add-on script for the Waze Map Editor (WME), part of the **Editor X PLUS series**. This series focuses on delivering a **premium experience** for core WME tasks through carefully crafted and enhanced features, high-quality implementation, and dedicated community support.
 
 Handling closures in WME can be time-consuming. Closures+ aims to revolutionize this process, simplifying everything from creation to management and providing powerful tools for efficiency.
 
-> [!WARNING]
-> **Early Development Stage:** Closures+ is currently in active development and may be unstable. Features might change, and unexpected behavior could occur.
-> We are committed to continuous improvement towards a stable version suitable for general use.
-> Until then, please use Closures+ with caution, especially during critical editing. Use at your own risk.
-
 ## Features
 
-Closures+ introduces several enhancements to streamline closure management. The status of current and planned features is listed below:
+Closures+ introduces several enhancements to streamline closure management. Currently available features are listed below:
 
-| Feature                     | Description                                                      | Status            |
-|-----------------------------|------------------------------------------------------------------|-------------------|
-| Recurring Closures          | Define closures that repeat on a schedule (daily, weekly, etc.). | Available         |
-| Closure Templates           | Save/load templates for common closures.                         | Planned           |
-| Filters                     | Filter/view closures on map/list by date, reason, or status.     | Planned           |
-| Quick-Add Durations         | Buttons for common closure lengths.                              | Planned           |
-| Bulk Editing                | Modify details (time, reason) or delete multiple closures.       | Planned           |
+| Feature                     | Description                                                      |
+|-----------------------------|------------------------------------------------------------------|
+| Recurring Closures          | Define closures that repeat on a schedule (daily, weekly, etc.). |
+| Closure Templates           | Save/load templates for common closures.                         |
 
-* **Status Key:**
-    * **Available:** Feature is implemented and usable.
-    * **Experimental:** Feature is available for testing but may change or have bugs.
-    * **Under Development:** Feature is actively being worked on.
-    * **Planned:** Feature is intended for a future release.
+To see a list of features requests and ideas and their status, please refer to the [Discussions page](https://github.com/TheEditorX/wme-closures-plus/discussions/categories/ideas).
 
 ## Installation
 
