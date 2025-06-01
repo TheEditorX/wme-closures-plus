@@ -13,6 +13,9 @@ on:
       - 'src/localization/static/userscript.json'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   upload-to-crowdin:
     runs-on: ubuntu-latest
