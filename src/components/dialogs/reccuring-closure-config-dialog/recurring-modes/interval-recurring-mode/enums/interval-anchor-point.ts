@@ -1,5 +1,5 @@
 export enum IntervalAnchorPoint {
   Default = 'DEFAULT',
-  StartOfPreviousClosure = 'START_OF_PREVIOUS_CLOSURE',
-  EndOfPreviousClosure = 'END_OF_PREVIOUS_CLOSURE',
+  StartOfPreviousClosure = 'CLOSURE_START',
+  EndOfPreviousClosure = 'CLOSURE_END',
 }
