@@ -1,6 +1,9 @@
 import { WeekdayFlags } from 'enums';
+import Logger from 'js-logger';
 import { createDateResolver } from './date-resolver';
 import { DateOnly } from 'classes';
+
+const logger = Logger.get('DAY_OF_WEEK_RESOLVER');
 
 interface DayOfWeekResolverArgs {
   /** The numeric representation of the day(s) of the week, to be used with the {@link WeekdayFlags} bitwise enum. */
@@ -45,13 +48,25 @@ export const DAY_OF_WEEK_RESOLVER = createDateResolver(
     const { dayOfWeek } = args;
     const flags = new WeekdayFlags(dayOfWeek);
 
-    const nextOccurrences = flags.getActiveBasicFlags().map((dayFlagValue) => {
+    logger.debug('Resolving to date using args', { dayOfWeek });
+
+    const basicFlagValues = flags.getActiveBasicFlags();
+    logger.debug('Extracted active basic flags', { value: basicFlagValues });
+    const nextOccurrences = basicFlagValues.map((dayFlagValue) => {
       const dayIndex = dayFlagToDayIndex(dayFlagValue);
       const today = new Date();
       const todayDayOfWeek = today.getUTCDay();
       const daysUntilNextOccurrence = (dayIndex + 7 - todayDayOfWeek) % 7 || 7; // If it's today, go to next week
       const nextOccurrence = new DateOnly(today);
       nextOccurrence.setUTCDate(today.getUTCDate() + daysUntilNextOccurrence);
+      logger.debug('Calculating for day index', {
+        dayIndex,
+        dayFlagValue,
+        today: today.toISOString(),
+        todayDayOfWeek,
+        daysUntilNextOccurrence,
+        nextOccurrence: nextOccurrence.toISOString(),
+      });
       return nextOccurrence;
     });
 
