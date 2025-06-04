@@ -47,13 +47,19 @@ axios.defaults.adapter = axiosGmXhrAdapter;
 
 const [wmeSdk] = await Promise.all([
   await (async () => {
+    Logger.debug('Waiting for SDK to initialize...');
     await SDK_INITIALIZED;
-    return await initWmeSdkPlus(
+    const wmeSdk = await initWmeSdkPlus(
       getWmeSdk({
         scriptId: __SCRIPT_ID__,
         scriptName: __SCRIPT_NAME__,
       }),
     );
+    Logger.debug('SDK initialized.', {
+      username: wmeSdk.State.getUserInfo()?.userName,
+      userRank: wmeSdk.State.getUserInfo()?.rank,
+    });
+    return wmeSdk;
   })(),
   await loadCrowdinStrings(
     getCurrentLocale(),
@@ -63,6 +69,7 @@ const [wmeSdk] = await Promise.all([
   ),
 ]);
 
+Logger.debug('Starting app...');
 const root = createRoot(document.createDocumentFragment());
 const AppWrapper = asScriptTab(
   App,
@@ -82,3 +89,5 @@ root.render(
     wmeSdk,
   }),
 );
+
+Logger.debug('Rendered. Idle');
