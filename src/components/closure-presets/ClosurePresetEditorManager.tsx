@@ -1,7 +1,10 @@
+import Logger from 'js-logger';
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 import { useClosurePresetsListContext } from '../../contexts';
 import { ClosurePreset, ClosurePresetMetadata } from '../../interfaces';
 import { PresetEditingDialog } from './preset-edit-dialog';
+
+const logger = Logger.get('preset-editor-manager');
 
 interface ClosurePresetEditorManager {
   openEditor(presetId?: ClosurePresetMetadata['id']): void;
@@ -31,6 +34,7 @@ export function ClosurePresetEditorManagerProvider({
 
     return {
       openEditor(presetId) {
+        logger.debug('Opening preset editor', { presetId });
         setEditingPreset(presetId ? getPresetById(presetId) : null);
         setIsEditing(true);
       },
@@ -44,15 +48,27 @@ export function ClosurePresetEditorManagerProvider({
         <PresetEditingDialog
           mode={editingPreset ? 'EDIT' : 'CREATE'}
           preset={editingPreset}
-          onCancel={() => setIsEditing(false)}
+          onCancel={() => {
+            logger.debug('Preset editor cancelled');
+            setIsEditing(false);
+          }}
           onComplete={async (newPresetValue) => {
+            logger.debug('Preset editor completed');
             setIsEditing(false);
 
             if (!editingPreset) {
+              logger.debug('Creating new preset', {
+                preset: newPresetValue,
+              });
               await createPreset(newPresetValue);
               return;
             }
 
+            logger.debug('Editing existing preset', {
+              presetId: editingPreset.id,
+              oldPreset: editingPreset,
+              newPresetDetails: newPresetValue,
+            });
             await updatePreset(editingPreset.id, {
               ...newPresetValue,
             });
