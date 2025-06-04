@@ -13,6 +13,7 @@ export function DurationPicker(props: DurationPickerProps) {
 
   const { inputValue, onChange, onBlur, onKeyDown, error } = useDurationInput({
     modifiers: [
+      { modifier: 'w', multiplier: 60 * 24 * 7 },
       { modifier: 'd', multiplier: 60 * 24 },
       { modifier: 'h', multiplier: 60 },
       { modifier: 'm', multiplier: 1 },
