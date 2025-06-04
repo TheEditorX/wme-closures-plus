@@ -1,5 +1,7 @@
 import axios from 'axios';
+import Logger from 'js-logger';
 import { createRoot } from 'react-dom/client';
+import { SessionId } from './consts/session-id';
 import { getCurrentLocale, loadCrowdinStrings } from './localization';
 import fallbackStrings from './localization/static/userscript.json';
 import { axiosGmXhrAdapter } from './tampermonkey/axios-gmxhr-adapter';
@@ -10,6 +12,36 @@ import { createElement } from 'react';
 import PlusBranded from './assets/plus-branded.svg';
 
 import './utils/wme-date-format';
+
+const consoleLogger = (() => {
+  let lastConsoleOutput = NaN;
+
+  return Logger.createDefaultHandler({
+    formatter: (messages, context) => {
+      const currentTime = new Date();
+      const timeSinceLastMessage = currentTime.getTime() - lastConsoleOutput;
+      messages.unshift(
+        [
+          '[editorx.dev/closures-plus]',
+          currentTime.toISOString(),
+          !isNaN(timeSinceLastMessage) &&
+            `\x1B[32m+${timeSinceLastMessage}ms\x1B[m`,
+          context.name && `[\x1B[105;1m${context.name}\x1B[m]`,
+        ]
+          .filter(Boolean)
+          .join('\t'),
+      );
+      lastConsoleOutput = currentTime.getTime();
+    },
+  });
+})();
+Logger.setHandler((messages, context) => {
+  consoleLogger(messages, context);
+});
+
+Logger.setLevel(Logger.DEBUG);
+Logger.debug('Logger initialized.');
+Logger.debug('Starting session', { sessionId: SessionId });
 
 axios.defaults.adapter = axiosGmXhrAdapter;
 
