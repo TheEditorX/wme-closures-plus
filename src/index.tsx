@@ -13,6 +13,7 @@ import { WzMenuElement } from 'types/waze/elements';
 
 import './utils/wme-date-format';
 
+const sessionLogs = [];
 const consoleLogger = (() => {
   let lastConsoleOutput = NaN;
 
@@ -37,6 +38,11 @@ const consoleLogger = (() => {
 })();
 Logger.setHandler((messages, context) => {
   consoleLogger(messages, context);
+  sessionLogs.push({
+    time: new Date().toISOString(),
+    context,
+    messages,
+  });
 });
 
 Logger.setLevel(Logger.DEBUG);
@@ -131,7 +137,7 @@ root.render(
           timestamp: new Date().toISOString(),
           userInfo: wmeSdk.State.getUserInfo(),
           browserInfo,
-          content: null,
+          content: sessionLogs,
         };
 
         const logBlob = new Blob([JSON.stringify(logData, null, 2)], {
