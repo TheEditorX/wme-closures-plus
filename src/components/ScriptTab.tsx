@@ -1,14 +1,47 @@
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import {
+  ReactNode,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { useWmeSdk } from '../contexts/WmeSdkContext';
 
-interface ScriptTabProps {
+type EffectCallback = (element: HTMLElement) => (() => void) | void;
+
+export interface ScriptTabProps {
   tabId?: string;
   tabLabel: ReactNode;
   children: ReactNode;
+  tabLabelEffect?: EffectCallback;
+  tabPaneEffect?: EffectCallback;
+  useLayoutEffectInstead?: boolean;
 }
-export function ScriptTab({ tabId, tabLabel, children }: ScriptTabProps) {
+export function ScriptTab({
+  tabId,
+  tabLabel,
+  children,
+  tabLabelEffect,
+  tabPaneEffect,
+  useLayoutEffectInstead = false,
+}: ScriptTabProps) {
   const tabElements = useScriptTabElements(tabId);
+
+  // Use the appropriate effect hook based on the useLayoutEffectInstead flag
+  const effectHook = useLayoutEffectInstead ? useLayoutEffect : useEffect;
+
+  // Apply effect to tabLabel element if provided
+  effectHook(() => {
+    if (!tabElements || !tabLabelEffect) return;
+    return tabLabelEffect(tabElements.tabLabel);
+  }, [tabElements, tabLabelEffect]);
+
+  // Apply effect to tabPane element if provided
+  effectHook(() => {
+    if (!tabElements || !tabPaneEffect) return;
+    return tabPaneEffect(tabElements.tabPane);
+  }, [tabElements, tabPaneEffect]);
 
   if (!tabElements) return null;
 

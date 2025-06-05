@@ -80,6 +80,7 @@ export default {
       __SCRIPT_CAMEL_CASE_NAME__: JSON.stringify(
         convertStringConvention(packagePureName, 'PascalCase'),
       ),
+      __SCRIPT_VERSION__: JSON.stringify(packageMetadata.version),
       __BUILD_TIME__: JSON.stringify(new Date()),
       'process.env.CROWDIN_DISTRIBUTION_HASH': JSON.stringify(
         process.env.CROWDIN_DISTRIBUTION_HASH || '15dd9243e7c0c5a4cad8d58031c',
