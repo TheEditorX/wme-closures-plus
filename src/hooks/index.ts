@@ -1,4 +1,4 @@
-export * from './useChangeTabPadding';
+export * from './useChangeContainerPadding';
 export * from './useQuerySelectorAll';
 export * from './useSet';
 export * from './useTranslation';

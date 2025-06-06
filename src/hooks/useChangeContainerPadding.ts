@@ -11,14 +11,14 @@ type PaddingComponentValue =
   | `${number}${CSSUnit}`
   | PaddingComponentStructuredValue;
 
-export function useChangeTabPadding(
-  tabElement: HTMLElement,
+export function useChangeContainerPadding(
+  containerElement: HTMLElement,
   newPadding: PaddingComponentValue[] | string | number,
 ): PaddingComponentStructuredValue[] | null {
-  const tabContainer = useTabShadowELement(tabElement);
+  const container = useShadowElement(containerElement);
 
   const originalPadding =
-    tabContainer ? getComputedStyle(tabContainer).padding : null;
+    container ? getComputedStyle(container).padding : null;
   const paddingValues =
     originalPadding ? parsePaddingValue(originalPadding) : null;
 
@@ -43,14 +43,14 @@ export function useChangeTabPadding(
     })();
 
     // Apply the new padding values
-    if (tabContainer)
-      tabContainer.style.padding = `${newPaddingValues.map((val) => `${val.value}${val.unit}`).join(' ')}`;
+    if (container)
+      container.style.padding = `${newPaddingValues.map((val) => `${val.value}${val.unit}`).join(' ')}`;
 
     return () => {
       // Reset to original padding on cleanup
-      if (tabContainer) tabContainer.style.padding = originalPadding;
+      if (container) container.style.padding = originalPadding;
     };
-  }, [tabContainer, newPadding, originalPadding]);
+  }, [container, newPadding, originalPadding]);
 
   return paddingValues;
 }
@@ -70,14 +70,20 @@ function parsePaddingValue(value: string): PaddingComponentStructuredValue[] {
   return paddingValues;
 }
 
-function useTabShadowELement(tabElement: HTMLElement): HTMLElement | null {
-  if (tabElement?.tagName !== 'WZ-TAB') return null;
+function useShadowElement(element: HTMLElement): HTMLElement | null {
+  if (!element) return null;
 
-  const shadowRoot = tabElement.shadowRoot;
+  // Check if the element is either a WZ-TAB or WZ-CARD
+  if (element.tagName !== 'WZ-TAB' && element.tagName !== 'WZ-CARD')
+    return null;
+
+  const shadowRoot = element.shadowRoot;
   if (!shadowRoot) return null;
 
-  const tabContainer: HTMLElement = shadowRoot.querySelector('.wz-tab');
-  if (!tabContainer) return null;
+  // Select the appropriate container based on the element type
+  const selector = element.tagName === 'WZ-TAB' ? '.wz-tab' : '.wz-card';
+  const container: HTMLElement = shadowRoot.querySelector(selector);
+  if (!container) return null;
 
-  return tabContainer;
+  return container;
 }

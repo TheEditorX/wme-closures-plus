@@ -10,17 +10,28 @@ const groupClass = css({
 const groupWithBorderClass = css({
   borderBottom: '1px solid var(--hairline)',
 });
+const disableTopPaddingClass = css({
+  paddingTop: 'unset',
+});
 
 interface ClosureEditorGroupProps {
+  disableTopPadding?: boolean;
   hasBorder?: boolean;
   children: ReactNode;
 }
 export function ClosureEditorGroup({
+  disableTopPadding,
   hasBorder,
   children,
 }: ClosureEditorGroupProps) {
   return (
-    <div className={clsx(groupClass, hasBorder && groupWithBorderClass)}>
+    <div
+      className={clsx(
+        groupClass,
+        hasBorder && groupWithBorderClass,
+        disableTopPadding && disableTopPaddingClass,
+      )}
+    >
       {children}
     </div>
   );
