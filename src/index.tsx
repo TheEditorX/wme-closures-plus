@@ -50,6 +50,7 @@ Logger.debug('Logger initialized.');
 Logger.debug('Starting session', {
   sessionId: SessionId,
   version: __SCRIPT_VERSION__,
+  commitHash: __COMMIT_HASH__,
   buildTime: __BUILD_TIME__,
   browserInfo: {
     userAgent: navigator.userAgent,
@@ -208,7 +209,7 @@ root.render(
             debugInfoItem.innerHTML = `
               <wz-overline>${__SCRIPT_SHORT_NAME__} Debug Menu</wz-overline>
               <div style="display: flex; flex-direction: column">
-                <wz-caption>Version: ${__SCRIPT_VERSION__}</wz-caption>
+                <wz-caption>Version: ${__SCRIPT_VERSION__}-${__COMMIT_HASH__}</wz-caption>
                 <wz-caption>Build time: ${__BUILD_TIME__}</wz-caption>
               </div>
             `;

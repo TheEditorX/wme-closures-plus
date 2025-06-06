@@ -7,6 +7,7 @@ import terser from '@rollup/plugin-terser';
 import replace from '@rollup/plugin-replace';
 import addBanner from './rollup-plugin-add-banner';
 import svgr from '@svgr/rollup';
+import { execSync } from 'child_process';
 
 import packageMetadata from './package.json';
 
@@ -25,6 +26,17 @@ const packageAuthor =
     packageMetadata.author) ||
   packageNamespace?.substring(1) ||
   'Unknown';
+
+// Get the current Git commit hash
+const getCommitHash = () => {
+  try {
+    // Get the short version of the commit hash (7 characters)
+    return execSync('git rev-parse --short HEAD').toString().trim();
+  } catch (error) {
+    console.error('Failed to get Git commit hash:', error);
+    return 'unknown';
+  }
+};
 
 const scriptName =
   ('displayName' in packageMetadata &&
@@ -81,6 +93,7 @@ export default {
         convertStringConvention(packagePureName, 'PascalCase'),
       ),
       __SCRIPT_VERSION__: JSON.stringify(packageMetadata.version),
+      __COMMIT_HASH__: JSON.stringify(getCommitHash()),
       __BUILD_TIME__: JSON.stringify(new Date()),
       'process.env.CROWDIN_DISTRIBUTION_HASH': JSON.stringify(
         process.env.CROWDIN_DISTRIBUTION_HASH || '15dd9243e7c0c5a4cad8d58031c',
