@@ -55,10 +55,10 @@ export const DAY_OF_WEEK_RESOLVER = createDateResolver(
     const nextOccurrences = basicFlagValues.map((dayFlagValue) => {
       const dayIndex = dayFlagToDayIndex(dayFlagValue);
       const today = new Date();
-      const todayDayOfWeek = today.getUTCDay();
+      const todayDayOfWeek = today.getDay();
       const daysUntilNextOccurrence = (dayIndex + 7 - todayDayOfWeek) % 7 || 7; // If it's today, go to next week
       const nextOccurrence = new DateOnly(today);
-      nextOccurrence.setUTCDate(today.getUTCDate() + daysUntilNextOccurrence);
+      nextOccurrence.setDate(today.getDate() + daysUntilNextOccurrence);
       logger.debug('Calculating for day index', {
         dayIndex,
         dayFlagValue,

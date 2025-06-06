@@ -4,17 +4,10 @@ type DateOnlyPropertyKeys =
   | 'toString'
   | 'toISOString'
   | 'toJSON'
-  | 'getUTCDate'
-  | 'getUTCMonth'
-  | 'getUTCFullYear'
-  | 'getUTCDay'
   | 'getDate'
   | 'getMonth'
   | 'getFullYear'
   | 'getDay'
-  | 'setUTCDate'
-  | 'setUTCMonth'
-  | 'setUTCFullYear'
   | 'setDate'
   | 'setMonth'
   | 'setFullYear';
@@ -61,11 +54,17 @@ export class DateOnly implements Pick<Date, DateOnlyPropertyKeys> {
     if (arguments.length === 0) this.date = new Date();
     else if (arguments.length === 3)
       this.date = new Date(
-        Date.UTC(valueOrYear as number, monthIndex as number, date as number),
+        valueOrYear as number,
+        monthIndex as number,
+        date as number,
+        0,
+        0,
+        0,
+        0,
       );
     else this.date = new Date(valueOrYear);
 
-    this.date.setUTCHours(0, 0, 0, 0); // Set time to midnight UTC
+    this.date.setHours(0, 0, 0, 0); // Set time to midnight
   }
 
   toString(): string {
@@ -73,7 +72,10 @@ export class DateOnly implements Pick<Date, DateOnlyPropertyKeys> {
   }
 
   toISOString(): string {
-    return this.date.toISOString().split('T')[0]; // Return only the date part
+    const year = this.getFullYear().toString().padStart(4, '0');
+    const month = (this.getMonth() + 1).toString().padStart(2, '0');
+    const date = this.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${date}`;
   }
 
   toJSON(): string {
@@ -93,23 +95,8 @@ export class DateOnly implements Pick<Date, DateOnlyPropertyKeys> {
    * @returns The date as a number of milliseconds.
    */
   getTime(): number {
-    return this.date.getTime();
-  }
-
-  getUTCDate(): number {
-    return this.date.getUTCDate();
-  }
-
-  getUTCMonth(): number {
-    return this.date.getUTCMonth();
-  }
-
-  getUTCFullYear(): number {
-    return this.date.getUTCFullYear();
-  }
-
-  getUTCDay(): number {
-    return this.date.getUTCDay();
+    const timezoneOffset = this.date.getTimezoneOffset() * 60 * 1000;
+    return this.date.getTime() - timezoneOffset;
   }
 
   getDate(): number {
@@ -126,21 +113,6 @@ export class DateOnly implements Pick<Date, DateOnlyPropertyKeys> {
 
   getDay(): number {
     return this.date.getDay();
-  }
-
-  setUTCDate(date: number): number {
-    this.date.setUTCDate(date);
-    return this.getTime();
-  }
-
-  setUTCMonth(month: number): number {
-    this.date.setUTCMonth(month);
-    return this.getTime();
-  }
-
-  setUTCFullYear(year: number): number {
-    this.date.setUTCFullYear(year);
-    return this.getTime();
   }
 
   setDate(date: number): number {
