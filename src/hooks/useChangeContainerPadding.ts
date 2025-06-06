@@ -23,6 +23,18 @@ export function useChangeContainerPadding(
     originalPadding ? parsePaddingValue(originalPadding) : null;
 
   useLayoutEffect(() => {
+    if (!container) return;
+
+    const originalOverflow = getComputedStyle(container).overflow;
+
+    container.style.overflow = 'hidden';
+
+    return () => {
+      container.style.overflow = originalOverflow;
+    };
+  }, [container]);
+
+  useLayoutEffect(() => {
     const newPaddingValues = (() => {
       if (typeof newPadding === 'string') return parsePaddingValue(newPadding);
       if (typeof newPadding === 'number')
