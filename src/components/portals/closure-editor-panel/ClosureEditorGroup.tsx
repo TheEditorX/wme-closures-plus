@@ -4,6 +4,8 @@ import { ReactNode } from 'react';
 
 const groupClass = css({
   padding: 'var(--trimmed-padding)',
+  width: '100%',
+  flex: '1 1 auto', // Make it grow and take all available space in flexbox context
 });
 const groupWithBorderClass = css({
   borderBottom: '1px solid var(--hairline)',
