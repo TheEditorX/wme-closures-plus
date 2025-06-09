@@ -6,6 +6,7 @@ interface ClosureFixedEnd {
     hours: number;
     minutes: number;
   };
+  postponeBy: number;
 }
 interface ClosureDurationalEnd {
   type: 'DURATIONAL';

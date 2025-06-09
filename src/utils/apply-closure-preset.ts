@@ -102,6 +102,14 @@ function getEndDateForPreset(
         // we need to apply the end time to the next day
         endDate.setDate(endDate.getDate() + 1);
       }
+      if (endDetails.postponeBy) {
+        logger.debug(
+          `Postponing the end time by ${endDetails.postponeBy} minutes`,
+        );
+        const time = endDate.getTime();
+        const postponeByMs = endDetails.postponeBy * 60 * 1000;
+        endDate.setTime(time + postponeByMs);
+      }
       return endDate;
     }
     default:
