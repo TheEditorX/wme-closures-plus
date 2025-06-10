@@ -1,10 +1,11 @@
 import { useEffect, useRef, ComponentProps } from 'react';
 import { useMergeRefs } from '../hooks/useMergeRefs';
+import { TimeOnly } from '../classes/time-only';
 
 interface TimePickerProps extends ComponentProps<'wz-text-input'> {
-  value?: string;
-  onChange?: (value: string) => void;
-  onBlur?: (value: string) => void;
+  value?: TimeOnly;
+  onChange?: (value: TimeOnly | undefined) => void;
+  onBlur?: (value: TimeOnly | undefined) => void;
   timePickerOptions?: {
     defaultTime?: boolean | string;
     showMeridian?: boolean;
@@ -15,7 +16,7 @@ interface TimePickerProps extends ComponentProps<'wz-text-input'> {
 }
 
 export const TimePicker = ({
-  value = '',
+  value,
   onChange,
   onBlur,
   timePickerOptions = {},
@@ -26,6 +27,9 @@ export const TimePicker = ({
 
   // Combine the external ref with our internal ref using useMergeRefs
   const mergedRef = useMergeRefs(inputRef, ref);
+
+  // Convert TimeOnly to string for display
+  const displayValue = value ? value.formatAsTimeInput() : '';
 
   // Initialize timepicker when the component mounts
   useEffect(() => {
@@ -55,14 +59,33 @@ export const TimePicker = ({
     jQueryInput.on('changeTime.timepicker', () => {
       const timeValue = timePicker.getTime();
       if (timeValue && onChange) {
-        onChange(timeValue);
+        try {
+          const timeOnly = new TimeOnly(timeValue);
+          onChange(timeOnly);
+        } catch {
+          // If the time string is invalid, call onChange with undefined
+          onChange(undefined);
+        }
+      } else {
+        onChange?.(undefined);
       }
     });
 
     jQueryInput.on('blur.timepicker', () => {
       timePicker.setTime(input.value, true);
       timePicker.update();
-      onBlur?.(timePicker.getTime());
+      const timeValue = timePicker.getTime();
+      if (timeValue && onBlur) {
+        try {
+          const timeOnly = new TimeOnly(timeValue);
+          onBlur(timeOnly);
+        } catch {
+          // If the time string is invalid, call onBlur with undefined
+          onBlur(undefined);
+        }
+      } else {
+        onBlur?.(undefined);
+      }
     });
 
     // Clean up event listeners when component unmounts
@@ -75,7 +98,7 @@ export const TimePicker = ({
   return (
     <wz-text-input
       ref={mergedRef}
-      value={value}
+      value={displayValue}
       autocomplete="off"
       {...props}
     />
