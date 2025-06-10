@@ -140,7 +140,7 @@ describe('applyClosurePreset rounding functionality', () => {
         startDate: { type: 'CURRENT_DATE', args: null },
         end: {
           type: 'DURATIONAL',
-          duration: { hours: 1, minutes: 52 }, // 1 hour 52 minutes
+          duration: { hours: 1, minutes: 53 }, // 1 hour 53 minutes
           roundTo: 15,
         },
       },
@@ -150,7 +150,7 @@ describe('applyClosurePreset rounding functionality', () => {
 
     const endTimeCall = mockClosureEditorForm.setEnd.mock.calls[0][0];
     
-    // Start time: 10:00, duration: 1h 52m = 11:52, rounded to nearest 15min = 12:00
+    // Start time: 10:00, duration: 1h 53m = 11:53, rounded to nearest 15min = 12:00
     const expectedEndTime = new Date('2023-01-01T12:00:00');
     expect(endTimeCall.getTime()).toBe(expectedEndTime.getTime());
   });
