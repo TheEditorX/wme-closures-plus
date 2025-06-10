@@ -31,8 +31,19 @@ export function DurationPicker(props: DurationPickerProps) {
       onBlur={onBlur}
       onKeyDown={onKeyDown}
       errorMessage={error ? t('duration_picker.errors')[error] : null}
-      helperMessage={t('duration_picker.helper')}
       autocomplete="off"
-    />
+    >
+      <div slot="trailing-icon">
+        <wz-basic-tooltip>
+          <wz-tooltip-source>
+            <i className="w-icon w-icon-info"></i>
+          </wz-tooltip-source>
+          <wz-tooltip-target></wz-tooltip-target>
+          <wz-tooltip-content>
+            {t('duration_picker.helper')}
+          </wz-tooltip-content>
+        </wz-basic-tooltip>
+      </div>
+    </wz-text-input>
   );
 }
