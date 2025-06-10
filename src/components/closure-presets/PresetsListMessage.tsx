@@ -37,7 +37,6 @@ interface PresetsListMessageProps {
   message: string;
 }
 export function PresetsListMessage({
-  isSlashed = false,
   title,
   message,
 }: PresetsListMessageProps) {
