@@ -8,6 +8,7 @@ import { PresetEditDialogData } from '../interfaces';
 import { TimeOnly } from '../../../../classes'; // Assuming TimeOnly might be needed for formatting
 import { WeekdayFlags } from '../../../../enums'; // Assuming WeekdayFlags might be needed
 import { useTranslation } from '../../../../hooks';
+import { formatTimeInput } from '../../../../utils';
 
 const usePresetInfoState = createUseStepState<
   PresetEditDialogData,
@@ -60,7 +61,7 @@ const formatTime = (
 ): string => {
   if (!time) return t('common.not_set');
   if (time instanceof TimeOnly) {
-    return time.formatAsTimeInput();
+    return formatTimeInput(time);
   }
   return t('common.invalid_time');
 };

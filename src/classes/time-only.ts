@@ -108,16 +108,6 @@ export class TimeOnly implements Pick<Date, TimeOnlyPropertyKeys> {
     return this.date.toString();
   }
 
-  /**
-   * Formats the time as HH:MM string for use in time input fields.
-   * @returns Time formatted as "HH:MM" (e.g., "09:30", "14:45")
-   */
-  formatAsTimeInput(): string {
-    const hours = this.getHours().toString().padStart(2, '0');
-    const minutes = this.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  }
-
   getHours(): number {
     return this.date.getHours();
   }

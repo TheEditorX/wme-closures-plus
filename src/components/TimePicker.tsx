@@ -1,6 +1,7 @@
 import { useEffect, useRef, ComponentProps } from 'react';
 import { useMergeRefs } from '../hooks/useMergeRefs';
 import { TimeOnly } from '../classes/time-only';
+import { formatTimeInput } from '../utils';
 
 interface TimePickerProps extends ComponentProps<'wz-text-input'> {
   value?: TimeOnly;
@@ -29,7 +30,7 @@ export const TimePicker = ({
   const mergedRef = useMergeRefs(inputRef, ref);
 
   // Convert TimeOnly to string for display
-  const displayValue = value ? value.formatAsTimeInput() : '';
+  const displayValue = value ? formatTimeInput(value) : '';
 
   // Initialize timepicker when the component mounts
   useEffect(() => {

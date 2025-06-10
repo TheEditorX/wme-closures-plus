@@ -106,24 +106,5 @@ describe('TimeOnly', () => {
       timeOnly.setMilliseconds(250);
       expect(timeOnly.getMilliseconds()).toBe(250);
     });
-
-    it('formatAsTimeInput should return correct HH:MM format', () => {
-      expect(timeOnly.formatAsTimeInput()).toBe('10:15');
-    });
-
-    it('formatAsTimeInput should pad single digits with zeros', () => {
-      const timeOnly = new TimeOnly(9, 5, 0, 0);
-      expect(timeOnly.formatAsTimeInput()).toBe('09:05');
-    });
-
-    it('formatAsTimeInput should handle midnight correctly', () => {
-      const timeOnly = new TimeOnly(0, 0, 0, 0);
-      expect(timeOnly.formatAsTimeInput()).toBe('00:00');
-    });
-
-    it('formatAsTimeInput should handle noon correctly', () => {
-      const timeOnly = new TimeOnly(12, 0, 0, 0);
-      expect(timeOnly.formatAsTimeInput()).toBe('12:00');
-    });
   });
 });
