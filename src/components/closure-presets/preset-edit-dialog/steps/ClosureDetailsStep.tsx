@@ -38,6 +38,12 @@ export function ClosureDetailsStep() {
   const [postponeRecoverValue, setPostponeRecoverValue] = useState<
     number | null
   >(null);
+  const [isRoundingEnabled, setIsRoundingEnabled] = useState(
+    () => endTime?.type === 'DURATIONAL' && !!endTime?.roundTo,
+  );
+  const [roundingRecoverValue, setRoundingRecoverValue] = useState<
+    10 | 15 | 30 | 60 | null
+  >(null);
 
   return (
     <PresetEditForm>
@@ -216,7 +222,7 @@ export function ClosureDetailsStep() {
                   });
                 }
                 case 'DURATIONAL':
-                  return setEndTime({ type: 'DURATIONAL', duration: NaN });
+                  return setEndTime({ type: 'DURATIONAL', duration: NaN, roundTo: undefined });
                 default:
                   console.warn(`Unexpected end time type: ${value}`);
                   break;
@@ -361,12 +367,90 @@ export function ClosureDetailsStep() {
               </div>
             </>
           : endTime?.type === 'DURATIONAL' && (
-              <DurationPicker
-                value={endTime.duration}
-                onChange={(value) =>
-                  setEndTime({ type: 'DURATIONAL', duration: value })
-                }
-              />
+              <>
+                <DurationPicker
+                  style={{
+                    marginBottom: 'var(--space-always-xs, 8px)',
+                  }}
+                  value={endTime.duration}
+                  onChange={(value) =>
+                    setEndTime((prevEndTime) => ({
+                      type: 'DURATIONAL',
+                      duration: value,
+                      roundTo: (prevEndTime?.type === 'DURATIONAL' && prevEndTime.roundTo) || undefined,
+                    }))
+                  }
+                />
+                
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: 'var(--space-always-xs, 8px)',
+                  }}
+                >
+                  <wz-checkbox
+                    checked={isRoundingEnabled}
+                    onChange={(event: SyntheticEvent<HTMLInputElement>) => {
+                      event.preventDefault();
+                      setIsRoundingEnabled(event.currentTarget.checked);
+                      if (event.currentTarget.checked) {
+                        // the checkbox is now selected
+                        // we need to restore the persisted value if we have any
+                        setEndTime((prevEndTime) => {
+                          if (prevEndTime?.type !== 'DURATIONAL') return prevEndTime;
+
+                          return {
+                            ...prevEndTime,
+                            roundTo: roundingRecoverValue || 15,
+                          };
+                        });
+                      } else {
+                        // the checkbox is now deselected
+                        // we need to update the value to undefined
+                        // and preserve the existing value
+                        setEndTime((prevEndTime) => {
+                          if (prevEndTime?.type !== 'DURATIONAL') return prevEndTime;
+
+                          setRoundingRecoverValue(prevEndTime.roundTo || null);
+                          return {
+                            ...prevEndTime,
+                            roundTo: undefined,
+                          };
+                        });
+                      }
+                    }}
+                  >
+                    Round end time to nearest
+                  </wz-checkbox>
+                  <wz-select
+                    style={{
+                      minWidth: 'unset',
+                      flex: 1,
+                    }}
+                    disabled={!isRoundingEnabled}
+                    value={endTime.roundTo?.toString() || roundingRecoverValue?.toString() || '15'}
+                    onChange={(event: SyntheticEvent<HTMLSelectElement>) => {
+                      const value = parseInt(event.currentTarget.value) as 10 | 15 | 30 | 60;
+                      setEndTime((prevEndTime) => {
+                        if (prevEndTime?.type !== 'DURATIONAL') return prevEndTime;
+
+                        return {
+                          ...prevEndTime,
+                          roundTo: value,
+                        };
+                      });
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation(); // prevent the checkbox from deactivating
+                    }}
+                  >
+                    <wz-option value="10">10 minutes</wz-option>
+                    <wz-option value="15">15 minutes</wz-option>
+                    <wz-option value="30">30 minutes</wz-option>
+                    <wz-option value="60">1 hour</wz-option>
+                  </wz-select>
+                </div>
+              </>
             )
           }
         </div>

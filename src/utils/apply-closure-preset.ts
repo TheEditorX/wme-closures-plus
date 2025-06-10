@@ -58,6 +58,24 @@ function getStartDateForPreset(
   return result;
 }
 
+function roundToNearestMinutes(date: Date, roundToMinutes: number): Date {
+  const rounded = new Date(date);
+  const minutes = rounded.getMinutes();
+  const roundedMinutes = Math.round(minutes / roundToMinutes) * roundToMinutes;
+  
+  if (roundedMinutes >= 60) {
+    rounded.setHours(rounded.getHours() + 1);
+    rounded.setMinutes(0);
+  } else {
+    rounded.setMinutes(roundedMinutes);
+  }
+  
+  rounded.setSeconds(0);
+  rounded.setMilliseconds(0);
+  
+  return rounded;
+}
+
 function getEndDateForPreset(
   closureDetails: ClosurePreset['closureDetails'],
   startDate: Date,
@@ -69,13 +87,21 @@ function getEndDateForPreset(
   });
 
   switch (endDetails.type) {
-    case 'DURATIONAL':
-      return new Date(
+    case 'DURATIONAL': {
+      let endDate = new Date(
         startDate.getTime() +
           (endDetails.duration.hours * 3600 +
             endDetails.duration.minutes * 60) *
             1000,
       );
+      
+      if (endDetails.roundTo) {
+        logger.debug(`Rounding end time to nearest ${endDetails.roundTo} minutes`);
+        endDate = roundToNearestMinutes(endDate, endDetails.roundTo);
+      }
+      
+      return endDate;
+    }
     case 'FIXED': {
       const startTime = new TimeOnly(startDate);
       const endTime = new TimeOnly(

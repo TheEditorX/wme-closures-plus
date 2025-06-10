@@ -73,9 +73,15 @@ const formatEndTime = (
   if (!endTime) return t('common.not_set');
   if (endTime.type === 'FIXED') return formatTime(endTime.value, t);
   if (endTime.type === 'DURATIONAL') {
-    return endTime.duration && !isNaN(endTime.duration) ?
-        `${endTime.duration} minutes`
-      : t('common.not_set');
+    if (!endTime.duration || isNaN(endTime.duration)) {
+      return t('common.not_set');
+    }
+    let result = `${endTime.duration} minutes`;
+    if (endTime.roundTo) {
+      const roundToText = endTime.roundTo === 60 ? '1 hour' : `${endTime.roundTo} minutes`;
+      result += ` (rounded to nearest ${roundToText})`;
+    }
+    return result;
   }
   return t('common.not_set');
 };

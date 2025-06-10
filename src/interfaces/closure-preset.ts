@@ -14,6 +14,7 @@ interface ClosureDurationalEnd {
     hours: number;
     minutes: number;
   };
+  roundTo?: 10 | 15 | 30 | 60; // round to nearest X minutes
 }
 
 export interface ClosurePresetMetadata {

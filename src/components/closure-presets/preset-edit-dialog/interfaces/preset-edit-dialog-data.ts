@@ -29,6 +29,7 @@ export type PresetEditDialogData = {
       | {
           type: 'DURATIONAL';
           duration: number;
+          roundTo?: 10 | 15 | 30 | 60;
         };
   };
 } & {
