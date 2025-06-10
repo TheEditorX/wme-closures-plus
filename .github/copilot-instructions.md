@@ -29,7 +29,7 @@ Commit messages **must** follow the [Conventional Commits](https://www.conventio
     * Use `snake_case` for properties in JSON files and similar files (e.g., `duration`, `postpone_by`, `closure_details`).
     * Use `UPPER_SNAKE_CASE` for constants, both in code and other files (e.g., `MAX_CLOSURE_DURATION`, `DEFAULT_PRESET_NAME`).
 * **Return Statements:** The final `return` statement of a function or method should be on its own line for clarity.
-* **Switch Expressions:** Where appropriate, prefer using `switch` expressions over a series of `if...else if` statements for readability.
+* **Switch Statements:** Where appropriate, prefer using `switch` statements over a series of `if...else if` statements for readability.
 
 ## TypeScript and React Best Practices
 
