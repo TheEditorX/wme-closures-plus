@@ -174,7 +174,6 @@ root.render(
         clickCount++;
         lastClickTime = currentTime;
 
-
         if (clickCount === 5) {
           Logger.debug('Context menu triggered', { event });
           // Prevent default context menu on third click

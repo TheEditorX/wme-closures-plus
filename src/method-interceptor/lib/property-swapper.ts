@@ -11,10 +11,7 @@ export class PropertySwapper<
   private _wasDefined = false;
   private _isSwapped = false;
 
-  constructor(
-    target: Target,
-    key: Key,
-  ) {
+  constructor(target: Target, key: Key) {
     this._target = target;
     this._key = key;
     this._oldValue = this._target[this._key] as Value;
@@ -41,8 +38,7 @@ export class PropertySwapper<
 
     if (this._wasDefined)
       this._target[this._key] = this._oldValue as Target[Key];
-    else
-      delete this._target[this._key];
+    else delete this._target[this._key];
 
     this._isSwapped = false;
   }

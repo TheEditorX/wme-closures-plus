@@ -257,7 +257,9 @@ export class CrowdinOtaClient {
       return this.manifestHolder;
     } else {
       this.manifestHolder = this.httpClient
-        .get(`${CrowdinOtaClient.BASE_URL}/${this.distributionHash}/manifest.json`)
+        .get(
+          `${CrowdinOtaClient.BASE_URL}/${this.distributionHash}/manifest.json`,
+        )
         .then((manifest: Manifest) => {
           if (manifest.language_mapping) {
             Object.keys(manifest.language_mapping).forEach(

@@ -5,17 +5,13 @@ import pluginReact from 'eslint-plugin-react';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import { includeIgnoreFile } from "@eslint/compat";
+import { includeIgnoreFile } from '@eslint/compat';
 import { fileURLToPath } from 'node:url';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-  includeIgnoreFile(
-    fileURLToPath(new URL('.gitignore', import.meta.url)),
-  ),
-  includeIgnoreFile(
-    fileURLToPath(new URL('.eslintignore', import.meta.url)),
-  ),
+  includeIgnoreFile(fileURLToPath(new URL('.gitignore', import.meta.url))),
+  includeIgnoreFile(fileURLToPath(new URL('.eslintignore', import.meta.url))),
   { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
   {
     languageOptions: { globals: globals.browser },

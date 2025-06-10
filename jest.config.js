@@ -1,12 +1,9 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
 export default {
-  testEnvironment: "jsdom",
+  testEnvironment: 'jsdom',
   transform: {
-    "^.+\.tsx?$": ["ts-jest",{}],
+    '^.+\.tsx?$': ['ts-jest', {}],
   },
-  modulePaths: [
-    "<rootDir>/src/"
-  ],
+  modulePaths: ['<rootDir>/src/'],
   coveragePathIgnorePatterns: ['<rootDir>/tests/__extenders__'],
 };
-

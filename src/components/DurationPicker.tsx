@@ -39,9 +39,7 @@ export function DurationPicker(props: DurationPickerProps) {
             <i className="w-icon w-icon-info"></i>
           </wz-tooltip-source>
           <wz-tooltip-target></wz-tooltip-target>
-          <wz-tooltip-content>
-            {t('duration_picker.helper')}
-          </wz-tooltip-content>
+          <wz-tooltip-content>{t('duration_picker.helper')}</wz-tooltip-content>
         </wz-basic-tooltip>
       </div>
     </wz-text-input>
