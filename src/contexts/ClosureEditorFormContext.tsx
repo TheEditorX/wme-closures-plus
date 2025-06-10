@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { ClosureEditorForm, ClosureGroupModelBasedEditorForm } from 'classes';
 import { createContext, ReactNode, useContext, useMemo } from 'react';
 
@@ -21,9 +22,7 @@ export function ClosureEditorFormContextProvider(
 
     switch (props.type) {
       case 'CLOSURES_GROUP_MODEL_DOM_FORM':
-        return ClosureGroupModelBasedEditorForm.fromHTMLForm(
-          props.target,
-        );
+        return ClosureGroupModelBasedEditorForm.fromHTMLForm(props.target);
     }
   }, [
     'closureEditorForm' in props && props.closureEditorForm,
@@ -44,7 +43,9 @@ export const ClosureEditorFormContextConsumer =
 export function useClosureEditorFormContext() {
   const context = useContext(ClosureEditorFormContext);
   if (!context) {
-    throw new Error('useClosureEditorFormContext must be used within <ClosureEditorFormContext>');
+    throw new Error(
+      'useClosureEditorFormContext must be used within <ClosureEditorFormContext>',
+    );
   }
 
   return context;

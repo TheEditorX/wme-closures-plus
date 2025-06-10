@@ -99,9 +99,9 @@ gmxhr.prototype.send = function (data) {
   var that = this;
   // Detect if using older GM API (or other userscript engines)
   var agent =
-    typeof GM_xmlhttpRequest === 'undefined'
-      ? GM.xmlHttpRequest
-      : GM_xmlhttpRequest;
+    typeof GM_xmlhttpRequest === 'undefined' ?
+      GM.xmlHttpRequest
+    : GM_xmlhttpRequest;
   // https://wiki.greasespot.net/GM.xmlHttpRequest
   agent({
     method: this.type,
