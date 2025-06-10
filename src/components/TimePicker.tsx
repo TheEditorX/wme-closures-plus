@@ -1,10 +1,30 @@
 import { useEffect, useRef, ComponentProps } from 'react';
 import { useMergeRefs } from '../hooks/useMergeRefs';
+import { TimeOnly } from '../classes/time-only';
+
+// Helper function to format TimeOnly to HH:MM format
+const formatTimeOnlyToString = (timeOnly: TimeOnly): string => {
+  const hours = timeOnly.getHours().toString().padStart(2, '0');
+  const minutes = timeOnly.getMinutes().toString().padStart(2, '0');
+  return `${hours}:${minutes}`;
+};
+
+// Helper function to safely create TimeOnly from string
+const createTimeOnlyFromString = (timeString: string): TimeOnly | null => {
+  try {
+    if (!timeString || typeof timeString !== 'string') {
+      return null;
+    }
+    return new TimeOnly(timeString);
+  } catch {
+    return null;
+  }
+};
 
 interface TimePickerProps extends ComponentProps<'wz-text-input'> {
-  value?: string;
-  onChange?: (value: string) => void;
-  onBlur?: (value: string) => void;
+  value?: TimeOnly;
+  onChange?: (value: TimeOnly) => void;
+  onBlur?: (value: TimeOnly) => void;
   timePickerOptions?: {
     defaultTime?: boolean | string;
     showMeridian?: boolean;
@@ -15,7 +35,7 @@ interface TimePickerProps extends ComponentProps<'wz-text-input'> {
 }
 
 export const TimePicker = ({
-  value = '',
+  value,
   onChange,
   onBlur,
   timePickerOptions = {},
@@ -26,6 +46,9 @@ export const TimePicker = ({
 
   // Combine the external ref with our internal ref using useMergeRefs
   const mergedRef = useMergeRefs(inputRef, ref);
+
+  // Convert TimeOnly to string for the input value
+  const stringValue = value ? formatTimeOnlyToString(value) : '';
 
   // Initialize timepicker when the component mounts
   useEffect(() => {
@@ -55,14 +78,23 @@ export const TimePicker = ({
     jQueryInput.on('changeTime.timepicker', () => {
       const timeValue = timePicker.getTime();
       if (timeValue && onChange) {
-        onChange(timeValue);
+        const timeOnly = createTimeOnlyFromString(timeValue);
+        if (timeOnly) {
+          onChange(timeOnly);
+        }
       }
     });
 
     jQueryInput.on('blur.timepicker', () => {
       timePicker.setTime(input.value, true);
       timePicker.update();
-      onBlur?.(timePicker.getTime());
+      const timeValue = timePicker.getTime();
+      if (timeValue && onBlur) {
+        const timeOnly = createTimeOnlyFromString(timeValue);
+        if (timeOnly) {
+          onBlur(timeOnly);
+        }
+      }
     });
 
     // Clean up event listeners when component unmounts
@@ -75,7 +107,7 @@ export const TimePicker = ({
   return (
     <wz-text-input
       ref={mergedRef}
-      value={value}
+      value={stringValue}
       autocomplete="off"
       {...props}
     />
