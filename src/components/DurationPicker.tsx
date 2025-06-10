@@ -33,7 +33,7 @@ export function DurationPicker(props: DurationPickerProps) {
       errorMessage={error ? t('duration_picker.errors')[error] : null}
       autocomplete="off"
     >
-      <div slot="trailing-icon">
+      <div slot="trailing-icon" style={{ margin: 'auto', fontSize: '24px' }}>
         <wz-basic-tooltip>
           <wz-tooltip-source>
             <i className="w-icon w-icon-info"></i>
