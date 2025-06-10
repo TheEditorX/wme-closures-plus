@@ -31,11 +31,13 @@ export function createUseStepState<D extends object>(
         updateStepData(currentStepConfig.id, {
           [key]:
             typeof newValue === 'function' ?
-              (newValue as () => D[K])()
+              (newValue as (prevValue: D[K]) => D[K])(
+                getStepData(currentStepConfig.id)[key],
+              )
             : newValue,
         });
       },
-      [currentStepConfig.id, key, updateStepData],
+      [currentStepConfig.id, getStepData, key, updateStepData],
     );
 
     (() => {
