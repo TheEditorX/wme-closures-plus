@@ -32,6 +32,12 @@ export function ClosureDetailsStep() {
   const [startTimeMode, setStartTimeMode] = useState<'IMMEDIATE' | 'FIXED'>(
     startTime ? 'FIXED' : 'IMMEDIATE',
   );
+  const [isPostponeEnabled, setIsPostponeEnabled] = useState(
+    () => endTime?.type === 'FIXED' && !!endTime?.postponeBy,
+  );
+  const [postponeRecoverValue, setPostponeRecoverValue] = useState<
+    number | null
+  >(null);
 
   return (
     <PresetEditForm>
@@ -203,7 +209,11 @@ export function ClosureDetailsStep() {
                 case 'FIXED': {
                   const timeInOneHour = new TimeOnly();
                   timeInOneHour.setHours(timeInOneHour.getHours() + 1);
-                  return setEndTime({ type: 'FIXED', value: timeInOneHour });
+                  return setEndTime({
+                    type: 'FIXED',
+                    value: timeInOneHour,
+                    postponeBy: 0,
+                  });
                 }
                 case 'DURATIONAL':
                   return setEndTime({ type: 'DURATIONAL', duration: NaN });
@@ -243,33 +253,113 @@ export function ClosureDetailsStep() {
           </ToggleGroup>
 
           {endTime?.type === 'FIXED' ?
-            <TimePicker
-              placeholder="--:--"
-              value={
-                endTime.value ?
-                  `${endTime.value.getHours().toString().padStart(2, '0')}:${endTime.value.getMinutes().toString().padStart(2, '0')}`
-                : ''
-              }
-              onChange={(timeValue) => {
-                if (!timeValue) return;
-                setEndTime({
-                  type: 'FIXED',
-                  value: new TimeOnly(timeValue),
-                });
-              }}
-              onBlur={(timeValue) => {
-                if (!timeValue) return;
-                setEndTime({
-                  type: 'FIXED',
-                  value: new TimeOnly(timeValue),
-                });
-              }}
-              timePickerOptions={{
-                defaultTime: false,
-                showMeridian: false,
-                template: false,
-              }}
-            />
+            <>
+              <TimePicker
+                style={{
+                  marginBottom: 'var(--space-always-xs, 8px)',
+                  display: 'block',
+                }}
+                placeholder="--:--"
+                value={
+                  endTime.value ?
+                    `${endTime.value.getHours().toString().padStart(2, '0')}:${endTime.value.getMinutes().toString().padStart(2, '0')}`
+                  : ''
+                }
+                onChange={(timeValue) => {
+                  if (!timeValue) return;
+                  setEndTime((prevEndTime) => ({
+                    type: 'FIXED',
+                    value: new TimeOnly(timeValue),
+                    postponeBy:
+                      (prevEndTime.type === 'FIXED' &&
+                        prevEndTime.postponeBy) ||
+                      0,
+                  }));
+                }}
+                onBlur={(timeValue) => {
+                  if (!timeValue) return;
+                  setEndTime((prevEndTime) => ({
+                    type: 'FIXED',
+                    value: new TimeOnly(timeValue),
+                    postponeBy:
+                      (prevEndTime.type === 'FIXED' &&
+                        prevEndTime.postponeBy) ||
+                      0,
+                  }));
+                }}
+                timePickerOptions={{
+                  defaultTime: false,
+                  showMeridian: false,
+                  template: false,
+                }}
+              />
+
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 'var(--space-always-xs, 8px)',
+                }}
+              >
+                <wz-checkbox
+                  checked={isPostponeEnabled}
+                  onChange={(event: SyntheticEvent<HTMLInputElement>) => {
+                    event.preventDefault();
+                    setIsPostponeEnabled(event.currentTarget.checked);
+                    if (event.currentTarget.checked) {
+                      // the checkbox is now selected
+                      // we need to restore the persisted value if we have any
+                      setEndTime((prevEndTime) => {
+                        if (prevEndTime?.type !== 'FIXED') return prevEndTime;
+
+                        return {
+                          ...prevEndTime,
+                          postponeBy: postponeRecoverValue,
+                        };
+                      });
+                    } else {
+                      // the checkbox is now deselected
+                      // we need to update the value of the end time to 0
+                      // and we need to preserve the existing value
+                      // for that we'll use nested updaters
+                      setEndTime((prevEndTime) => {
+                        if (prevEndTime?.type !== 'FIXED') return prevEndTime;
+
+                        setPostponeRecoverValue(prevEndTime.postponeBy);
+                        return {
+                          ...prevEndTime,
+                          postponeBy: 0,
+                        };
+                      });
+                    }
+                  }}
+                >
+                  {t(
+                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.postpone_by',
+                  )}
+                </wz-checkbox>
+                <DurationPicker
+                  style={{
+                    minWidth: 'unset',
+                    flex: 1,
+                  }}
+                  disabled={!isPostponeEnabled}
+                  value={endTime.postponeBy ?? postponeRecoverValue}
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent the checkbox from deactivating
+                  }}
+                  onChange={(value) => {
+                    setEndTime((prevEndTime) => {
+                      if (prevEndTime?.type !== 'FIXED') return prevEndTime;
+
+                      return {
+                        ...prevEndTime,
+                        postponeBy: value,
+                      };
+                    });
+                  }}
+                />
+              </div>
+            </>
           : endTime?.type === 'DURATIONAL' && (
               <DurationPicker
                 value={endTime.duration}

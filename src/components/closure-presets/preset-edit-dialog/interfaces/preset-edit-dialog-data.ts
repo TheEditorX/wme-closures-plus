@@ -24,6 +24,7 @@ export type PresetEditDialogData = {
       | {
           type: 'FIXED';
           value: TimeOnly;
+          postponeBy: number;
         }
       | {
           type: 'DURATIONAL';
