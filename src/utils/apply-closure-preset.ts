@@ -3,6 +3,7 @@ import { TimeOnly } from 'classes';
 import { getDateResolverByName } from 'consts/date-resolvers';
 import { ClosurePreset } from 'interfaces/closure-preset';
 import Logger from 'js-logger';
+import { roundTime } from './round-time';
 
 const logger = Logger.get('closure-presets');
 
@@ -69,13 +70,21 @@ function getEndDateForPreset(
   });
 
   switch (endDetails.type) {
-    case 'DURATIONAL':
-      return new Date(
+    case 'DURATIONAL': {
+      const endDate = new Date(
         startDate.getTime() +
           (endDetails.duration.hours * 3600 +
             endDetails.duration.minutes * 60) *
             1000,
       );
+
+      // Apply rounding if specified
+      if (endDetails.roundTo && endDetails.roundTo !== 'NONE') {
+        return roundTime(endDate, endDetails.roundTo);
+      }
+
+      return endDate;
+    }
     case 'FIXED': {
       const startTime = new TimeOnly(startDate);
       const endTime = new TimeOnly(
@@ -110,6 +119,12 @@ function getEndDateForPreset(
         const postponeByMs = endDetails.postponeBy * 60 * 1000;
         endDate.setTime(time + postponeByMs);
       }
+
+      // Apply rounding if specified (after postpone)
+      if (endDetails.roundTo && endDetails.roundTo !== 'NONE') {
+        return roundTime(endDate, endDetails.roundTo);
+      }
+
       return endDate;
     }
     default:

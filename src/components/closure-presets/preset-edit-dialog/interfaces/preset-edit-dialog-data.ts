@@ -25,10 +25,22 @@ export type PresetEditDialogData = {
           type: 'FIXED';
           value: TimeOnly;
           postponeBy: number;
+          roundTo?:
+            | 'NONE'
+            | '10_MINUTES'
+            | '15_MINUTES'
+            | '30_MINUTES'
+            | '1_HOUR';
         }
       | {
           type: 'DURATIONAL';
           duration: number;
+          roundTo?:
+            | 'NONE'
+            | '10_MINUTES'
+            | '15_MINUTES'
+            | '30_MINUTES'
+            | '1_HOUR';
         };
   };
 } & {

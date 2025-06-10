@@ -97,7 +97,17 @@
                 "FIXED": "Specific time",
                 "DURATIONAL": "Durational"
               },
-              "postpone_by": "Postpone by"
+              "postpone_by": "Postpone by",
+              "round_to": {
+                "label": "Round end time to",
+                "options": {
+                  "NONE": "No rounding",
+                  "10_MINUTES": "10 minutes",
+                  "15_MINUTES": "15 minutes", 
+                  "30_MINUTES": "30 minutes",
+                  "1_HOUR": "1 hour"
+                }
+              }
             }
           },
           "SUMMARY": {

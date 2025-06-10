@@ -213,10 +213,16 @@ export function ClosureDetailsStep() {
                     type: 'FIXED',
                     value: timeInOneHour,
                     postponeBy: 0,
+                    roundTo: 'NONE',
                   });
                 }
                 case 'DURATIONAL':
-                  return setEndTime({ type: 'DURATIONAL', duration: NaN });
+                  return setEndTime({
+                    type: 'DURATIONAL',
+                    duration: NaN,
+                    roundTo: 'NONE',
+                  });
+                  setEndTime({ type: 'DURATIONAL', duration: NaN });
                 default:
                   console.warn(`Unexpected end time type: ${value}`);
                   break;
@@ -274,6 +280,9 @@ export function ClosureDetailsStep() {
                       (prevEndTime.type === 'FIXED' &&
                         prevEndTime.postponeBy) ||
                       0,
+                    roundTo:
+                      (prevEndTime.type === 'FIXED' && prevEndTime.roundTo) ||
+                      'NONE',
                   }));
                 }}
                 onBlur={(timeValue) => {
@@ -285,6 +294,9 @@ export function ClosureDetailsStep() {
                       (prevEndTime.type === 'FIXED' &&
                         prevEndTime.postponeBy) ||
                       0,
+                    roundTo:
+                      (prevEndTime.type === 'FIXED' && prevEndTime.roundTo) ||
+                      'NONE',
                   }));
                 }}
                 timePickerOptions={{
@@ -359,14 +371,123 @@ export function ClosureDetailsStep() {
                   }}
                 />
               </div>
+
+              <wz-select
+                value={endTime.roundTo ?? 'NONE'}
+                onChange={(event: SyntheticEvent<HTMLSelectElement>) => {
+                  const value = event.currentTarget.value as
+                    | 'NONE'
+                    | '10_MINUTES'
+                    | '15_MINUTES'
+                    | '30_MINUTES'
+                    | '1_HOUR';
+                  setEndTime((prevEndTime) => {
+                    if (prevEndTime?.type !== 'FIXED') return prevEndTime;
+                    return {
+                      ...prevEndTime,
+                      roundTo: value,
+                    };
+                  });
+                }}
+                label={t(
+                  'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_to.label',
+                )}
+                style={{
+                  marginTop: 'var(--space-always-xs, 8px)',
+                }}
+              >
+                <wz-option value="NONE">
+                  {t(
+                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_to.options.NONE',
+                  )}
+                </wz-option>
+                <wz-option value="10_MINUTES">
+                  {t(
+                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_to.options.10_MINUTES',
+                  )}
+                </wz-option>
+                <wz-option value="15_MINUTES">
+                  {t(
+                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_to.options.15_MINUTES',
+                  )}
+                </wz-option>
+                <wz-option value="30_MINUTES">
+                  {t(
+                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_to.options.30_MINUTES',
+                  )}
+                </wz-option>
+                <wz-option value="1_HOUR">
+                  {t(
+                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_to.options.1_HOUR',
+                  )}
+                </wz-option>
+              </wz-select>
             </>
           : endTime?.type === 'DURATIONAL' && (
-              <DurationPicker
-                value={endTime.duration}
-                onChange={(value) =>
-                  setEndTime({ type: 'DURATIONAL', duration: value })
-                }
-              />
+              <>
+                <DurationPicker
+                  value={endTime.duration}
+                  onChange={(value) =>
+                    setEndTime({
+                      type: 'DURATIONAL',
+                      duration: value,
+                      roundTo: endTime.roundTo ?? 'NONE',
+                    })
+                  }
+                  style={{
+                    marginBottom: 'var(--space-always-xs, 8px)',
+                  }}
+                />
+
+                <wz-select
+                  value={endTime.roundTo ?? 'NONE'}
+                  onChange={(event: SyntheticEvent<HTMLSelectElement>) => {
+                    const value = event.currentTarget.value as
+                      | 'NONE'
+                      | '10_MINUTES'
+                      | '15_MINUTES'
+                      | '30_MINUTES'
+                      | '1_HOUR';
+                    setEndTime((prevEndTime) => {
+                      if (prevEndTime?.type !== 'DURATIONAL')
+                        return prevEndTime;
+                      return {
+                        ...prevEndTime,
+                        roundTo: value,
+                      };
+                    });
+                  }}
+                  label={t(
+                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_to.label',
+                  )}
+                >
+                  <wz-option value="NONE">
+                    {t(
+                      'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_to.options.NONE',
+                    )}
+                  </wz-option>
+                  <wz-option value="10_MINUTES">
+                    {t(
+                      'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_to.options.10_MINUTES',
+                    )}
+                  </wz-option>
+                  <wz-option value="15_MINUTES">
+                    {t(
+                      'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_to.options.15_MINUTES',
+                    )}
+                  </wz-option>
+                  <wz-option value="30_MINUTES">
+                    {t(
+                      'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_to.options.30_MINUTES',
+                    )}
+                  </wz-option>
+                  <wz-option value="1_HOUR">
+                    {t(
+                      'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_to.options.1_HOUR',
+                    )}
+                  </wz-option>
+                </wz-select>
+              </>
             )
           }
         </div>

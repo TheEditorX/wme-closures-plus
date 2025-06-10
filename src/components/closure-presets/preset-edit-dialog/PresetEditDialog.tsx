@@ -84,6 +84,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
                 minutes: closureDetailsData.endTime!.value.getMinutes(),
               },
               postponeBy: closureDetailsData.endTime!.postponeBy,
+              roundTo: closureDetailsData.endTime!.roundTo ?? 'NONE',
             };
             break;
           case 'DURATIONAL': {
@@ -94,6 +95,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
                 hours: Math.floor(durationInMinutes / 60),
                 minutes: durationInMinutes % 60,
               },
+              roundTo: closureDetailsData.endTime!.roundTo ?? 'NONE',
             };
             break;
           }
@@ -173,6 +175,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
                   0,
                 ),
                 postponeBy: props.preset.closureDetails.end.postponeBy,
+                roundTo: props.preset.closureDetails.end.roundTo ?? 'NONE',
               }
             : props.preset.closureDetails.end.type === 'DURATIONAL' ?
               {
@@ -180,6 +183,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
                 duration:
                   props.preset.closureDetails.end.duration.hours * 60 +
                   props.preset.closureDetails.end.duration.minutes,
+                roundTo: props.preset.closureDetails.end.roundTo ?? 'NONE',
               }
             : null,
         },
