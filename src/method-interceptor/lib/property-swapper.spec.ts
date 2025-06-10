@@ -6,7 +6,11 @@ describe('PropertySwapper', () => {
     nonExistingProperty?: boolean;
   };
 
-  const testPropertySwap = <K extends keyof typeof object>(property: K, swapper: PropertySwapper<typeof object, K>, originalValue: (typeof object)[K]) => {
+  const testPropertySwap = <K extends keyof typeof object>(
+    property: K,
+    swapper: PropertySwapper<typeof object, K>,
+    originalValue: (typeof object)[K],
+  ) => {
     const previousValue = object[property];
     const swappedValue = Math.random() as (typeof object)[K];
     swapper.swap(swappedValue);
@@ -31,7 +35,7 @@ describe('PropertySwapper', () => {
 
     const originalValue = object.existingProperty;
     testPropertySwap('existingProperty', swapper, originalValue);
-    
+
     swapper.restore();
     expect(object.existingProperty).toBe(originalValue);
     expect(swapper.value).toBe(object.existingProperty);
@@ -49,7 +53,7 @@ describe('PropertySwapper', () => {
     testPropertySwap('existingProperty', swapper, originalValue);
     testPropertySwap('existingProperty', swapper, originalValue);
     testPropertySwap('existingProperty', swapper, originalValue);
-    
+
     swapper.restore();
     expect(object.existingProperty).toBe(originalValue);
     expect(swapper.value).toBe(object.existingProperty);
@@ -80,5 +84,5 @@ describe('PropertySwapper', () => {
     swapper.restore();
     expect(Object.hasOwn(object, 'nonExistingProperty')).toBe(false);
     expect(swapper.isSwapped).toBe(false);
-  })
+  });
 });

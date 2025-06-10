@@ -10,7 +10,7 @@ import isURLSameOrigin from './helpers/isURLSameOrigin';
 import createError from './core/createError';
 import btoaPolyfill from './helpers/btoa';
 const btoa =
-  (typeof window !== undefined && window.btoa && window.btoa.bind(window)) ||
+  (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) ||
   btoaPolyfill;
 
 export function axiosGmXhrAdapter(config) {
@@ -78,13 +78,13 @@ export function axiosGmXhrAdapter(config) {
 
       // Prepare the response
       var responseHeaders =
-        'getAllResponseHeaders' in request
-          ? parseHeaders(request.getAllResponseHeaders())
-          : null;
+        'getAllResponseHeaders' in request ?
+          parseHeaders(request.getAllResponseHeaders())
+        : null;
       var responseData =
-        !config.responseType || config.responseType === 'text'
-          ? request.responseText
-          : request.response;
+        !config.responseType || config.responseType === 'text' ?
+          request.responseText
+        : request.response;
       var response = {
         data: responseData,
         // IE sends 1223 instead of 204 (https://github.com/mzabriskie/axios/issues/201)
@@ -131,10 +131,12 @@ export function axiosGmXhrAdapter(config) {
     if (utils.isStandardBrowserEnv()) {
       // Add xsrf header
       var xsrfValue =
-        (config.withCredentials || isURLSameOrigin(config.url)) &&
-        config.xsrfCookieName
-          ? cookies.read(config.xsrfCookieName)
-          : undefined;
+        (
+          (config.withCredentials || isURLSameOrigin(config.url)) &&
+          config.xsrfCookieName
+        ) ?
+          cookies.read(config.xsrfCookieName)
+        : undefined;
 
       if (xsrfValue) {
         requestHeaders[config.xsrfHeaderName] = xsrfValue;
