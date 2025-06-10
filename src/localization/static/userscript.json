@@ -111,7 +111,7 @@
     "errors": {
       "INVALID_PATTERN": "* Invalid format"
     },
-    "helper": "Use number+unit (m for minutes, h for hours, d for days, w for weeks). Combine, e.g., `1h 30m`."
+    "helper": "Enter duration using numbers followed by units (w: weeks, d: days, h: hours, m: minutes). Example: '1h 30m'."
   },
   "sidebar_tab": {
     "closure_presets": {
