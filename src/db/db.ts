@@ -19,4 +19,19 @@ db.version(2)
       });
   });
 
+db.version(3)
+  .stores({
+    closurePresets: '++id, name, createdAt, updatedAt',
+  })
+  .upgrade((transaction) => {
+    return transaction
+      .table('closurePresets')
+      .toCollection()
+      .modify((closurePreset: ClosurePreset) => {
+        if (closurePreset.closureDetails.end.type !== 'DURATIONAL') return;
+        // Initialize roundUpTo as undefined for existing durational presets
+        closurePreset.closureDetails.end.roundUpTo = undefined;
+      });
+  });
+
 export { db };

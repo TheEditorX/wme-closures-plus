@@ -94,6 +94,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
                 hours: Math.floor(durationInMinutes / 60),
                 minutes: durationInMinutes % 60,
               },
+              roundUpTo: closureDetailsData.endTime!.roundUpTo,
             };
             break;
           }
@@ -180,6 +181,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
                 duration:
                   props.preset.closureDetails.end.duration.hours * 60 +
                   props.preset.closureDetails.end.duration.minutes,
+                roundUpTo: props.preset.closureDetails.end.roundUpTo,
               }
             : null,
         },

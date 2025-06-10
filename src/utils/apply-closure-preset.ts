@@ -69,13 +69,33 @@ function getEndDateForPreset(
   });
 
   switch (endDetails.type) {
-    case 'DURATIONAL':
-      return new Date(
+    case 'DURATIONAL': {
+      const endDate = new Date(
         startDate.getTime() +
           (endDetails.duration.hours * 3600 +
             endDetails.duration.minutes * 60) *
             1000,
       );
+
+      if (endDetails.roundUpTo) {
+        logger.debug(
+          `Rounding up the end time to the nearest ${endDetails.roundUpTo} minutes`,
+        );
+        const minutes = endDate.getMinutes();
+        const roundUpToMinutes = endDetails.roundUpTo;
+        const remainder = minutes % roundUpToMinutes;
+
+        if (remainder > 0) {
+          // Round up to the next interval
+          const minutesToAdd = roundUpToMinutes - remainder;
+          endDate.setMinutes(minutes + minutesToAdd);
+          // Reset seconds and milliseconds
+          endDate.setSeconds(0, 0);
+        }
+      }
+
+      return endDate;
+    }
     case 'FIXED': {
       const startTime = new TimeOnly(startDate);
       const endTime = new TimeOnly(
