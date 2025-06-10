@@ -13,7 +13,7 @@ This document contains guidelines that GitHub Copilot should follow when assisti
 
 Commit messages **must** follow the [Conventional Commits](https://www.conventionalcommits.org/) specification, as detailed in `CONTRIBUTING.md`.
 
-* **Type:** Start every commit message with a type, such as `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, or `ci`.
+* **Type:** Start every commit message with a type, such as `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `chore`, or `ci`.
 * **Format:** The format should be `type(scope): subject`. For example: `feat(presets): Add support for recurring closures`.
 * **Imperative Mood:** Use the imperative mood in the subject line (e.g., "add feature" not "added feature").
 * **Referencing Issues:** If a commit resolves an issue, reference it in the commit body (e.g., `closes #123`).
