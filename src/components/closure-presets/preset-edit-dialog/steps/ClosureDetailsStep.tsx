@@ -174,18 +174,12 @@ export function ClosureDetailsStep() {
           <TimePicker
             disabled={startTimeMode !== 'FIXED'}
             placeholder="--:--"
-            value={
-              startTimeMode === 'FIXED' && startTime ?
-                `${startTime.getHours().toString().padStart(2, '0')}:${startTime.getMinutes().toString().padStart(2, '0')}`
-              : ''
-            }
+            value={startTimeMode === 'FIXED' ? startTime : undefined}
             onChange={(timeValue) => {
-              if (!timeValue) return;
-              setStartTime(new TimeOnly(timeValue));
+              setStartTime(timeValue);
             }}
             onBlur={(timeValue) => {
-              if (!timeValue) return;
-              setStartTime(new TimeOnly(timeValue));
+              setStartTime(timeValue);
             }}
             timePickerOptions={{
               defaultTime: false,
@@ -260,16 +254,11 @@ export function ClosureDetailsStep() {
                   display: 'block',
                 }}
                 placeholder="--:--"
-                value={
-                  endTime.value ?
-                    `${endTime.value.getHours().toString().padStart(2, '0')}:${endTime.value.getMinutes().toString().padStart(2, '0')}`
-                  : ''
-                }
+                value={endTime.value}
                 onChange={(timeValue) => {
-                  if (!timeValue) return;
                   setEndTime((prevEndTime) => ({
                     type: 'FIXED',
-                    value: new TimeOnly(timeValue),
+                    value: timeValue,
                     postponeBy:
                       (prevEndTime.type === 'FIXED' &&
                         prevEndTime.postponeBy) ||
@@ -277,10 +266,9 @@ export function ClosureDetailsStep() {
                   }));
                 }}
                 onBlur={(timeValue) => {
-                  if (!timeValue) return;
                   setEndTime((prevEndTime) => ({
                     type: 'FIXED',
-                    value: new TimeOnly(timeValue),
+                    value: timeValue,
                     postponeBy:
                       (prevEndTime.type === 'FIXED' &&
                         prevEndTime.postponeBy) ||
