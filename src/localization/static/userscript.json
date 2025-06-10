@@ -96,7 +96,8 @@
               "modes": {
                 "FIXED": "Specific time",
                 "DURATIONAL": "Durational"
-              }
+              },
+              "postpone_by": "Postpone by"
             }
           },
           "SUMMARY": {

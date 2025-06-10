@@ -83,6 +83,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
                 hours: closureDetailsData.endTime!.value.getHours(),
                 minutes: closureDetailsData.endTime!.value.getMinutes(),
               },
+              postponeBy: closureDetailsData.endTime!.postponeBy,
             };
             break;
           case 'DURATIONAL': {
@@ -171,6 +172,7 @@ export function PresetEditingDialog(props: PresetEditingDialogProps) {
                   0,
                   0,
                 ),
+                postponeBy: props.preset.closureDetails.end.postponeBy,
               }
             : props.preset.closureDetails.end.type === 'DURATIONAL' ?
               {
