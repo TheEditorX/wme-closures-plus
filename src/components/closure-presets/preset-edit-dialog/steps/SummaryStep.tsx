@@ -60,7 +60,7 @@ const formatTime = (
 ): string => {
   if (!time) return t('common.not_set');
   if (time instanceof TimeOnly) {
-    return `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
+    return time.formatAsTimeInput();
   }
   return t('common.invalid_time');
 };
