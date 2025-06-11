@@ -56,6 +56,17 @@ function transformSourcemapPath(path: string): string {
 
 export default {
   input: 'src/index.tsx',
+  onwarn: (warning, warn) => {
+    // Suppress warnings about "use client" directives from @base-ui-components/react
+    if (
+      warning.code === 'MODULE_LEVEL_DIRECTIVE' &&
+      warning.message.includes('"use client"') &&
+      warning.id?.includes('node_modules/@base-ui-components/react')
+    ) {
+      return;
+    }
+    warn(warning);
+  },
   output: [
     {
       format: 'es',
