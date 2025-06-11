@@ -55,4 +55,4 @@ Commit messages **must** follow the [Conventional Commits](https://www.conventio
 Empty commits created early by Copilot, such as the "Initial plan for issue" commit, must be discarded and excluded from the branch. All commits following that one have to be rebased on top of the base branch. Pull Requests with such empty commits will not be approved, unless there is a good reason to have them in the git history.
 
 Prohibited commit types and messages include:
-- "Initial plan for issue"
+* "Initial plan for issue"
