@@ -49,3 +49,10 @@ Commit messages **must** follow the [Conventional Commits](https://www.conventio
 * **File Location:** Unit tests must be co-located with the source files they are testing. For a file named `my-feature.ts`, the corresponding test file must be named `my-feature.spec.ts`.
 * **Coverage:** Write unit tests for all new features and bug fixes. If you are modifying an existing feature that is not covered by tests, you are not required to add tests, but it is highly encouraged.
 * **Custom Matchers:** Be aware of custom Jest matchers defined in `tests/__extenders__`, such as `toBeDateEqual`.
+
+## GitHub Copilot Initial Plan Commit
+
+Empty commits created early by Copilot, such as the "Initial plan for issue" commit, must be discarded and excluded from the branch. All commits following that one have to be rebased on top of the base branch. Pull Requests with such empty commits will not be approved, unless there is a good reason to have them in the git history.
+
+Prohibited commit types and messages include:
+- "Initial plan for issue"
