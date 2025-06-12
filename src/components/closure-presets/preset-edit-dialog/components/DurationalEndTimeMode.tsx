@@ -6,12 +6,6 @@ import { createUseStepState } from '../../../stepper';
 import { STEP_CLOSURE_DETAILS_SYMBOL } from '../consts';
 import { PresetEditDialogData } from '../interfaces';
 
-interface DurationalEndTimeData {
-  type: 'DURATIONAL';
-  duration: number;
-  roundUpTo?: number;
-}
-
 type ClosureDetailsDialogData =
   PresetEditDialogData[typeof STEP_CLOSURE_DETAILS_SYMBOL];
 const useClosureDetailsState = createUseStepState<ClosureDetailsDialogData>();
@@ -27,35 +21,39 @@ export function DurationalEndTimeMode() {
   const { t } = useTranslation();
   const [endTime, setEndTime] = useClosureDetailsState('endTime');
 
+  const isInDurationalMode = endTime?.type === 'DURATIONAL';
+
   const [roundUpValue, setRoundUpValue, isRoundUpEnabled, setIsRoundUpEnabled] =
-    useToggleableState<number>({
-      initialValue: endTime?.type === 'DURATIONAL' && endTime.roundUpTo ? endTime.roundUpTo : 10, // use existing value or default
-      initialEnabled: endTime?.type === 'DURATIONAL' && !!endTime.roundUpTo, // enabled if roundUpTo exists
-      onEnabled: (value) => {
-        // onEnabled: restore value to step data
-        if (endTime?.type !== 'DURATIONAL') return;
-        setEndTime({
-          ...endTime,
-          roundUpTo: value,
-        });
+    useToggleableState<number>(
+      (isInDurationalMode && endTime.roundUpTo) || 10,
+      isInDurationalMode && !!endTime.roundUpTo,
+      {
+        onEnabled: (value) => {
+          // onEnabled: restore value to step data
+          if (endTime?.type !== 'DURATIONAL') return;
+          setEndTime({
+            ...endTime,
+            roundUpTo: value,
+          });
+        },
+        onDisabled: () => {
+          // onDisabled: remove from step data
+          if (endTime?.type !== 'DURATIONAL') return;
+          setEndTime({
+            ...endTime,
+            roundUpTo: undefined,
+          });
+        },
+        onValueChanged: (value) => {
+          // onValueChanged: update step data when enabled
+          if (endTime?.type !== 'DURATIONAL') return;
+          setEndTime({
+            ...endTime,
+            roundUpTo: value,
+          });
+        },
       },
-      onDisabled: () => {
-        // onDisabled: remove from step data
-        if (endTime?.type !== 'DURATIONAL') return;
-        setEndTime({
-          ...endTime,
-          roundUpTo: undefined,
-        });
-      },
-      onValueChanged: (value) => {
-        // onValueChanged: update step data when enabled
-        if (endTime?.type !== 'DURATIONAL') return;
-        setEndTime({
-          ...endTime,
-          roundUpTo: value,
-        });
-      },
-    });
+    );
 
   const handleDurationChange = (value: number) => {
     if (endTime?.type !== 'DURATIONAL') return;

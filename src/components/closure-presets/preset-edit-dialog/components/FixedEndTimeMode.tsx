@@ -8,12 +8,6 @@ import { createUseStepState } from '../../../stepper';
 import { STEP_CLOSURE_DETAILS_SYMBOL } from '../consts';
 import { PresetEditDialogData } from '../interfaces';
 
-interface FixedEndTimeData {
-  type: 'FIXED';
-  value: TimeOnly;
-  postponeBy: number;
-}
-
 type ClosureDetailsDialogData =
   PresetEditDialogData[typeof STEP_CLOSURE_DETAILS_SYMBOL];
 const useClosureDetailsState = createUseStepState<ClosureDetailsDialogData>();
@@ -22,10 +16,17 @@ export function FixedEndTimeMode() {
   const { t } = useTranslation();
   const [endTime, setEndTime] = useClosureDetailsState('endTime');
 
-  const [postponeValue, setPostponeValue, isPostponeEnabled, setIsPostponeEnabled] =
-    useToggleableState<number>({
-      initialValue: endTime?.type === 'FIXED' && endTime.postponeBy ? endTime.postponeBy : 0, // use existing value or default
-      initialEnabled: endTime?.type === 'FIXED' && !!endTime.postponeBy, // enabled if postponeBy > 0
+  const isInFixedMode = endTime?.type === 'FIXED';
+
+  const [
+    postponeValue,
+    setPostponeValue,
+    isPostponeEnabled,
+    setIsPostponeEnabled,
+  ] = useToggleableState<number>(
+    (isInFixedMode && endTime.postponeBy) || 0,
+    isInFixedMode && !!endTime.postponeBy,
+    {
       onEnabled: (value) => {
         // onEnabled: restore value to step data
         if (endTime?.type !== 'FIXED') return;
@@ -50,7 +51,8 @@ export function FixedEndTimeMode() {
           postponeBy: value,
         });
       },
-    });
+    },
+  );
 
   const handleTimeChange = (timeValue: TimeOnly | null) => {
     if (!timeValue || endTime?.type !== 'FIXED') return;
