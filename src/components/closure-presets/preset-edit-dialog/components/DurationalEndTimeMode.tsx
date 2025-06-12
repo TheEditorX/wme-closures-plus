@@ -1,7 +1,10 @@
 import { SyntheticEvent } from 'react';
-import { useTranslation } from 'hooks';
+import { useTranslation, useToggleableState } from 'hooks';
 import { DurationPicker } from 'components/DurationPicker';
 import { FlexRow, SpacedBlock } from './CommonLayouts';
+import { createUseStepState } from '../../../stepper';
+import { STEP_CLOSURE_DETAILS_SYMBOL } from '../consts';
+import { PresetEditDialogData } from '../interfaces';
 
 interface DurationalEndTimeData {
   type: 'DURATIONAL';
@@ -9,62 +12,78 @@ interface DurationalEndTimeData {
   roundUpTo?: number;
 }
 
-interface DurationalEndTimeModeProps {
-  endTime: DurationalEndTimeData;
-  onEndTimeChange: (endTime: DurationalEndTimeData) => void;
-  isRoundUpEnabled: boolean;
-  onRoundUpEnabledChange: (enabled: boolean) => void;
-  roundUpRecoverValue: number | null;
-  onRoundUpRecoverValueChange: (value: number | null) => void;
-}
+type ClosureDetailsDialogData =
+  PresetEditDialogData[typeof STEP_CLOSURE_DETAILS_SYMBOL];
+const useClosureDetailsState = createUseStepState<ClosureDetailsDialogData>();
 
-export function DurationalEndTimeMode({
-  endTime,
-  onEndTimeChange,
-  isRoundUpEnabled,
-  onRoundUpEnabledChange,
-  roundUpRecoverValue,
-  onRoundUpRecoverValueChange,
-}: DurationalEndTimeModeProps) {
+const ROUND_UP_OPTIONS = [
+  { value: 10, i18nKey: '10_minutes' },
+  { value: 15, i18nKey: '15_minutes' },
+  { value: 30, i18nKey: '30_minutes' },
+  { value: 60, i18nKey: 'hour' },
+] as const;
+
+export function DurationalEndTimeMode() {
   const { t } = useTranslation();
+  const [endTime, setEndTime] = useClosureDetailsState('endTime');
+
+  const [roundUpValue, setRoundUpValue, isRoundUpEnabled, setIsRoundUpEnabled] =
+    useToggleableState<number>(
+      endTime?.type === 'DURATIONAL' && endTime.roundUpTo ? endTime.roundUpTo : 10, // use existing value or default
+      endTime?.type === 'DURATIONAL' && !!endTime.roundUpTo, // enabled if roundUpTo exists
+      (value) => {
+        // onEnabled: restore value to step data
+        if (endTime?.type === 'DURATIONAL') {
+          setEndTime({
+            ...endTime,
+            roundUpTo: value,
+          });
+        }
+      },
+      () => {
+        // onDisabled: remove from step data
+        if (endTime?.type === 'DURATIONAL') {
+          setEndTime({
+            ...endTime,
+            roundUpTo: undefined,
+          });
+        }
+      },
+      (value) => {
+        // onValueChanged: update step data when enabled
+        if (endTime?.type === 'DURATIONAL') {
+          setEndTime({
+            ...endTime,
+            roundUpTo: value,
+          });
+        }
+      },
+    );
 
   const handleDurationChange = (value: number) => {
-    onEndTimeChange({
-      ...endTime,
-      duration: value,
-    });
+    if (endTime?.type === 'DURATIONAL') {
+      setEndTime({
+        ...endTime,
+        duration: value,
+      });
+    }
   };
 
   const handleRoundUpToggle = (event: SyntheticEvent<HTMLInputElement>) => {
     event.preventDefault();
-    const isChecked = event.currentTarget.checked;
-    onRoundUpEnabledChange(isChecked);
-
-    if (isChecked) {
-      // Restore the persisted value if we have any, default to 10 minutes
-      onEndTimeChange({
-        ...endTime,
-        roundUpTo: roundUpRecoverValue || 10,
-      });
-    } else {
-      // Preserve the existing value and set roundUpTo to undefined
-      onRoundUpRecoverValueChange(endTime.roundUpTo ?? null);
-      onEndTimeChange({
-        ...endTime,
-        roundUpTo: undefined,
-      });
-    }
+    setIsRoundUpEnabled(event.currentTarget.checked);
   };
 
   const handleRoundUpValueChange = (
     event: SyntheticEvent<HTMLSelectElement>,
   ) => {
     const value = parseInt(event.currentTarget.value, 10);
-    onEndTimeChange({
-      ...endTime,
-      roundUpTo: value,
-    });
+    setRoundUpValue(value);
   };
+
+  if (endTime?.type !== 'DURATIONAL') {
+    return null;
+  }
 
   return (
     <>
@@ -87,32 +106,16 @@ export function DurationalEndTimeMode({
             flex: 1,
           }}
           disabled={!isRoundUpEnabled}
-          value={endTime.roundUpTo?.toString() || '10'}
-          onClick={(e) => {
-            e.stopPropagation(); // prevent the checkbox from deactivating
-          }}
+          value={roundUpValue.toString()}
           onChange={handleRoundUpValueChange}
         >
-          <wz-option value="10">
-            {t(
-              'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_up_options.10_minutes',
-            )}
-          </wz-option>
-          <wz-option value="15">
-            {t(
-              'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_up_options.15_minutes',
-            )}
-          </wz-option>
-          <wz-option value="30">
-            {t(
-              'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_up_options.30_minutes',
-            )}
-          </wz-option>
-          <wz-option value="60">
-            {t(
-              'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_up_options.hour',
-            )}
-          </wz-option>
+          {ROUND_UP_OPTIONS.map((option) => (
+            <wz-option key={option.value} value={option.value.toString()}>
+              {t(
+                `edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_up_options.${option.i18nKey}`,
+              )}
+            </wz-option>
+          ))}
         </wz-select>
       </FlexRow>
     </>

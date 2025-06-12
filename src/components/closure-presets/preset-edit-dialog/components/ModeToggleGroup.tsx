@@ -21,9 +21,8 @@ export function ModeToggleGroup({
     <ToggleGroup
       value={value ? [value] : []}
       onValueChange={([newValue]) => {
-        if (newValue) {
-          onValueChange(newValue);
-        }
+        if (!newValue) return;
+        onValueChange(newValue);
       }}
       style={{ display: 'flex', marginBottom: 'var(--space-always-xs, 8px)' }}
     >

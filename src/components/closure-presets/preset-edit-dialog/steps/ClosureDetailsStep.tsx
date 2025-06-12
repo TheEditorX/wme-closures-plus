@@ -28,18 +28,6 @@ export function ClosureDetailsStep() {
   const [startTimeMode, setStartTimeMode] = useState<'IMMEDIATE' | 'FIXED'>(
     startTime ? 'FIXED' : 'IMMEDIATE',
   );
-  const [isPostponeEnabled, setIsPostponeEnabled] = useState(
-    () => endTime?.type === 'FIXED' && !!endTime?.postponeBy,
-  );
-  const [postponeRecoverValue, setPostponeRecoverValue] = useState<
-    number | null
-  >(null);
-  const [isRoundUpEnabled, setIsRoundUpEnabled] = useState(
-    () => endTime?.type === 'DURATIONAL' && !!endTime?.roundUpTo,
-  );
-  const [roundUpRecoverValue, setRoundUpRecoverValue] = useState<number | null>(
-    null,
-  );
 
   return (
     <PresetEditForm>
@@ -208,27 +196,9 @@ export function ClosureDetailsStep() {
             ]}
           />
 
-          {endTime?.type === 'FIXED' && (
-            <FixedEndTimeMode
-              endTime={endTime}
-              onEndTimeChange={(newEndTime) => setEndTime(() => newEndTime)}
-              isPostponeEnabled={isPostponeEnabled}
-              onPostponeEnabledChange={setIsPostponeEnabled}
-              postponeRecoverValue={postponeRecoverValue}
-              onPostponeRecoverValueChange={setPostponeRecoverValue}
-            />
-          )}
+          {endTime?.type === 'FIXED' && <FixedEndTimeMode />}
 
-          {endTime?.type === 'DURATIONAL' && (
-            <DurationalEndTimeMode
-              endTime={endTime}
-              onEndTimeChange={(newEndTime) => setEndTime(() => newEndTime)}
-              isRoundUpEnabled={isRoundUpEnabled}
-              onRoundUpEnabledChange={setIsRoundUpEnabled}
-              roundUpRecoverValue={roundUpRecoverValue}
-              onRoundUpRecoverValueChange={setRoundUpRecoverValue}
-            />
-          )}
+          {endTime?.type === 'DURATIONAL' && <DurationalEndTimeMode />}
         </div>
       </TwoColumnsGrid>
     </PresetEditForm>

@@ -1,9 +1,12 @@
 import { SyntheticEvent } from 'react';
 import { TimeOnly } from 'classes';
-import { useTranslation } from 'hooks';
+import { useTranslation, useToggleableState } from 'hooks';
 import { DurationPicker } from 'components/DurationPicker';
 import { TimePicker } from 'components/TimePicker';
 import { FlexRow, SpacedBlock } from './CommonLayouts';
+import { createUseStepState } from '../../../stepper';
+import { STEP_CLOSURE_DETAILS_SYMBOL } from '../consts';
+import { PresetEditDialogData } from '../interfaces';
 
 interface FixedEndTimeData {
   type: 'FIXED';
@@ -11,28 +14,50 @@ interface FixedEndTimeData {
   postponeBy: number;
 }
 
-interface FixedEndTimeModeProps {
-  endTime: FixedEndTimeData;
-  onEndTimeChange: (endTime: FixedEndTimeData) => void;
-  isPostponeEnabled: boolean;
-  onPostponeEnabledChange: (enabled: boolean) => void;
-  postponeRecoverValue: number | null;
-  onPostponeRecoverValueChange: (value: number | null) => void;
-}
+type ClosureDetailsDialogData =
+  PresetEditDialogData[typeof STEP_CLOSURE_DETAILS_SYMBOL];
+const useClosureDetailsState = createUseStepState<ClosureDetailsDialogData>();
 
-export function FixedEndTimeMode({
-  endTime,
-  onEndTimeChange,
-  isPostponeEnabled,
-  onPostponeEnabledChange,
-  postponeRecoverValue,
-  onPostponeRecoverValueChange,
-}: FixedEndTimeModeProps) {
+export function FixedEndTimeMode() {
   const { t } = useTranslation();
+  const [endTime, setEndTime] = useClosureDetailsState('endTime');
+
+  const [postponeValue, setPostponeValue, isPostponeEnabled, setIsPostponeEnabled] =
+    useToggleableState<number>(
+      endTime?.type === 'FIXED' && endTime.postponeBy ? endTime.postponeBy : 0, // use existing value or default
+      endTime?.type === 'FIXED' && !!endTime.postponeBy, // enabled if postponeBy > 0
+      (value) => {
+        // onEnabled: restore value to step data
+        if (endTime?.type === 'FIXED') {
+          setEndTime({
+            ...endTime,
+            postponeBy: value,
+          });
+        }
+      },
+      () => {
+        // onDisabled: set to 0 in step data
+        if (endTime?.type === 'FIXED') {
+          setEndTime({
+            ...endTime,
+            postponeBy: 0,
+          });
+        }
+      },
+      (value) => {
+        // onValueChanged: update step data when enabled
+        if (endTime?.type === 'FIXED') {
+          setEndTime({
+            ...endTime,
+            postponeBy: value,
+          });
+        }
+      },
+    );
 
   const handleTimeChange = (timeValue: TimeOnly | null) => {
-    if (!timeValue) return;
-    onEndTimeChange({
+    if (!timeValue || endTime?.type !== 'FIXED') return;
+    setEndTime({
       ...endTime,
       value: timeValue,
     });
@@ -40,31 +65,16 @@ export function FixedEndTimeMode({
 
   const handlePostponeToggle = (event: SyntheticEvent<HTMLInputElement>) => {
     event.preventDefault();
-    const isChecked = event.currentTarget.checked;
-    onPostponeEnabledChange(isChecked);
-
-    if (isChecked) {
-      // Restore the persisted value if we have any
-      onEndTimeChange({
-        ...endTime,
-        postponeBy: postponeRecoverValue ?? 0,
-      });
-    } else {
-      // Preserve the existing value and set postpone to 0
-      onPostponeRecoverValueChange(endTime.postponeBy);
-      onEndTimeChange({
-        ...endTime,
-        postponeBy: 0,
-      });
-    }
+    setIsPostponeEnabled(event.currentTarget.checked);
   };
 
   const handlePostponeValueChange = (value: number) => {
-    onEndTimeChange({
-      ...endTime,
-      postponeBy: value,
-    });
+    setPostponeValue(value);
   };
+
+  if (endTime?.type !== 'FIXED') {
+    return null;
+  }
 
   return (
     <>
@@ -97,10 +107,7 @@ export function FixedEndTimeMode({
             flex: 1,
           }}
           disabled={!isPostponeEnabled}
-          value={endTime.postponeBy ?? postponeRecoverValue}
-          onClick={(e) => {
-            e.stopPropagation(); // prevent the checkbox from deactivating
-          }}
+          value={postponeValue}
           onChange={handlePostponeValueChange}
         />
       </FlexRow>
