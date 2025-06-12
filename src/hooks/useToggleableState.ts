@@ -1,21 +1,23 @@
 import { useState, useCallback, useEffect } from 'react';
 
+interface UseToggleableStateOptions<T> {
+  initialValue: T;
+  initialEnabled: boolean;
+  onEnabled: (value: T) => void;
+  onDisabled: () => void;
+  onValueChanged: (value: T) => void;
+}
+
 /**
  * A hook for managing state that can be toggled on/off with separate local and external state
- * @param initialValue - The initial value to populate the state with
- * @param initialEnabled - Whether the toggle should be initially enabled
- * @param onEnabled - Handler triggered when state is enabled (receives the current value)
- * @param onDisabled - Handler triggered when state is disabled (no arguments)
- * @param onValueChanged - Handler triggered when value changes and state is enabled (receives new value)
+ * @param options - Configuration object containing event handlers and initial values
  * @returns A tuple with [value, setValue, enabled, setEnabled]
  */
 export function useToggleableState<T>(
-  initialValue: T,
-  initialEnabled: boolean,
-  onEnabled: (value: T) => void,
-  onDisabled: () => void,
-  onValueChanged: (value: T) => void,
+  options: UseToggleableStateOptions<T>,
 ): [T, (value: T) => void, boolean, (enabled: boolean) => void] {
+  const { initialValue, initialEnabled, onEnabled, onDisabled, onValueChanged } = options;
+  
   const [localValue, setLocalValue] = useState<T>(initialValue);
   const [enabled, setEnabledState] = useState<boolean>(initialEnabled);
 

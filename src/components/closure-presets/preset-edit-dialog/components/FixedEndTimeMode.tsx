@@ -23,37 +23,34 @@ export function FixedEndTimeMode() {
   const [endTime, setEndTime] = useClosureDetailsState('endTime');
 
   const [postponeValue, setPostponeValue, isPostponeEnabled, setIsPostponeEnabled] =
-    useToggleableState<number>(
-      endTime?.type === 'FIXED' && endTime.postponeBy ? endTime.postponeBy : 0, // use existing value or default
-      endTime?.type === 'FIXED' && !!endTime.postponeBy, // enabled if postponeBy > 0
-      (value) => {
+    useToggleableState<number>({
+      initialValue: endTime?.type === 'FIXED' && endTime.postponeBy ? endTime.postponeBy : 0, // use existing value or default
+      initialEnabled: endTime?.type === 'FIXED' && !!endTime.postponeBy, // enabled if postponeBy > 0
+      onEnabled: (value) => {
         // onEnabled: restore value to step data
-        if (endTime?.type === 'FIXED') {
-          setEndTime({
-            ...endTime,
-            postponeBy: value,
-          });
-        }
+        if (endTime?.type !== 'FIXED') return;
+        setEndTime({
+          ...endTime,
+          postponeBy: value,
+        });
       },
-      () => {
+      onDisabled: () => {
         // onDisabled: set to 0 in step data
-        if (endTime?.type === 'FIXED') {
-          setEndTime({
-            ...endTime,
-            postponeBy: 0,
-          });
-        }
+        if (endTime?.type !== 'FIXED') return;
+        setEndTime({
+          ...endTime,
+          postponeBy: 0,
+        });
       },
-      (value) => {
+      onValueChanged: (value) => {
         // onValueChanged: update step data when enabled
-        if (endTime?.type === 'FIXED') {
-          setEndTime({
-            ...endTime,
-            postponeBy: value,
-          });
-        }
+        if (endTime?.type !== 'FIXED') return;
+        setEndTime({
+          ...endTime,
+          postponeBy: value,
+        });
       },
-    );
+    });
 
   const handleTimeChange = (timeValue: TimeOnly | null) => {
     if (!timeValue || endTime?.type !== 'FIXED') return;

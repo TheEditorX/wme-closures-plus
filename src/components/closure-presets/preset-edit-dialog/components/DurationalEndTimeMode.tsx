@@ -28,45 +28,41 @@ export function DurationalEndTimeMode() {
   const [endTime, setEndTime] = useClosureDetailsState('endTime');
 
   const [roundUpValue, setRoundUpValue, isRoundUpEnabled, setIsRoundUpEnabled] =
-    useToggleableState<number>(
-      endTime?.type === 'DURATIONAL' && endTime.roundUpTo ? endTime.roundUpTo : 10, // use existing value or default
-      endTime?.type === 'DURATIONAL' && !!endTime.roundUpTo, // enabled if roundUpTo exists
-      (value) => {
+    useToggleableState<number>({
+      initialValue: endTime?.type === 'DURATIONAL' && endTime.roundUpTo ? endTime.roundUpTo : 10, // use existing value or default
+      initialEnabled: endTime?.type === 'DURATIONAL' && !!endTime.roundUpTo, // enabled if roundUpTo exists
+      onEnabled: (value) => {
         // onEnabled: restore value to step data
-        if (endTime?.type === 'DURATIONAL') {
-          setEndTime({
-            ...endTime,
-            roundUpTo: value,
-          });
-        }
+        if (endTime?.type !== 'DURATIONAL') return;
+        setEndTime({
+          ...endTime,
+          roundUpTo: value,
+        });
       },
-      () => {
+      onDisabled: () => {
         // onDisabled: remove from step data
-        if (endTime?.type === 'DURATIONAL') {
-          setEndTime({
-            ...endTime,
-            roundUpTo: undefined,
-          });
-        }
+        if (endTime?.type !== 'DURATIONAL') return;
+        setEndTime({
+          ...endTime,
+          roundUpTo: undefined,
+        });
       },
-      (value) => {
+      onValueChanged: (value) => {
         // onValueChanged: update step data when enabled
-        if (endTime?.type === 'DURATIONAL') {
-          setEndTime({
-            ...endTime,
-            roundUpTo: value,
-          });
-        }
+        if (endTime?.type !== 'DURATIONAL') return;
+        setEndTime({
+          ...endTime,
+          roundUpTo: value,
+        });
       },
-    );
+    });
 
   const handleDurationChange = (value: number) => {
-    if (endTime?.type === 'DURATIONAL') {
-      setEndTime({
-        ...endTime,
-        duration: value,
-      });
-    }
+    if (endTime?.type !== 'DURATIONAL') return;
+    setEndTime({
+      ...endTime,
+      duration: value,
+    });
   };
 
   const handleRoundUpToggle = (event: SyntheticEvent<HTMLInputElement>) => {
