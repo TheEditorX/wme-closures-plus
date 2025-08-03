@@ -7,7 +7,6 @@
   "description": "WME Closures+ extends the Waze Map Editor with advanced closure management features",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "concurrently \"rollup --watch -c --configPlugin typescript --bundleConfigAsCjs\" \"node server.js\"",
     "build": "rollup -c --configPlugin typescript",
     "lint": "eslint . --fix",
     "test": "jest --passWithNoTests",
