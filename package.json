@@ -4,17 +4,17 @@
   "shortDisplayName": "Closures+",
   "author": "r0den",
   "version": "1.0.1",
-  "description": "",
+  "description": "WME Closures+ extends the Waze Map Editor with advanced closure management features",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "concurrently \"rollup --watch -c --configPlugin typescript --bundleConfigAsCjs\" \"node server.js\"",
-    "build": "rollup -c --configPlugin typescript --bundleConfigAsCjs",
+    "build": "rollup -c --configPlugin typescript",
     "lint": "eslint . --fix",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch"
   },
   "type": "module",
   "devDependencies": {
+    "@editor-x/rollup-plugin-userscript": "^1.0.0",
     "@eslint/compat": "^1.2.9",
     "@eslint/js": "^9.17.0",
     "@jest/globals": "^29.7.0",

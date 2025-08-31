@@ -1,23 +1,19 @@
-import { Toggle, ToggleGroup } from '@base-ui-components/react';
-import styled from '@emotion/styled';
 import { SyntheticEvent, useState } from 'react';
 import { TimeOnly } from '../../../../classes';
 import { WeekdayFlags } from '../../../../enums';
 import { useTranslation } from '../../../../hooks';
-import { DurationPicker } from '../../../DurationPicker';
 import { TimePicker } from '../../../TimePicker';
 import { createUseStepState } from '../../../stepper';
-import { PositionAwareToggleButton } from '../../../ToggleButton';
 import { WeekdayPicker } from '../../../WeekdayPicker';
-import { PresetEditForm } from '../components';
+import {
+  DurationalEndTimeMode,
+  FixedEndTimeMode,
+  ModeToggleGroup,
+  PresetEditForm,
+  TwoColumnsGrid,
+} from '../components';
 import { STEP_CLOSURE_DETAILS_SYMBOL } from '../consts';
 import { PresetEditDialogData } from '../interfaces';
-
-const TwoColumnsGrid = styled('div')({
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
-  gap: 'var(--space-always-xs, 8px)',
-});
 
 type ClosureDetailsDialogData =
   PresetEditDialogData[typeof STEP_CLOSURE_DETAILS_SYMBOL];
@@ -31,18 +27,6 @@ export function ClosureDetailsStep() {
   const [endTime, setEndTime] = useClosureDetailsState('endTime');
   const [startTimeMode, setStartTimeMode] = useState<'IMMEDIATE' | 'FIXED'>(
     startTime ? 'FIXED' : 'IMMEDIATE',
-  );
-  const [isPostponeEnabled, setIsPostponeEnabled] = useState(
-    () => endTime?.type === 'FIXED' && !!endTime?.postponeBy,
-  );
-  const [postponeRecoverValue, setPostponeRecoverValue] = useState<
-    number | null
-  >(null);
-  const [isRoundUpEnabled, setIsRoundUpEnabled] = useState(
-    () => endTime?.type === 'DURATIONAL' && !!endTime?.roundUpTo,
-  );
-  const [roundUpRecoverValue, setRoundUpRecoverValue] = useState<number | null>(
-    null,
   );
 
   return (
@@ -64,9 +48,9 @@ export function ClosureDetailsStep() {
             'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.label',
           )}
         </wz-label>
-        <ToggleGroup
-          value={[startDate?.type]}
-          onValueChange={([value]) => {
+        <ModeToggleGroup
+          value={startDate?.type}
+          onValueChange={(value) => {
             switch (value) {
               case 'CURRENT_DATE':
                 return setStartDate({ type: 'CURRENT_DATE' });
@@ -80,35 +64,21 @@ export function ClosureDetailsStep() {
                 return;
             }
           }}
-          style={{
-            display: 'flex',
-            marginBottom: 'var(--space-always-xs, 8px)',
-          }}
-        >
-          {/* add a fictive toggle to prevent from BaseUI selecting the first option by default */}
-          <Toggle style={{ display: 'none' }} value=""></Toggle>
-
-          <Toggle
-            value="CURRENT_DATE"
-            render={
-              <PositionAwareToggleButton style={{ flex: 1 }}>
-                {t(
-                  'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.modes.CURRENT_DATE',
-                )}
-              </PositionAwareToggleButton>
-            }
-          />
-          <Toggle
-            value="DAY_OF_WEEK"
-            render={
-              <PositionAwareToggleButton style={{ flex: 1 }}>
-                {t(
-                  'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.modes.DAY_OF_WEEK',
-                )}
-              </PositionAwareToggleButton>
-            }
-          />
-        </ToggleGroup>
+          options={[
+            {
+              value: 'CURRENT_DATE',
+              label: t(
+                'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.modes.CURRENT_DATE',
+              ),
+            },
+            {
+              value: 'DAY_OF_WEEK',
+              label: t(
+                'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_date.modes.DAY_OF_WEEK',
+              ),
+            },
+          ]}
+        />
         {startDate?.type === 'DAY_OF_WEEK' && (
           <>
             <WeekdayPicker
@@ -137,45 +107,31 @@ export function ClosureDetailsStep() {
               'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.label',
             )}
           </wz-label>
-          <ToggleGroup
-            value={[startTimeMode]}
-            onValueChange={([value]) => {
-              setStartTimeMode(value);
+          <ModeToggleGroup
+            value={startTimeMode}
+            onValueChange={(value) => {
+              setStartTimeMode(value as 'IMMEDIATE' | 'FIXED');
               if (value === 'FIXED' && !startTime) {
                 setStartTime(new TimeOnly());
               } else if (value === 'IMMEDIATE') {
                 setStartTime(null);
               }
             }}
-            style={{
-              display: 'flex',
-              marginBottom: 'var(--space-always-xs, 8px)',
-            }}
-          >
-            {/* add a fictive toggle to prevent from BaseUI selecting the first option by default */}
-            <Toggle style={{ display: 'none' }} value=""></Toggle>
-
-            <Toggle
-              value="IMMEDIATE"
-              render={
-                <PositionAwareToggleButton style={{ flex: 1 }}>
-                  {t(
-                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.modes.IMMEDIATE',
-                  )}
-                </PositionAwareToggleButton>
-              }
-            />
-            <Toggle
-              value="FIXED"
-              render={
-                <PositionAwareToggleButton style={{ flex: 1 }}>
-                  {t(
-                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.modes.FIXED',
-                  )}
-                </PositionAwareToggleButton>
-              }
-            />
-          </ToggleGroup>
+            options={[
+              {
+                value: 'IMMEDIATE',
+                label: t(
+                  'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.modes.IMMEDIATE',
+                ),
+              },
+              {
+                value: 'FIXED',
+                label: t(
+                  'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_start_time.modes.FIXED',
+                ),
+              },
+            ]}
+          />
 
           <TimePicker
             disabled={startTimeMode !== 'FIXED'}
@@ -204,9 +160,9 @@ export function ClosureDetailsStep() {
               'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.label',
             )}
           </wz-label>
-          <ToggleGroup
-            value={[endTime?.type].filter(Boolean)}
-            onValueChange={([value]) => {
+          <ModeToggleGroup
+            value={endTime?.type}
+            onValueChange={(value) => {
               switch (value) {
                 case 'FIXED': {
                   const timeInOneHour = new TimeOnly();
@@ -224,252 +180,25 @@ export function ClosureDetailsStep() {
                   break;
               }
             }}
-            style={{
-              display: 'flex',
-              marginBottom: 'var(--space-always-xs, 8px)',
-            }}
-          >
-            {/* add a fictive toggle to prevent from BaseUI selecting the first option by default */}
-            <Toggle style={{ display: 'none' }} value=""></Toggle>
+            options={[
+              {
+                value: 'FIXED',
+                label: t(
+                  'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.modes.FIXED',
+                ),
+              },
+              {
+                value: 'DURATIONAL',
+                label: t(
+                  'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.modes.DURATIONAL',
+                ),
+              },
+            ]}
+          />
 
-            <Toggle
-              value="FIXED"
-              render={
-                <PositionAwareToggleButton style={{ flex: 1 }}>
-                  {t(
-                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.modes.FIXED',
-                  )}
-                </PositionAwareToggleButton>
-              }
-            />
-            <Toggle
-              value="DURATIONAL"
-              render={
-                <PositionAwareToggleButton style={{ flex: 1 }}>
-                  {t(
-                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.modes.DURATIONAL',
-                  )}
-                </PositionAwareToggleButton>
-              }
-            />
-          </ToggleGroup>
+          {endTime?.type === 'FIXED' && <FixedEndTimeMode />}
 
-          {endTime?.type === 'FIXED' ?
-            <>
-              <TimePicker
-                style={{
-                  marginBottom: 'var(--space-always-xs, 8px)',
-                  display: 'block',
-                }}
-                placeholder="--:--"
-                value={endTime.value}
-                onChange={(timeValue) => {
-                  if (!timeValue) return;
-                  setEndTime((prevEndTime) => ({
-                    type: 'FIXED',
-                    value: timeValue,
-                    postponeBy:
-                      (prevEndTime.type === 'FIXED' &&
-                        prevEndTime.postponeBy) ||
-                      0,
-                  }));
-                }}
-                onBlur={(timeValue) => {
-                  if (!timeValue) return;
-                  setEndTime((prevEndTime) => ({
-                    type: 'FIXED',
-                    value: timeValue,
-                    postponeBy:
-                      (prevEndTime.type === 'FIXED' &&
-                        prevEndTime.postponeBy) ||
-                      0,
-                  }));
-                }}
-                timePickerOptions={{
-                  defaultTime: false,
-                  showMeridian: false,
-                  template: false,
-                }}
-              />
-
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 'var(--space-always-xs, 8px)',
-                }}
-              >
-                <wz-checkbox
-                  checked={isPostponeEnabled}
-                  onChange={(event: SyntheticEvent<HTMLInputElement>) => {
-                    event.preventDefault();
-                    setIsPostponeEnabled(event.currentTarget.checked);
-                    if (event.currentTarget.checked) {
-                      // the checkbox is now selected
-                      // we need to restore the persisted value if we have any
-                      setEndTime((prevEndTime) => {
-                        if (prevEndTime?.type !== 'FIXED') return prevEndTime;
-
-                        return {
-                          ...prevEndTime,
-                          postponeBy: postponeRecoverValue,
-                        };
-                      });
-                    } else {
-                      // the checkbox is now deselected
-                      // we need to update the value of the end time to 0
-                      // and we need to preserve the existing value
-                      // for that we'll use nested updaters
-                      setEndTime((prevEndTime) => {
-                        if (prevEndTime?.type !== 'FIXED') return prevEndTime;
-
-                        setPostponeRecoverValue(prevEndTime.postponeBy);
-                        return {
-                          ...prevEndTime,
-                          postponeBy: 0,
-                        };
-                      });
-                    }
-                  }}
-                >
-                  {t(
-                    'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.postpone_by',
-                  )}
-                </wz-checkbox>
-                <DurationPicker
-                  style={{
-                    minWidth: 'unset',
-                    flex: 1,
-                  }}
-                  disabled={!isPostponeEnabled}
-                  value={endTime.postponeBy ?? postponeRecoverValue}
-                  onClick={(e) => {
-                    e.stopPropagation(); // prevent the checkbox from deactivating
-                  }}
-                  onChange={(value) => {
-                    setEndTime((prevEndTime) => {
-                      if (prevEndTime?.type !== 'FIXED') return prevEndTime;
-
-                      return {
-                        ...prevEndTime,
-                        postponeBy: value,
-                      };
-                    });
-                  }}
-                />
-              </div>
-            </>
-          : endTime?.type === 'DURATIONAL' && (
-              <>
-                <DurationPicker
-                  style={{
-                    marginBottom: 'var(--space-always-xs, 8px)',
-                    display: 'block',
-                  }}
-                  value={endTime.duration}
-                  onChange={(value) =>
-                    setEndTime((prevEndTime) => ({
-                      type: 'DURATIONAL',
-                      duration: value,
-                      roundUpTo:
-                        prevEndTime?.type === 'DURATIONAL' ?
-                          prevEndTime.roundUpTo
-                        : undefined,
-                    }))
-                  }
-                />
-
-                <div
-                  style={{
-                    display: 'flex',
-                    gap: 'var(--space-always-xs, 8px)',
-                  }}
-                >
-                  <wz-checkbox
-                    checked={isRoundUpEnabled}
-                    onChange={(event: SyntheticEvent<HTMLInputElement>) => {
-                      event.preventDefault();
-                      setIsRoundUpEnabled(event.currentTarget.checked);
-                      if (event.currentTarget.checked) {
-                        // the checkbox is now selected
-                        // we need to restore the persisted value if we have any
-                        setEndTime((prevEndTime) => {
-                          if (prevEndTime?.type !== 'DURATIONAL')
-                            return prevEndTime;
-
-                          return {
-                            ...prevEndTime,
-                            roundUpTo: roundUpRecoverValue || 10, // Default to 10 minutes if no previous value
-                          };
-                        });
-                      } else {
-                        // the checkbox is now deselected
-                        // we need to update the value of roundUpTo to undefined
-                        // and we need to preserve the existing value
-                        setEndTime((prevEndTime) => {
-                          if (prevEndTime?.type !== 'DURATIONAL')
-                            return prevEndTime;
-
-                          setRoundUpRecoverValue(prevEndTime.roundUpTo);
-                          return {
-                            ...prevEndTime,
-                            roundUpTo: undefined,
-                          };
-                        });
-                      }
-                    }}
-                  >
-                    {t(
-                      'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_up_to',
-                    )}
-                  </wz-checkbox>
-                  <wz-select
-                    style={{
-                      minWidth: 'unset',
-                      flex: 1,
-                    }}
-                    disabled={!isRoundUpEnabled}
-                    value={endTime.roundUpTo?.toString() || '10'}
-                    onClick={(e) => {
-                      e.stopPropagation(); // prevent the checkbox from deactivating
-                    }}
-                    onChange={(e: SyntheticEvent<HTMLSelectElement>) => {
-                      const value = parseInt(e.currentTarget.value, 10);
-                      setEndTime((prevEndTime) => {
-                        if (prevEndTime?.type !== 'DURATIONAL')
-                          return prevEndTime;
-
-                        return {
-                          ...prevEndTime,
-                          roundUpTo: value,
-                        };
-                      });
-                    }}
-                  >
-                    <wz-option value="10">
-                      {t(
-                        'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_up_options.10_minutes',
-                      )}
-                    </wz-option>
-                    <wz-option value="15">
-                      {t(
-                        'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_up_options.15_minutes',
-                      )}
-                    </wz-option>
-                    <wz-option value="30">
-                      {t(
-                        'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_up_options.30_minutes',
-                      )}
-                    </wz-option>
-                    <wz-option value="60">
-                      {t(
-                        'edit.closure_preset.edit_dialog.steps.CLOSURE_DETAILS.closure_end_time.round_up_options.hour',
-                      )}
-                    </wz-option>
-                  </wz-select>
-                </div>
-              </>
-            )
-          }
+          {endTime?.type === 'DURATIONAL' && <DurationalEndTimeMode />}
         </div>
       </TwoColumnsGrid>
     </PresetEditForm>

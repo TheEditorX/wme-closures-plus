@@ -1,15 +1,16 @@
 import json from '@rollup/plugin-json';
+import * as fs from 'node:fs';
+import userscript from '@editor-x/rollup-plugin-userscript';
 import convertStringConvention from './convert-string-convention';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import replace from '@rollup/plugin-replace';
-import addBanner from './rollup-plugin-add-banner';
 import svgr from '@svgr/rollup';
 import { execSync } from 'child_process';
 
-import packageMetadata from './package.json';
+const packageMetadata = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
 
 const packageName = packageMetadata.name;
 const packageNamespace =
@@ -114,6 +115,18 @@ export default {
           `${packageAuthor}/${packagePureName}`,
       ),
     }),
-    addBanner({ file: 'tampermonkey.meta.js' }),
+    userscript({
+      name: scriptName,
+      autoDetectGrants: true,
+      match: [
+        'https://*.waze.com/*editor*',
+        'https://waze.com/*editor*',
+        'https://*.wazestg.com/*editor*',
+      ],
+      require: [
+        'https://cdn.jsdelivr.net/gh/WazeSpace/wme-sdk-plus@v1/wme-sdk-plus.js',
+      ],
+      connect: ['distributions.crowdin.net'],
+    }),
   ],
 };
