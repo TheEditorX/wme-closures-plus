@@ -66,7 +66,7 @@ function ClosureEditorPanel(props: ClosureEditorPanelProps) {
 }
 
 const UInjectorComponent = asUInjectorComponent(ClosureEditorPanel, {
-  targetSelector: '.edit-closure',
+  targetSelector: '.closure form',
   position: 'BEFORE',
   wrapInContainer: false,
 });
