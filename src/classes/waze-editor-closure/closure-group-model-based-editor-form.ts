@@ -1,19 +1,13 @@
 import { findParentFiber, getFiber } from 'utils/react';
 import { ClosureEditorForm } from './closure-editor-form';
-import {
-  ClosureGroupModel,
-  MajorTrafficEvent as RawMajorTrafficEvent,
-} from 'types/waze';
+import { ClosureGroupModel } from 'types/waze';
 import { WazeDirection } from 'enums';
-import { MajorTrafficEvent as SdkMajorTrafficEvent } from 'wme-sdk-typings';
-import { transformMajorTrafficEventToSdk } from 'utils/wme-sdk';
 import dateformat, { masks } from 'utils/dateformat';
 
 export class ClosureGroupModelBasedEditorForm implements ClosureEditorForm {
   constructor(
     private readonly closureGroupModel: ClosureGroupModel,
     private readonly providers: ReadonlyMap<number, string>,
-    private readonly availableEvents: ReadonlySet<RawMajorTrafficEvent>,
   ) {}
 
   static fromHTMLForm(form: HTMLFormElement): ClosureGroupModelBasedEditorForm {
@@ -32,15 +26,12 @@ export class ClosureGroupModelBasedEditorForm implements ClosureEditorForm {
 
     const editClosureFormFiber = findParentFiber(
       getFiber(form),
-      (fiber) => 'availableEvents' in fiber.props && 'model' in fiber.props,
+      (fiber) => 'model' in fiber.props,
     );
 
     return new ClosureGroupModelBasedEditorForm(
       editClosureFormFiber.props.model,
       providers,
-      new Set(
-        editClosureFormFiber.props.availableEvents as RawMajorTrafficEvent[],
-      ),
     );
   }
 
@@ -82,12 +73,6 @@ export class ClosureGroupModelBasedEditorForm implements ClosureEditorForm {
   }
   setEventId(eventId: string | null): void {
     this.closureGroupModel.set('eventId', eventId);
-  }
-  getAvailableEvents(): SdkMajorTrafficEvent[] {
-    return Array.from(
-      this.availableEvents.values(),
-      transformMajorTrafficEventToSdk,
-    );
   }
 
   getIsPermanent(): boolean {
