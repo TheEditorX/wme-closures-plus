@@ -1,5 +1,4 @@
 import { WazeDirection } from 'enums';
-import { MajorTrafficEvent } from 'wme-sdk-typings';
 
 export interface ClosureEditorForm {
   getDescription(): string;
@@ -16,7 +15,6 @@ export interface ClosureEditorForm {
 
   getEventId(): string | null;
   setEventId(eventId: string | null): void;
-  getAvailableEvents(): MajorTrafficEvent[];
 
   getIsPermanent(): boolean;
   setIsPermanent(permanent: boolean): void;
