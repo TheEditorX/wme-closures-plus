@@ -127,6 +127,10 @@ export default {
         'https://cdn.jsdelivr.net/gh/WazeSpace/wme-sdk-plus@v1/wme-sdk-plus.js',
       ],
       connect: ['distributions.crowdin.net'],
+      updateURL:
+        'https://deployable-assets.editorx.dev/wme-closures-plus.meta.js',
+      downloadURL:
+        'https://deployable-assets.editorx.dev/wme-closures-plus.min.user.js',
     }),
   ],
 };
