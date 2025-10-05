@@ -3,7 +3,7 @@
   "displayName": "WME Closures+",
   "shortDisplayName": "Closures+",
   "author": "r0den",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "WME Closures+ extends the Waze Map Editor with advanced closure management features",
   "main": "dist/index.js",
   "scripts": {
