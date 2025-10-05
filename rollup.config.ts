@@ -123,6 +123,11 @@ export default {
         'https://waze.com/*editor*',
         'https://*.wazestg.com/*editor*',
       ],
+      exclude: [
+        'https://*.waze.com/*/user/editor/*',
+        'https://waze.com/*/user/editor/*',
+        'https://*.wazestg.com/*/user/editor/*',
+      ],
       require: [
         'https://cdn.jsdelivr.net/gh/WazeSpace/wme-sdk-plus@v1/wme-sdk-plus.js',
       ],
