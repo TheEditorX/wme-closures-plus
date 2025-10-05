@@ -33,7 +33,7 @@ To use Closures+, you **must** have a userscript manager browser extension insta
     * [Greasemonkey](https://www.greasespot.net/) (Firefox)
     * Violentmonkey (Chrome, Firefox, Edge, Opera)
 2.  **Install Closures+:**
-    * Click here to install directly from [**GitHub**](YOUR_GITHUB_RAW_INSTALL_LINK_HERE)
+    * Click here to install directly from our [**CDN**](https://deployable-assets.editorx.dev/wme-closures-plus.min.user.js)
 3.  Your userscript manager should prompt you to confirm the installation. Accept the prompt.
 4.  Once installed, Closures+ will automatically be active the next time you load or refresh the Waze Map Editor.
 
@@ -61,3 +61,4 @@ See the [**CONTRIBUTING.md**](/CONTRIBUTING.md) for detailed guidelines on how t
 ## License
 
 This add-on is licensed under the Apache License, Version 2.0. See the [LICENSE](/LICENSE) file for details.
+
