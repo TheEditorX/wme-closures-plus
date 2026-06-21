@@ -128,4 +128,4 @@ fixes #55
 
 ## License
 
-By contributing to Closures+, you agree that your contributions will be licensed under its [Apache License 2.0](/LICENSE).
+By contributing to Closures+, you agree that your contributions will be licensed under its [license](/LICENSE).
