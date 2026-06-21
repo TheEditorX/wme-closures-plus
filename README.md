@@ -60,5 +60,5 @@ See the [**CONTRIBUTING.md**](/CONTRIBUTING.md) for detailed guidelines on how t
 
 ## License
 
-This add-on is licensed under the Apache License, Version 2.0. See the [LICENSE](/LICENSE) file for details.
+This add-on is licensed under a custom license. See the [LICENSE](/LICENSE) file for details.
 
