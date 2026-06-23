@@ -2,9 +2,9 @@ import { ClosureEditorForm, DateOnly } from 'classes';
 import { TimeOnly } from 'classes';
 import { getDateResolverByName } from 'consts/date-resolvers';
 import { ClosurePreset } from 'interfaces/closure-preset';
-import Logger from 'js-logger';
+import { logger as baseLogger } from './logger';
 
-const logger = Logger.get('closure-presets');
+const logger = baseLogger.scope('closure-presets');
 
 function getStartDateForPreset(
   closureDetails: ClosurePreset['closureDetails'],
@@ -155,15 +155,15 @@ export function applyClosurePreset(
   const endDate = getEndDateForPreset(closureDetails, startDate);
 
   if (closureDetails.description) {
-    logger.log('Preset has a description. Applying..');
+    logger.debug('Preset has a description. Applying..');
     closureEditorForm.setDescription(closureDetails.description);
   }
 
-  logger.log('Applying resolved start timestamp', {
+  logger.debug('Applying resolved start timestamp', {
     value: startDate.toISOString(),
   });
   closureEditorForm.setStart(startDate);
-  logger.log('Applying resolved end timestamp', {
+  logger.debug('Applying resolved end timestamp', {
     value: endDate.toISOString(),
   });
   closureEditorForm.setEnd(endDate);

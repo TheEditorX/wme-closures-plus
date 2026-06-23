@@ -1,9 +1,9 @@
 import { WeekdayFlags } from 'enums';
-import Logger from 'js-logger';
 import { createDateResolver } from './date-resolver';
 import { DateOnly } from 'classes';
+import { logger as baseLogger } from '../../utils/logger';
 
-const logger = Logger.get('DAY_OF_WEEK_RESOLVER');
+const logger = baseLogger.scope('DAY_OF_WEEK_RESOLVER');
 
 interface DayOfWeekResolverArgs {
   /** The numeric representation of the day(s) of the week, to be used with the {@link WeekdayFlags} bitwise enum. */

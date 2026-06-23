@@ -1,8 +1,8 @@
-import Logger from 'js-logger';
 import { fetchRemoteStrings } from './fetch-remote-strings';
 import { loadStrings } from './load-strings';
+import { logger as baseLogger } from '../../utils/logger';
 
-const logger = Logger.get('i18n');
+const logger = baseLogger.scope('i18n');
 
 export async function loadCrowdinStrings(
   locale: string,

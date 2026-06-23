@@ -1,10 +1,10 @@
-import Logger from 'js-logger';
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 import { useClosurePresetsListContext } from '../../contexts';
 import { ClosurePreset, ClosurePresetMetadata } from '../../interfaces';
 import { PresetEditingDialog } from './preset-edit-dialog';
+import { logger as baseLogger } from '../../utils/logger';
 
-const logger = Logger.get('preset-editor-manager');
+const logger = baseLogger.scope('preset-editor-manager');
 
 interface ClosurePresetEditorManager {
   openEditor(presetId?: ClosurePresetMetadata['id']): void;

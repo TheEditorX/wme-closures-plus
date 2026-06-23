@@ -55,6 +55,7 @@
   "private": true,
   "dependencies": {
     "@base-ui-components/react": "^1.0.0-alpha.8",
+    "@editor-x/wme-logstream": "^0.1.0-alpha.1",
     "@emotion/css": "^11.13.5",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -63,7 +64,6 @@
     "concurrently": "^9.1.2",
     "dexie": "^4.0.11",
     "dexie-react-hooks": "^1.1.7",
-    "js-logger": "^1.6.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "usehooks-ts": "^3.1.1"
