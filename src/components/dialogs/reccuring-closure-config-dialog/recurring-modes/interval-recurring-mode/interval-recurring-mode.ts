@@ -1,11 +1,11 @@
 import { Timeframe } from 'interfaces';
-import Logger from 'js-logger';
 import { RecurringMode } from '../recurring-mode';
 import { IntervalAnchorPoint } from './enums';
 import { IntervalConfigForm } from './IntervalConfigForm';
 import { getDefaultAnchorPoint } from './utils';
+import { logger as baseLogger } from '../../../../../utils/logger';
 
-const logger = Logger.get('INTERVAL_RECURRING_MODE');
+const logger = baseLogger.scope('INTERVAL_RECURRING_MODE');
 
 export interface IntervalModeFields {
   /** The length of each closure in minutes */

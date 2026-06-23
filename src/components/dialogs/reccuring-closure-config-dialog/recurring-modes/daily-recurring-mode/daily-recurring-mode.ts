@@ -1,9 +1,9 @@
 import { Timeframe } from 'interfaces';
-import Logger from 'js-logger';
 import { RecurringMode } from '../recurring-mode';
 import { DailyConfigForm, DailyConfigFormFields } from './DailyConfigForm';
+import { logger as baseLogger } from '../../../../../utils/logger';
 
-const logger = Logger.get('DAILY_RECURRING_MODE');
+const logger = baseLogger.scope('DAILY_RECURRING_MODE');
 
 export const DailyRecurringMode: RecurringMode<DailyConfigFormFields> = {
   id: 'DAILY',

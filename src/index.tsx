@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Logger from 'js-logger';
 import { createRoot } from 'react-dom/client';
 import { SessionId } from './consts/session-id';
 import { getCurrentLocale, loadCrowdinStrings } from './localization';
@@ -10,44 +9,12 @@ import { App } from './App';
 import { asScriptTab } from 'utils/as-script-tab';
 import PlusBranded from './assets/plus-branded.svg';
 import { WzMenuElement } from 'types/waze/elements';
+import { logger } from './utils/logger';
 
 import './utils/wme-date-format';
 
-const sessionLogs = [];
-const consoleLogger = (() => {
-  let lastConsoleOutput = NaN;
-
-  return Logger.createDefaultHandler({
-    formatter: (messages, context) => {
-      const currentTime = new Date();
-      const timeSinceLastMessage = currentTime.getTime() - lastConsoleOutput;
-      messages.unshift(
-        [
-          '[editorx.dev/closures-plus]',
-          currentTime.toISOString(),
-          !isNaN(timeSinceLastMessage) &&
-            `\x1B[32m+${timeSinceLastMessage}ms\x1B[m`,
-          context.name && `[\x1B[105;1m${context.name}\x1B[m]`,
-        ]
-          .filter(Boolean)
-          .join('\t'),
-      );
-      lastConsoleOutput = currentTime.getTime();
-    },
-  });
-})();
-Logger.setHandler((messages, context) => {
-  consoleLogger(messages, context);
-  sessionLogs.push({
-    time: new Date().toISOString(),
-    context,
-    messages,
-  });
-});
-
-Logger.setLevel(Logger.DEBUG);
-Logger.debug('Logger initialized.');
-Logger.debug('Starting session', {
+logger.debug('Logger initialized.');
+logger.debug('Starting session', {
   sessionId: SessionId,
   version: __SCRIPT_VERSION__,
   commitHash: __COMMIT_HASH__,
@@ -68,7 +35,7 @@ axios.defaults.adapter = axiosGmXhrAdapter;
 
 const [wmeSdk] = await Promise.all([
   await (async () => {
-    Logger.debug('Waiting for SDK to initialize...');
+    logger.debug('Waiting for SDK to initialize...');
     await SDK_INITIALIZED;
     const wmeSdk = await initWmeSdkPlus(
       getWmeSdk({
@@ -76,7 +43,7 @@ const [wmeSdk] = await Promise.all([
         scriptName: __SCRIPT_NAME__,
       }),
     );
-    Logger.debug('SDK initialized.', {
+    logger.debug('SDK initialized.', {
       username: wmeSdk.State.getUserInfo()?.userName,
       userRank: wmeSdk.State.getUserInfo()?.rank,
       wazeMapEditorInfo: {
@@ -95,7 +62,7 @@ const [wmeSdk] = await Promise.all([
   ),
 ]);
 
-Logger.debug('Starting app...');
+logger.debug('Starting app...');
 const root = createRoot(document.createDocumentFragment());
 const AppWrapper = asScriptTab(
   App,
@@ -119,47 +86,14 @@ root.render(
       const CLICK_TIMEOUT = 3000;
 
       const sendLogs = () => {
-        Logger.debug('Sending logs...');
-
-        // Collect browser and environment information
-        const browserInfo = {
-          userAgent: navigator.userAgent,
-          language: navigator.language,
-          platform: navigator.platform,
-          screenWidth: window.screen.width,
-          screenHeight: window.screen.height,
-          windowWidth: window.innerWidth,
-          windowHeight: window.innerHeight,
-        };
-
-        // Create a text blob with logs
-        const logData = {
-          sessionId: SessionId,
-          timestamp: new Date().toISOString(),
-          userInfo: wmeSdk.State.getUserInfo(),
-          browserInfo,
-          content: sessionLogs,
-        };
-
-        const logBlob = new Blob([JSON.stringify(logData, null, 2)], {
-          type: 'application/json',
-        });
-        const url = URL.createObjectURL(logBlob);
-
-        // Create a download link
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `wme-closures-plus-logs-${new Date().toISOString()}.json`;
-        document.body.appendChild(a);
-        a.click();
-
-        // Clean up
-        setTimeout(() => {
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }, 100);
-
-        Logger.debug('Logs sent');
+        logger.debug('Downloading logs...');
+        logger
+          .downloadLogs(
+            `wme-closures-plus-logs-${new Date().toISOString()}.xlog`,
+          )
+          .catch((err) => {
+            logger.error('Failed to download logs', err);
+          });
       };
 
       const handleContextMenu = (event: MouseEvent) => {
@@ -175,7 +109,7 @@ root.render(
         lastClickTime = currentTime;
 
         if (clickCount === 5) {
-          Logger.debug('Context menu triggered', { event });
+          logger.debug('Context menu triggered', { event });
           // Prevent default context menu on third click
           event.preventDefault();
 
@@ -244,4 +178,4 @@ root.render(
   />,
 );
 
-Logger.debug('Rendered. Idle');
+logger.debug('Rendered. Idle');
