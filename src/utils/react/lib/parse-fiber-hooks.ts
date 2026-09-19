@@ -1,6 +1,12 @@
 import { DependencyList } from 'react';
 import { Fiber } from 'react-reconciler';
-import { isUseMemo, isUseRef, isUseState } from '../utils/hooks';
+import {
+  isUseCallback,
+  isUseMemo,
+  isUseRef,
+  isUseState,
+  isUseSyncExternalStore,
+} from '../utils/hooks';
 
 export interface UseStateHook<V = unknown> {
   type: 'useState';
@@ -19,7 +25,29 @@ export interface UseRefHook<T = unknown> {
   current: T;
 }
 
-export type AnyHook = UseStateHook | UseMemoHook | UseRefHook;
+export interface UseCallbackHook<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends (...args: any[]) => any = (...args: any[]) => any,
+> {
+  type: 'useCallback';
+  value: T;
+  dependencies: DependencyList;
+}
+
+export interface UseSyncExternalStoreHook<T = unknown> {
+  type: 'useSyncExternalStore';
+  /** Cached snapshot value pulled from the fiber at the time of render */
+  cachedValue: T;
+  /** Function to retrieve the current/live snapshot */
+  getSnapshot: () => T;
+}
+
+export type AnyHook =
+  | UseStateHook
+  | UseMemoHook
+  | UseRefHook
+  | UseCallbackHook
+  | UseSyncExternalStoreHook;
 
 function parseMemoizedStateValue(
   value: Fiber['memoizedState'],
@@ -29,6 +57,22 @@ function parseMemoizedStateValue(
       type: 'useState',
       value: value.memoizedState,
       dispatch: value.queue.dispatch,
+    };
+  }
+
+  if (isUseSyncExternalStore(value)) {
+    return {
+      type: 'useSyncExternalStore',
+      cachedValue: value.memoizedState,
+      getSnapshot: value.queue.getSnapshot,
+    };
+  }
+
+  if (isUseCallback(value)) {
+    return {
+      type: 'useCallback',
+      value: value.memoizedState[0],
+      dependencies: value.memoizedState[1],
     };
   }
 
