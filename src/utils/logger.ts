@@ -6,7 +6,7 @@ const scriptVersion = typeof __SCRIPT_VERSION__ !== 'undefined' ? __SCRIPT_VERSI
 export const logger = LogStream.create({
   minLogLevel: 'DEBUG',
   persist: true,
-  dbPrefix: scriptId.replace('/', '-'),
+  dbPrefix: scriptId.replaceAll('/', '-'),
   scriptVersion: scriptVersion,
   brand: {
     scriptPrefix: 'editorx.dev/closures-plus',

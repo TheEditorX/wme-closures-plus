@@ -89,7 +89,7 @@ root.render(
         logger.debug('Downloading logs...');
         logger
           .downloadLogs(
-            `wme-closures-plus-logs-${new Date().toISOString()}.xlog`,
+            `wme-closures-plus-logs-${new Date().toISOString().replaceAll(':', '-')}.xlog`,
           )
           .catch((err) => {
             logger.error('Failed to download logs', err);
