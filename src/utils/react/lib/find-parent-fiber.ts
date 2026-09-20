@@ -5,6 +5,7 @@ import {
   parseFiberHooks,
   UseCallbackHook,
   UseMemoHook,
+  UseMemoOrCallbackHook,
   UseRefHook,
   UseStateHook,
   UseSyncExternalStoreHook,
@@ -22,6 +23,7 @@ export interface ParsedFiber<P extends object = Record<string, any>> {
     all: (AnyHook | AnyCompositeHook)[];
     useState: UseStateHook[];
     useMemo: UseMemoHook[];
+    useMemoOrCallback: UseMemoOrCallbackHook[];
     useRef: UseRefHook[];
     useCallback: UseCallbackHook[];
     useSyncExternalStore: UseSyncExternalStoreHook[];
@@ -31,8 +33,6 @@ export interface ParsedFiber<P extends object = Record<string, any>> {
   };
   props: P;
 }
-
-const EMPTY_ARRAY: readonly never[] = Object.freeze([]) as never[];
 
 class LazyZustandHooks {
   private _useStore?: ZustandUseStoreHook[];
@@ -45,7 +45,7 @@ class LazyZustandHooks {
       const len = all.length;
 
       if (len === 0) {
-        this._useStore = EMPTY_ARRAY as unknown as ZustandUseStoreHook[];
+        this._useStore = [];
       } else {
         const result: ZustandUseStoreHook[] = [];
         for (let i = 0; i < len; i++) {
@@ -64,6 +64,7 @@ class LazyFiberHooks {
   private _all?: (AnyHook | AnyCompositeHook)[];
   private _useState?: UseStateHook[];
   private _useMemo?: UseMemoHook[];
+  private _useMemoOrCallback?: UseMemoOrCallbackHook[];
   private _useRef?: UseRefHook[];
   private _useCallback?: UseCallbackHook[];
   private _useSyncExternalStore?: UseSyncExternalStoreHook[];
@@ -74,7 +75,7 @@ class LazyFiberHooks {
   get all(): (AnyHook | AnyCompositeHook)[] {
     if (this._all === undefined) {
       if (!this._fiber || !this._fiber.memoizedState) {
-        this._all = EMPTY_ARRAY as unknown as (AnyHook | AnyCompositeHook)[];
+        this._all = [];
       } else {
         const rawHooks = parseFiberHooks(this._fiber);
         this._all = defaultCompositeHookEngine.parse(rawHooks);
@@ -95,6 +96,13 @@ class LazyFiberHooks {
       this._useMemo = this._filter('useMemo');
     }
     return this._useMemo;
+  }
+
+  get useMemoOrCallback(): UseMemoOrCallbackHook[] {
+    if (this._useMemoOrCallback === undefined) {
+      this._useMemoOrCallback = this._filter('useMemoOrCallback');
+    }
+    return this._useMemoOrCallback;
   }
 
   get useRef(): UseRefHook[] {
@@ -129,7 +137,7 @@ class LazyFiberHooks {
     const all = this.all;
     const len = all.length;
     if (len === 0) {
-      return EMPTY_ARRAY as unknown as T[];
+      return [];
     }
 
     const result: T[] = [];
@@ -141,8 +149,6 @@ class LazyFiberHooks {
     return result;
   }
 }
-
-const EMPTY_HOOKS = new LazyFiberHooks(null);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 class LazyParsedFiber<P extends object = Record<string, any>>
@@ -166,7 +172,9 @@ class LazyParsedFiber<P extends object = Record<string, any>>
   get hooks(): ParsedFiber['hooks'] {
     if (this._hooks === undefined) {
       this._hooks =
-        this.fiber.memoizedState ? new LazyFiberHooks(this.fiber) : EMPTY_HOOKS;
+        this.fiber.memoizedState ?
+          new LazyFiberHooks(this.fiber)
+        : new LazyFiberHooks(null);
     }
     return this._hooks;
   }

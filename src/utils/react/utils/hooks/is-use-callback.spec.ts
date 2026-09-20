@@ -1,7 +1,7 @@
 import { isUseCallback } from './is-use-callback';
 
 describe('isUseCallback', () => {
-  it('should return true for a valid useCallback hook value', () => {
+  it('should leave function-valued memo tuples ambiguous', () => {
     const fn = () => 42;
     const hookValue = {
       memoizedState: [fn, []],
@@ -11,7 +11,7 @@ describe('isUseCallback', () => {
       next: null,
     };
 
-    expect(isUseCallback(hookValue)).toBe(true);
+    expect(isUseCallback(hookValue)).toBe(false);
   });
 
   it('should return false if memoizedState[0] is not a function (i.e. regular useMemo)', () => {

@@ -32,13 +32,14 @@ describe('findParentFiber', () => {
       },
       next: null,
     };
+    const selector = (s: { theme: string }) => s.theme;
     const hook2 = {
-      memoizedState: [() => 'dark', [store, (s: { theme: string }) => s.theme]],
+      memoizedState: [() => 'dark', [store, selector]],
       queue: null,
       next: hook3,
     };
     const hook1 = {
-      memoizedState: [() => 'dark', [store, (s: { theme: string }) => s.theme]],
+      memoizedState: [() => 'dark', [store, selector]],
       queue: null,
       next: hook2,
     };
@@ -54,6 +55,64 @@ describe('findParentFiber', () => {
     });
 
     expect(result).not.toBeNull();
+  });
+
+  it('should preserve an unmatched function tuple as ambiguous', () => {
+    const callback = () => 'value';
+    const fiber = createMockFiber({
+      memoizedState: [callback, []],
+      queue: null,
+      next: null,
+    });
+
+    findParentFiber(fiber, (parsed) => {
+      expect(parsed.hooks.all).toEqual([
+        {
+          type: 'useMemoOrCallback',
+          value: callback,
+          dependencies: [],
+        },
+      ]);
+      expect(parsed.hooks.useMemo).toEqual([]);
+      expect(parsed.hooks.useCallback).toEqual([]);
+      expect(parsed.hooks.useMemoOrCallback).toHaveLength(1);
+      return true;
+    });
+  });
+
+  it('should expose independent mutable hook arrays for fibers without hooks', () => {
+    const firstFiber = createMockFiber(null);
+    const secondFiber = createMockFiber(null);
+
+    const first = findParentFiber(firstFiber, () => true);
+    const second = findParentFiber(secondFiber, () => true);
+
+    expect(first).not.toBeNull();
+    expect(second).not.toBeNull();
+    if (!first || !second) return;
+
+    first.hooks.all.push({
+      type: 'useRef',
+      current: 'added',
+    });
+    first.hooks.useState.push({
+      type: 'useState',
+      value: 1,
+      dispatch: jest.fn(),
+    });
+    first.hooks.zustand.useStore.push({
+      type: 'zustand:useStore',
+      store,
+      selector: (state) => state,
+      cachedValue: store.getState(),
+    });
+
+    expect(first.hooks.all).toHaveLength(1);
+    expect(first.hooks.useState).toHaveLength(1);
+    expect(first.hooks.zustand.useStore).toHaveLength(1);
+    expect(second.hooks.all).toEqual([]);
+    expect(second.hooks.useState).toEqual([]);
+    expect(second.hooks.zustand.useStore).toEqual([]);
   });
 
   it('should traverse up the fiber tree via fiber.return', () => {

@@ -1,6 +1,5 @@
 import { DependencyList } from 'react';
 import { BaseHookValue } from './base-hook-value';
-import { isUseMemo } from './is-use-memo';
 
 export interface UseCallbackHookValue<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -12,14 +11,15 @@ export interface UseCallbackHookValue<
 
 /**
  * Checks if the given hook value (memoizedState of a Fiber) is a result of a useCallback hook.
+ * React stores useCallback and function-valued useMemo hooks in the same tuple
+ * shape, so a Fiber hook value alone cannot distinguish between them.
  * @param hookValue The hook value to check.
- * @returns True if the hook value is a useCallback hook value, false otherwise.
+ * @returns Always false because no structural distinction is available.
  */
 export function isUseCallback<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends (...args: any[]) => any = (...args: any[]) => any,
 >(hookValue: unknown): hookValue is UseCallbackHookValue<T> {
-  return (
-    isUseMemo(hookValue) && typeof hookValue.memoizedState[0] === 'function'
-  );
+  void hookValue;
+  return false;
 }

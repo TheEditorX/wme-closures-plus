@@ -9,9 +9,9 @@ export interface ZustandUseStoreHook<TState = unknown, TSlice = unknown> {
   cachedValue: TSlice;
 }
 
-type ReadonlyStoreApi<T> = Pick<
+export type ReadonlyStoreApi<T> = Pick<
   StoreApi<T>,
-  'getState' | 'setState' | 'subscribe'
+  'getState' | 'getInitialState' | 'subscribe'
 >;
 
 /**
@@ -25,6 +25,8 @@ export function isReadonlyStoreApi<T = unknown>(
     value !== null &&
     'getState' in value &&
     typeof (value as Record<string, unknown>).getState === 'function' &&
+    'getInitialState' in value &&
+    typeof (value as Record<string, unknown>).getInitialState === 'function' &&
     'subscribe' in value &&
     typeof (value as Record<string, unknown>).subscribe === 'function'
   );
@@ -67,14 +69,22 @@ export const zustandUseStoreMatcher: CompositeHookMatcher<
     const hook3 = hooks[startIndex + 2];
 
     if (
-      hook1.type !== 'useCallback' ||
-      hook2.type !== 'useCallback' ||
+      (hook1.type !== 'useCallback' && hook1.type !== 'useMemoOrCallback') ||
+      (hook2.type !== 'useCallback' && hook2.type !== 'useMemoOrCallback') ||
       hook3.type !== 'useSyncExternalStore'
     ) {
       return null;
     }
 
-    // Identify StoreApi from either getSnapshot() return value or Hook 1's dependencies
+    if (
+      typeof hook1.value !== 'function' ||
+      typeof hook2.value !== 'function' ||
+      hook1.dependencies[1] !== hook2.dependencies[1]
+    ) {
+      return null;
+    }
+
+    // Identify StoreApi from getSnapshot() or either callback's dependencies.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let store: ReadonlyStoreApi<any> | null = null;
 
@@ -87,34 +97,15 @@ export const zustandUseStoreMatcher: CompositeHookMatcher<
       // Ignore errors when calling getSnapshot()
     }
 
-    if (
-      !store &&
-      hook1.dependencies &&
-      isReadonlyStoreApi(hook1.dependencies[0])
-    ) {
-      store = hook1.dependencies[0];
-    }
-
-    // Verify hook1 and hook2 dependencies correlate to getState / getInitialState or store
     const dep1 = hook1.dependencies?.[0];
     const dep2 = hook2.dependencies?.[0];
 
-    const isHook1Valid =
-      isReadonlyStoreApi(dep1) ||
-      (typeof dep1 === 'function' &&
-        (dep1.name === 'getState' || 'getState' in dep1));
-
-    const isHook2Valid =
-      isReadonlyStoreApi(dep2) ||
-      (typeof dep2 === 'function' &&
-        (dep2.name === 'getInitialState' || 'getInitialState' in dep2));
-
-    // If store is still not resolved, check if dep1 or dep2 has store reference
-    if (!store) {
-      if (isReadonlyStoreApi(dep1)) {
-        store = dep1;
-      } else if (isReadonlyStoreApi(dep2)) {
-        store = dep2;
+    for (const dependency of [dep1, dep2]) {
+      if (isReadonlyStoreApi(dependency)) {
+        if (store && store !== dependency) {
+          return null;
+        }
+        store = dependency;
       }
     }
 
@@ -122,8 +113,10 @@ export const zustandUseStoreMatcher: CompositeHookMatcher<
       return null;
     }
 
-    // If both hooks had dependencies, verify they are compatible
-    if (!isHook1Valid && !isHook2Valid && !isReadonlyStoreApi(dep1)) {
+    const isHook1Valid = dep1 === store || dep1 === store.getState;
+    const isHook2Valid = dep2 === store || dep2 === store.getInitialState;
+
+    if (!isHook1Valid || !isHook2Valid) {
       return null;
     }
 

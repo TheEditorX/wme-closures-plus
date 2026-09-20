@@ -11,6 +11,7 @@ describe('CompositeHookEngine', () => {
   const store = createStore(() => ({ val: 123 }));
 
   it('should scan sequentially, match composite hooks, and advance by consumed count', () => {
+    const selector = (s: { val: number }) => s.val;
     const hooks: AnyHook[] = [
       {
         type: 'useState',
@@ -21,12 +22,12 @@ describe('CompositeHookEngine', () => {
       {
         type: 'useCallback',
         value: () => store.getState(),
-        dependencies: [store, (s: { val: number }) => s.val],
+        dependencies: [store, selector],
       },
       {
         type: 'useCallback',
         value: () => store.getInitialState(),
-        dependencies: [store, (s: { val: number }) => s.val],
+        dependencies: [store, selector],
       },
       {
         type: 'useSyncExternalStore',

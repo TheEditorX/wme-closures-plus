@@ -1,7 +1,6 @@
 import { DependencyList } from 'react';
 import { Fiber } from 'react-reconciler';
 import {
-  isUseCallback,
   isUseMemo,
   isUseRef,
   isUseState,
@@ -17,6 +16,15 @@ export interface UseStateHook<V = unknown> {
 export interface UseMemoHook<V = unknown> {
   type: 'useMemo';
   value: V;
+  dependencies: DependencyList;
+}
+
+export interface UseMemoOrCallbackHook<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends (...args: any[]) => any = (...args: any[]) => any,
+> {
+  type: 'useMemoOrCallback';
+  value: T;
   dependencies: DependencyList;
 }
 
@@ -45,6 +53,7 @@ export interface UseSyncExternalStoreHook<T = unknown> {
 export type AnyHook =
   | UseStateHook
   | UseMemoHook
+  | UseMemoOrCallbackHook
   | UseRefHook
   | UseCallbackHook
   | UseSyncExternalStoreHook;
@@ -68,15 +77,15 @@ function parseMemoizedStateValue(
     };
   }
 
-  if (isUseCallback(value)) {
-    return {
-      type: 'useCallback',
-      value: value.memoizedState[0],
-      dependencies: value.memoizedState[1],
-    };
-  }
-
   if (isUseMemo(value)) {
+    if (typeof value.memoizedState[0] === 'function') {
+      return {
+        type: 'useMemoOrCallback',
+        value: value.memoizedState[0] as UseMemoOrCallbackHook['value'],
+        dependencies: value.memoizedState[1],
+      };
+    }
+
     return {
       type: 'useMemo',
       value: value.memoizedState[0],

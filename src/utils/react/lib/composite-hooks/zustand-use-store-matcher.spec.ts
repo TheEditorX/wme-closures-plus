@@ -1,6 +1,9 @@
 import { createStore } from 'zustand/vanilla';
 import type { AnyHook } from '../parse-fiber-hooks';
-import { zustandUseStoreMatcher } from './zustand-use-store-matcher';
+import {
+  isReadonlyStoreApi,
+  zustandUseStoreMatcher,
+} from './zustand-use-store-matcher';
 
 describe('zustandUseStoreMatcher', () => {
   interface TestState {
@@ -13,6 +16,23 @@ describe('zustandUseStoreMatcher', () => {
       counter: 0,
       text: 'initial',
     }));
+
+  it('should require the complete readonly store contract', () => {
+    const store = createMockStore();
+    const readonlyStore = {
+      getState: store.getState,
+      getInitialState: store.getInitialState,
+      subscribe: store.subscribe,
+    };
+
+    expect(isReadonlyStoreApi(readonlyStore)).toBe(true);
+    expect(
+      isReadonlyStoreApi({
+        getState: store.getState,
+        subscribe: store.subscribe,
+      }),
+    ).toBe(false);
+  });
 
   it('should match a Zustand v5 hook sequence where store is in deps[0]', () => {
     const store = createMockStore();
@@ -77,6 +97,134 @@ describe('zustandUseStoreMatcher', () => {
     expect(match?.consumed).toBe(3);
     expect(match?.hook.type).toBe('zustand:useStore');
     expect(match?.hook.store).toBe(store);
+  });
+
+  it('should match ambiguous callback tuples only as a complete Zustand sequence', () => {
+    const store = createMockStore();
+    const selector = (s: TestState) => s.counter;
+    const getSelection = () => selector(store.getState());
+    const getServerSelection = () => selector(store.getInitialState());
+    const hooks: AnyHook[] = [
+      {
+        type: 'useMemoOrCallback',
+        value: getSelection,
+        dependencies: [store, selector],
+      },
+      {
+        type: 'useMemoOrCallback',
+        value: getServerSelection,
+        dependencies: [store, selector],
+      },
+      {
+        type: 'useSyncExternalStore',
+        cachedValue: 0,
+        getSnapshot: getSelection,
+      },
+    ];
+
+    expect(zustandUseStoreMatcher.match(hooks, 0)?.hook.store).toBe(store);
+  });
+
+  it('should reject an unrelated second callback', () => {
+    const store = createMockStore();
+    const selector = (s: TestState) => s.counter;
+    const unrelated = () => 1;
+    const hooks: AnyHook[] = [
+      {
+        type: 'useCallback',
+        value: () => selector(store.getState()),
+        dependencies: [store, selector],
+      },
+      {
+        type: 'useCallback',
+        value: unrelated,
+        dependencies: [unrelated, selector],
+      },
+      {
+        type: 'useSyncExternalStore',
+        cachedValue: 0,
+        getSnapshot: () => 0,
+      },
+    ];
+
+    expect(zustandUseStoreMatcher.match(hooks, 0)).toBeNull();
+  });
+
+  it('should reject callbacks that depend on different stores', () => {
+    const store1 = createMockStore();
+    const store2 = createMockStore();
+    const selector = (s: TestState) => s.counter;
+    const hooks: AnyHook[] = [
+      {
+        type: 'useCallback',
+        value: () => selector(store1.getState()),
+        dependencies: [store1, selector],
+      },
+      {
+        type: 'useCallback',
+        value: () => selector(store2.getInitialState()),
+        dependencies: [store2, selector],
+      },
+      {
+        type: 'useSyncExternalStore',
+        cachedValue: 0,
+        getSnapshot: () => 0,
+      },
+    ];
+
+    expect(zustandUseStoreMatcher.match(hooks, 0)).toBeNull();
+  });
+
+  it('should reject callbacks with different selectors', () => {
+    const store = createMockStore();
+    const selector1 = (s: TestState) => s.counter;
+    const selector2 = (s: TestState) => s.counter;
+    const hooks: AnyHook[] = [
+      {
+        type: 'useCallback',
+        value: () => selector1(store.getState()),
+        dependencies: [store, selector1],
+      },
+      {
+        type: 'useCallback',
+        value: () => selector2(store.getInitialState()),
+        dependencies: [store, selector2],
+      },
+      {
+        type: 'useSyncExternalStore',
+        cachedValue: 0,
+        getSnapshot: () => 0,
+      },
+    ];
+
+    expect(zustandUseStoreMatcher.match(hooks, 0)).toBeNull();
+  });
+
+  it('should only accept method dependencies owned by the resolved store', () => {
+    const store = createMockStore();
+    const selector = (s: TestState) => s.counter;
+    const unrelatedGetInitialState = function getInitialState() {
+      return store.getInitialState();
+    };
+    const hooks: AnyHook[] = [
+      {
+        type: 'useCallback',
+        value: () => selector(store.getState()),
+        dependencies: [store.getState, selector],
+      },
+      {
+        type: 'useCallback',
+        value: () => selector(unrelatedGetInitialState()),
+        dependencies: [unrelatedGetInitialState, selector],
+      },
+      {
+        type: 'useSyncExternalStore',
+        cachedValue: store,
+        getSnapshot: () => store,
+      },
+    ];
+
+    expect(zustandUseStoreMatcher.match(hooks, 0)).toBeNull();
   });
 
   it('should return null if there are fewer than 3 hooks remaining', () => {
