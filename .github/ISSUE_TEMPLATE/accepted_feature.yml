@@ -1,21 +1,22 @@
-name: Accepted Feature (Backlog)
-description: For maintainers and contributors to specify an accepted feature from Discussions ready for the backlog.
+name: 📋 Feature Specification (Maintainers / Approved Backlog)
+description: Specify an accepted feature or internal team initiative for the backlog.
 type: Feature
 body:
   - type: markdown
     attributes:
       value: |
-        ### 📌 Accepted Feature Specification
-        This template is intended for **accepted features** moving into the engineering backlog.
-        If you are pitching a new idea or feature request, please open a [GitHub Discussion](https://github.com/TheEditorX/wme-closures-plus/discussions/new?category=ideas) instead.
+        ### 📌 Feature Specification
+        This form is for specifying scoped features entering the engineering backlog.
+        - **Community suggestions**: Please pitch new ideas in [GitHub Discussions](https://github.com/TheEditorX/wme-closures-plus/discussions/new?category=ideas) first.
+        - **Team initiatives**: Can be authored directly by maintainers without a prior discussion.
   - type: input
     id: discussion
     attributes:
-      label: Original Discussion
-      description: Link to the approved GitHub Discussion.
-      placeholder: "https://github.com/TheEditorX/wme-closures-plus/discussions/..."
+      label: Original Discussion (Optional)
+      description: Link to the GitHub Discussion if originated from one. Leave blank for internal initiatives.
+      placeholder: "https://github.com/TheEditorX/wme-closures-plus/discussions/... (or leave blank)"
     validations:
-      required: true
+      required: false
   - type: textarea
     id: problem
     attributes:
@@ -43,15 +44,11 @@ body:
       placeholder: "Affected components, proposed changes, edge cases..."
     validations:
       required: false
-  - type: dropdown
-    id: contributor-readiness
+  - type: checkboxes
+    id: terms
     attributes:
-      label: Contributor Readiness
-      description: Who is expected to implement this feature?
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/TheEditorX/wme-closures-plus/blob/dev/CODE_OF_CONDUCT.md).
       options:
-        - Core maintainer will implement
-        - Ready for community (tag with `help wanted`)
-        - Beginner-friendly (tag with `good first issue`)
-    validations:
-      required: true
-
+        - label: I agree to follow this project's Code of Conduct
+          required: true

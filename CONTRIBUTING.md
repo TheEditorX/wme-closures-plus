@@ -23,7 +23,7 @@ There are many ways to contribute to Closures+:
 
 ## Reporting Bugs
 
-If you encounter a bug, please search the [GitHub Issues](https://github.com/davidsl4/wme-closures-plus/issues) first to see if it has already been reported. If not, please [open a new issue](https://github.com/davidsl4/wme-closures-plus/issues/new/choose).
+If you encounter a bug, please search the [GitHub Issues](https://github.com/TheEditorX/wme-closures-plus/issues) first to see if it has already been reported. If not, please [open a new issue](https://github.com/TheEditorX/wme-closures-plus/issues/new/choose).
 
 When reporting a bug, please include:
 
@@ -35,9 +35,12 @@ When reporting a bug, please include:
 
 ## Suggesting Enhancements
 
-We welcome ideas for new features! Please check the [GitHub Issues](https://github.com/davidsl4/wme-closures-plus/issues) (especially those tagged 'enhancement' or with type 'feature') to see if your idea has already been suggested.
+We welcome ideas for new features and improvements!
 
-If not, feel free to [open a new issue](https://github.com/davidsl4/wme-closures-plus/issues/new/choose), clearly outlining the proposed feature and its benefits.
+1. **Check existing ideas**: Browse [GitHub Discussions](https://github.com/TheEditorX/wme-closures-plus/discussions?discussions_q=category%3AIdeas) and existing issues to see if your idea has already been proposed.
+2. **Start a discussion**: If it hasn't, please [start a discussion in the Ideas category](https://github.com/TheEditorX/wme-closures-plus/discussions/new?category=ideas) to describe your proposal, user needs, and expected benefits.
+
+Once an idea is discussed and accepted by the maintainers, it will be added to the backlog as an engineering issue for prioritization and implementation.
 
 ## Localization and Translation
 

@@ -6,6 +6,8 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report!
+
+        > 💡 **Looking to suggest a new feature or improvement?** Please [start a discussion](https://github.com/TheEditorX/wme-closures-plus/discussions/new?category=ideas) instead of opening a bug report.
   - type: input
     id: contact
     attributes:
@@ -72,7 +74,7 @@ body:
     id: terms
     attributes:
       label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/davidsl4/wme-closures-plus/blob/main/CODE_OF_CONDUCT.md). 
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/TheEditorX/wme-closures-plus/blob/dev/CODE_OF_CONDUCT.md). 
       options:
         - label: I agree to follow this project's Code of Conduct
           required: true
