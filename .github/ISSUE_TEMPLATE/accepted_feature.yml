@@ -1,0 +1,57 @@
+name: Accepted Feature (Backlog)
+description: For maintainers and contributors to specify an accepted feature from Discussions ready for the backlog.
+type: Feature
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### 📌 Accepted Feature Specification
+        This template is intended for **accepted features** moving into the engineering backlog.
+        If you are pitching a new idea or feature request, please open a [GitHub Discussion](https://github.com/TheEditorX/wme-closures-plus/discussions/new?category=ideas) instead.
+  - type: input
+    id: discussion
+    attributes:
+      label: Original Discussion
+      description: Link to the approved GitHub Discussion.
+      placeholder: "https://github.com/TheEditorX/wme-closures-plus/discussions/..."
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement / User Story
+      description: What problem does this feature solve, and for whom?
+      placeholder: "As a [user type], I want to [action] so that [benefit]..."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: What testable criteria must be met for this feature to be considered complete?
+      placeholder: |
+        - [ ] Criteria 1
+        - [ ] Criteria 2
+        - [ ] Criteria 3
+    validations:
+      required: true
+  - type: textarea
+    id: technical-notes
+    attributes:
+      label: Proposed Technical Solution & Scope
+      description: Architectural notes, affected components, files, or APIs.
+      placeholder: "Affected components, proposed changes, edge cases..."
+    validations:
+      required: false
+  - type: dropdown
+    id: contributor-readiness
+    attributes:
+      label: Contributor Readiness
+      description: Who is expected to implement this feature?
+      options:
+        - Core maintainer will implement
+        - Ready for community (tag with `help wanted`)
+        - Beginner-friendly (tag with `good first issue`)
+    validations:
+      required: true
+

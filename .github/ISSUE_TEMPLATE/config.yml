@@ -1,4 +1,9 @@
+blank_issues_enabled: false
 contact_links:
+  - name: 💡 Propose a Feature Idea
+    url: https://github.com/TheEditorX/wme-closures-plus/discussions/new?category=ideas
+    about: Have an idea or feature request? Share and discuss it with the community here!
   - name: Editor X Community Discord
     url: https://discord.gg/xqZ5gsHBA9
     about: Join our Discord server to discuss issues, features, and more with the community.
+
