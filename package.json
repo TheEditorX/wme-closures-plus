@@ -9,6 +9,8 @@
   "scripts": {
     "build": "rollup -c --configPlugin typescript",
     "lint": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch"
   },
@@ -36,7 +38,6 @@
     "@types/react-reconciler": "^0.31.0",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.3",
     "eslint-plugin-react-hooks": "^5.1.0",
     "globals": "^15.14.0",

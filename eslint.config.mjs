@@ -3,7 +3,6 @@ import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import { includeIgnoreFile } from '@eslint/compat';
 import { fileURLToPath } from 'node:url';
@@ -30,12 +29,10 @@ export default [
     },
     rules: pluginReactHooks.configs.recommended.rules,
   },
-  eslintPluginPrettierRecommended,
-  eslintConfigPrettier,
   {
     rules: {
       'react/react-in-jsx-scope': 'off',
-      'linebreak-style': ['error', 'unix'],
     },
   },
+  eslintConfigPrettier,
 ];
