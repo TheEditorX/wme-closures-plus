@@ -50,7 +50,8 @@
     "tslib": "^2.8.1",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.18.2",
-    "wme-sdk-typings": "https://web-assets.waze.com/wme_sdk_docs/production/latest/wme-sdk-typings.tgz"
+    "wme-sdk-typings": "https://web-assets.waze.com/wme_sdk_docs/production/latest/wme-sdk-typings.tgz",
+    "zustand": "^5.0.15"
   },
   "private": true,
   "dependencies": {

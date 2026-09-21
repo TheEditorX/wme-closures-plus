@@ -1,6 +1,11 @@
 import { DependencyList } from 'react';
 import { Fiber } from 'react-reconciler';
-import { isUseMemo, isUseRef, isUseState } from '../utils/hooks';
+import {
+  isUseMemo,
+  isUseRef,
+  isUseState,
+  isUseSyncExternalStore,
+} from '../utils/hooks';
 
 export interface UseStateHook<V = unknown> {
   type: 'useState';
@@ -14,12 +19,44 @@ export interface UseMemoHook<V = unknown> {
   dependencies: DependencyList;
 }
 
+export interface UseMemoOrCallbackHook<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends (...args: any[]) => any = (...args: any[]) => any,
+> {
+  type: 'useMemoOrCallback';
+  value: T;
+  dependencies: DependencyList;
+}
+
 export interface UseRefHook<T = unknown> {
   type: 'useRef';
   current: T;
 }
 
-export type AnyHook = UseStateHook | UseMemoHook | UseRefHook;
+export interface UseCallbackHook<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends (...args: any[]) => any = (...args: any[]) => any,
+> {
+  type: 'useCallback';
+  value: T;
+  dependencies: DependencyList;
+}
+
+export interface UseSyncExternalStoreHook<T = unknown> {
+  type: 'useSyncExternalStore';
+  /** Cached snapshot value pulled from the fiber at the time of render */
+  cachedValue: T;
+  /** Function to retrieve the current/live snapshot */
+  getSnapshot: () => T;
+}
+
+export type AnyHook =
+  | UseStateHook
+  | UseMemoHook
+  | UseMemoOrCallbackHook
+  | UseRefHook
+  | UseCallbackHook
+  | UseSyncExternalStoreHook;
 
 function parseMemoizedStateValue(
   value: Fiber['memoizedState'],
@@ -32,7 +69,23 @@ function parseMemoizedStateValue(
     };
   }
 
+  if (isUseSyncExternalStore(value)) {
+    return {
+      type: 'useSyncExternalStore',
+      cachedValue: value.memoizedState,
+      getSnapshot: value.queue.getSnapshot,
+    };
+  }
+
   if (isUseMemo(value)) {
+    if (typeof value.memoizedState[0] === 'function') {
+      return {
+        type: 'useMemoOrCallback',
+        value: value.memoizedState[0] as UseMemoOrCallbackHook['value'],
+        dependencies: value.memoizedState[1],
+      };
+    }
+
     return {
       type: 'useMemo',
       value: value.memoizedState[0],
