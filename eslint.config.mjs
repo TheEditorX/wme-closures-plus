@@ -10,25 +10,22 @@ import { fileURLToPath } from 'node:url';
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   includeIgnoreFile(fileURLToPath(new URL('.gitignore', import.meta.url))),
-  includeIgnoreFile(fileURLToPath(new URL('.eslintignore', import.meta.url))),
-  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
   {
+    ignores: ['src/tampermonkey/**'],
+  },
+  {
+    files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
     languageOptions: { globals: globals.browser },
     settings: {
       react: {
-        version: 'detect',
+        version: '19.0',
       },
     },
   },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
-  {
-    plugins: {
-      'react-hooks': pluginReactHooks,
-    },
-    rules: pluginReactHooks.configs.recommended.rules,
-  },
+  pluginReactHooks.configs['recommended-latest'],
   {
     rules: {
       'react/react-in-jsx-scope': 'off',
