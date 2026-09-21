@@ -79,7 +79,11 @@ function useScriptTabElements(tabId?: string) {
   > | null>(null);
 
   useEffect(() => {
-    sidebarModule.registerScriptTab().then(setTabResult);
+    sidebarModule.registerScriptTab().then((result) => {
+      result.tabPane.style.padding =
+        '0 var(--space-always-m, var(--space_always_m, 16px))';
+      setTabResult(result);
+    });
 
     return () => {
       sidebarModule.removeScriptTab();
