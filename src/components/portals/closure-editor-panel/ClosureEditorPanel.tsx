@@ -45,7 +45,7 @@ function ClosureEditorPanel(props: ClosureEditorPanelProps) {
 
   return (
     <ClosureEditorFormContextProvider
-      type="CLOSURES_GROUP_MODEL_DOM_FORM"
+      type="AUTO"
       target={props.target as HTMLFormElement}
     >
       <ClosureEditorGroup hasBorder disableTopPadding={!!closestCard}>

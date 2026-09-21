@@ -1,5 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ClosureEditorForm, ClosureGroupModelBasedEditorForm } from 'classes';
+import {
+  ClosureEditorForm,
+  ClosureGroupModelBasedEditorForm,
+  ZustandClosureEditorForm,
+} from 'classes';
 import { createContext, ReactNode, useContext, useMemo } from 'react';
 
 const ClosureEditorFormContext = createContext<ClosureEditorForm>(null);
@@ -11,7 +15,7 @@ interface StaticInstanceProps {
   closureEditorForm: ClosureEditorForm;
 }
 interface DynamicInstanceProps {
-  type: 'CLOSURES_GROUP_MODEL_DOM_FORM';
+  type?: 'AUTO' | 'CLOSURES_GROUP_MODEL_DOM_FORM' | 'ZUSTAND_STORE_DOM_FORM';
   target: HTMLFormElement;
 }
 export function ClosureEditorFormContextProvider(
@@ -21,8 +25,17 @@ export function ClosureEditorFormContextProvider(
     if ('closureEditorForm' in props) return props.closureEditorForm;
 
     switch (props.type) {
+      case 'ZUSTAND_STORE_DOM_FORM':
+        return ZustandClosureEditorForm.fromHTMLForm(props.target);
       case 'CLOSURES_GROUP_MODEL_DOM_FORM':
         return ClosureGroupModelBasedEditorForm.fromHTMLForm(props.target);
+      case 'AUTO':
+      default:
+        try {
+          return ZustandClosureEditorForm.fromHTMLForm(props.target);
+        } catch {
+          return ClosureGroupModelBasedEditorForm.fromHTMLForm(props.target);
+        }
     }
   }, [
     'closureEditorForm' in props && props.closureEditorForm,
