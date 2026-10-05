@@ -39,7 +39,7 @@ export function ReccuringClosureConfigDialog({
   const modeSelectionTabsRef = useRef<WzTabs>(null);
   const fieldsValuesRef = useRef<Record<string, FieldsValuesRef>>({});
   const [activeModeId, setActiveModeId] = useState<string>(
-    props.initialMode ?? 'INTERVAL',
+    props.initialMode ?? 'DAILY',
   );
 
   useImperativeHandle(
